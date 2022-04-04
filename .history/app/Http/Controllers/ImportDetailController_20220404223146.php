@@ -108,8 +108,8 @@ class detailController extends Controller
                 $detail->detail_vat = $request->detail_vat;
                 $get_image = $request->file('detail_image');
                 if ($get_image) {
-                    if ($detail->detail_image) {
-                        $destinationPath = 'uploads/product/' . $detail->detail_image;
+                    if ($detail->customer) {
+                        $destinationPath = 'uploads/product/' . $detail->customer_image;
                         if (file_exists($destinationPath)) {
                             unlink($destinationPath);
                         }

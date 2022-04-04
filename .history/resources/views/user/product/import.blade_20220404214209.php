@@ -108,7 +108,7 @@
     {{-- Add Detail --}}
     <div class="modal fade" id="exampleModalSizeSm3" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
          aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Thêm nhập hàng</h5>
@@ -227,6 +227,7 @@
                             <button type="reset" class="btn btn-secondary">Nhập lại</button>
                         </div>
                     </form>
+                    <div id="load_importdetail"></div>
                 </div>
             </div>
         </div>
@@ -252,23 +253,6 @@
                             <button id="update_import" type="button" class="btn btn-primary mr-2">Cập nhật</button>
                         </div>
                     </form>
-                </div>
-            </div>
-        </div>
-    </div>
-    {{-- ViewDetail --}}
-    <div class="modal fade" id="exampleModalSizeSm5" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel2"
-         aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Chi tiết hoá đơn nhập hàng</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <i aria-hidden="true" class="ki ki-close"></i>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div id="load_importdetail"></div>
                 </div>
             </div>
         </div>
@@ -337,18 +321,9 @@
                     autoHide: false,
                     render: function(data, type, row) {
                         return `\
-                            <div class="dropdown dropdown-inline">\
-								<a href="javascript:;" class="btn btn-sm btn-clean btn-icon" data-toggle="dropdown">\
-	                                <i class="la la-cog"></i>\
-	                            </a>\
-							  	<div class="dropdown-menu dropdown-menu-sm dropdown-menu-right">\
-									<ul class="nav nav-hoverable flex-column">\
-							    		<li data-toggle="modal" data-target="#exampleModalSizeSm3" class="nav-item"><a class="nav-link" href="#"><i class="nav-icon la la-edit"></i><span class="nav-text">Thêm sản phẩm</span></a></li>\
-							    		<li onclick="load_detail(${row.id})" data-toggle="modal" data-target="#exampleModalSizeSm5" class="nav-item"><a class="nav-link" href="#"><i class="nav-icon la la-leaf"></i><span class="nav-text">Danh sách</span></a></li>\
-							    		<li class="nav-item"><a class="nav-link" href="#"><i class="nav-icon la la-print"></i><span class="nav-text">In hoá đơn</span></a></li>\
-									</ul>\
-							  	</div>\
-							</div>\
+                            <span data-toggle="modal" data-target="#exampleModalSizeSm5" data-id='${row.id}' class="add_detail btn btn-sm btn-clean btn-icon" title="Nhập hàng">\
+								<i class="la la-file-import"></i>\
+							</span>\
                             <span data-toggle="modal" data-target="#exampleModalSizeSm2" data-id='${row.id}' class="edit_import btn btn-sm btn-clean btn-icon" title="Sửa">\
 								<i class="la la-edit"></i>\
 							</span>\

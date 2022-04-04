@@ -106,10 +106,9 @@ class detailController extends Controller
                 $detail->coupon_date_end = $request->coupon_date_end;
                 $detail->detail_quantity = $request->detail_quantity;
                 $detail->detail_vat = $request->detail_vat;
-                $get_image = $request->file('detail_image');
                 if ($get_image) {
-                    if ($detail->detail_image) {
-                        $destinationPath = 'uploads/product/' . $detail->detail_image;
+                    if ($detail->customer) {
+                        $destinationPath = 'uploads/product/' . $detail->customer_image;
                         if (file_exists($destinationPath)) {
                             unlink($destinationPath);
                         }
@@ -118,7 +117,7 @@ class detailController extends Controller
                     $name_image = current(explode('.', $get_name_image));
                     $new_image =  $name_image . rand(0, 99) . '.' . $get_image->getClientOriginalExtension();
                     $get_image->move('uploads/product', $new_image);
-                    $detail->detail_image = $new_image;
+                    $detail->product_image = $new_image;
                 }
                 $detail->save();
                 return 1;

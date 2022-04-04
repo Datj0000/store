@@ -257,7 +257,7 @@
         </div>
     </div>
     {{-- ViewDetail --}}
-    <div class="modal fade" id="exampleModalSizeSm5" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel2"
+    <div class="modal fade" id="exampleModalSizeSm4" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel2"
          aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content">
@@ -268,7 +268,15 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div id="load_importdetail"></div>
+                    <form class="form" id="form_edit_import">
+                        <div class=" card-body">
+                            <input type="hidden" id="edit_detail_id">
+
+                        </div>
+                        <div class="card-footer">
+                            <button id="update_import" type="button" class="btn btn-primary mr-2">Cập nhật</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>

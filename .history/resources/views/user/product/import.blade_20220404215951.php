@@ -268,7 +268,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div id="load_importdetail"></div>
+                    <div id=""></div>
                 </div>
             </div>
         </div>

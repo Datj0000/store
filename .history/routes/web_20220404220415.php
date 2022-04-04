@@ -102,10 +102,10 @@ Route::group(['middleware' => 'mod'], function(){
     //Import
     Route::get('/view-importdetail',[ImportDetailController::class,'index']);
     Route::get('/fetchdata-importdetail',[ImportDetailController::class,'fetchdata']);
-    Route::post('/create-importdetail',[ImportDetailController::class,'create']);
-    Route::get('/edit-importdetail/{id}',[ImportDetailController::class, 'edit']);
-    Route::post('/update-importdetail/{id}',[ImportDetailController::class,'update']);
-    Route::get('/destroy-importdetail/{id}',[ImportDetailController::class,'destroy']);
+    Route::post('/create-import',[ImportDetailController::class,'create']);
+    Route::get('/edit-import/{id}',[ImportDetailController::class, 'edit']);
+    Route::post('/update-import/{id}',[ImportDetailController::class,'update']);
+    Route::get('/destroy-import/{id}',[ImportDetailController::class,'destroy']);
 
     //Coupon
     Route::get('/view-coupon',[CouponController::class,'index']);

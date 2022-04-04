@@ -24,7 +24,7 @@
     {{-- Add --}}
     <div class="modal fade" id="exampleModalSizeSm" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
          aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Thêm nhập hàng</h5>
@@ -66,7 +66,7 @@
     {{-- Edit --}}
     <div class="modal fade" id="exampleModalSizeSm2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel2"
          aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Sửa nhập hàng</h5>
@@ -234,7 +234,7 @@
     {{-- Edit --}}
     <div class="modal fade" id="exampleModalSizeSm4" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel2"
          aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Sửa nhập hàng</h5>
@@ -256,23 +256,6 @@
             </div>
         </div>
     </div>
-    {{-- ViewDetail --}}
-    <div class="modal fade" id="exampleModalSizeSm5" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel2"
-         aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Chi tiết hoá đơn nhập hàng</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <i aria-hidden="true" class="ki ki-close"></i>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div id="load_importdetail"></div>
-                </div>
-            </div>
-        </div>
-    </div>
     <div class="card-body">
         <table class="table table-separate table-head-custom table-checkable display nowrap" cellspacing="0" width="100%" id="kt_datatable">
             <thead>
@@ -290,15 +273,6 @@
 <script src="{{ asset('asset/js/pages/crud/forms/widgets/bootstrap-datepicker.js') }}"></script>
 <script src="{{ asset('asset/js/pages/crud/file-upload/image-input.js') }}"></script>
 <script type="text/javascript">
-    function load_detail(id){
-        axios.get('view-importdetail/' + id)
-            .then(function(response) {
-                $("#load_importdetail").html(response.data);
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    }
     $(document).ready(function() {
         var i = 0;
         var formatter = new Intl.NumberFormat('vi-VN', {
@@ -337,18 +311,9 @@
                     autoHide: false,
                     render: function(data, type, row) {
                         return `\
-                            <div class="dropdown dropdown-inline">\
-								<a href="javascript:;" class="btn btn-sm btn-clean btn-icon" data-toggle="dropdown">\
-	                                <i class="la la-cog"></i>\
-	                            </a>\
-							  	<div class="dropdown-menu dropdown-menu-sm dropdown-menu-right">\
-									<ul class="nav nav-hoverable flex-column">\
-							    		<li data-toggle="modal" data-target="#exampleModalSizeSm3" class="nav-item"><a class="nav-link" href="#"><i class="nav-icon la la-edit"></i><span class="nav-text">Thêm sản phẩm</span></a></li>\
-							    		<li onclick="load_detail(${row.id})" data-toggle="modal" data-target="#exampleModalSizeSm5" class="nav-item"><a class="nav-link" href="#"><i class="nav-icon la la-leaf"></i><span class="nav-text">Danh sách</span></a></li>\
-							    		<li class="nav-item"><a class="nav-link" href="#"><i class="nav-icon la la-print"></i><span class="nav-text">In hoá đơn</span></a></li>\
-									</ul>\
-							  	</div>\
-							</div>\
+                            <span data-toggle="modal" data-target="#exampleModalSizeSm3" data-id='${row.id}' class="add_detail btn btn-sm btn-clean btn-icon" title="Nhập hàng">\
+								<i class="la la-file-import"></i>\
+							</span>\
                             <span data-toggle="modal" data-target="#exampleModalSizeSm2" data-id='${row.id}' class="edit_import btn btn-sm btn-clean btn-icon" title="Sửa">\
 								<i class="la la-edit"></i>\
 							</span>\
@@ -424,50 +389,59 @@
 
         $(document).on('click', '#create_import', function(e) {
             e.preventDefault();
-            var supplier_id = $('#supplier_id').val();
-            var import_fee_ship = $('#import_fee_ship').val();
-            validation.validate().then(function(status) {
-                if (status == 'Valid') {
-                    axios({
-                        url: 'create-import',
-                        method: 'POST',
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name = "csrf-token" ]').attr('content')
-                        },
-                        data: {
-                            supplier_id: supplier_id,
-                            import_fee_ship: import_fee_ship,
-                        },
-                    })
-                        .then(function (response) {
-                            Swal.fire({
-                                icon: "success",
-                                title: "Thành công",
-                                text: "Tạo đơn nhập hàng thành công!",
-                                showConfirmButton: false,
-                                timer: 1500
-                            });
-                            i = 0;
-                            table.ajax.reload();
-                            $('#exampleModalSizeSm3').modal();
-                        })
-                        .catch(function (error) {
-                            console.log(error);
-                        });
-                } else {
-                    swal.fire({
-                        text: "Xin lỗi, có vẻ như đã phát hiện thấy một số lỗi, vui lòng thử lại .",
-                        icon: "error",
-                        buttonsStyling: false,
-                        confirmButtonText: "Đồng ý!",
-                        customClass: {
-                            confirmButton: "btn font-weight-bold btn-light-primary"
-                        }
-                    }).then(function () {
-                        KTUtil.scrollTop();
-                    });
-                }
-            });
+            $('#exampleModalSizeSm').removeClass("show");
+            $('#exampleModalSizeSm').removeAtt("aria-modal");
+            $('#exampleModalSizeSm').attr("aria-hidden","true");
+            $('#exampleModalSizeSm').css("display","none");
+            $('#kt_body').css("display","none");
+
+            $('#exampleModalSizeSm3').addClass("show");
+            $('#exampleModalSizeSm3').attr("aria-modal","true");
+            $('#exampleModalSizeSm3').css("display","block");
+
+            // var supplier_id = $('#supplier_id').val();
+            // var import_fee_ship = $('#import_fee_ship').val();
+            // validation.validate().then(function(status) {
+            //     if (status == 'Valid') {
+            //         axios({
+            //             url: 'create-import',
+            //             method: 'POST',
+            //             headers: {
+            //                 'X-CSRF-TOKEN': $('meta[name = "csrf-token" ]').attr('content')
+            //             },
+            //             data: {
+            //                 supplier_id: supplier_id,
+            //                 import_fee_ship: import_fee_ship,
+            //             },
+            //         })
+            //             .then(function (response) {
+            //                 Swal.fire({
+            //                     icon: "success",
+            //                     title: "Thành công",
+            //                     text: "Sửa nhập hàng thành công!",
+            //                     showConfirmButton: false,
+            //                     timer: 1500
+            //                 });
+            //                 i = 0;
+            //                 table.ajax.reload();
+            //             })
+            //             .catch(function (error) {
+            //                 console.log(error);
+            //             });
+            //     } else {
+            //         swal.fire({
+            //             text: "Xin lỗi, có vẻ như đã phát hiện thấy một số lỗi, vui lòng thử lại .",
+            //             icon: "error",
+            //             buttonsStyling: false,
+            //             confirmButtonText: "Đồng ý!",
+            //             customClass: {
+            //                 confirmButton: "btn font-weight-bold btn-light-primary"
+            //             }
+            //         }).then(function () {
+            //             KTUtil.scrollTop();
+            //         });
+            //     }
+            // });
         });
         $(document).on('click', '.edit_import', function(e) {
             e.preventDefault();

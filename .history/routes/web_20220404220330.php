@@ -12,7 +12,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ImportController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\CouponController;
-use App\Http\Controllers\ImportDetailController;
+use Im
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -98,14 +98,6 @@ Route::group(['middleware' => 'mod'], function(){
     Route::get('/edit-import/{id}',[ImportController::class, 'edit']);
     Route::post('/update-import/{id}',[ImportController::class,'update']);
     Route::get('/destroy-import/{id}',[ImportController::class,'destroy']);
-
-    //Import
-    Route::get('/view-importdetail',[ImportDetailController::class,'index']);
-    Route::get('/fetchdata-importdetail',[ImportDetailController::class,'fetchdata']);
-    Route::post('/create-importdetail',[ImportDetailController::class,'create']);
-    Route::get('/edit-importdetail/{id}',[ImportDetailController::class, 'edit']);
-    Route::post('/update-importdetail/{id}',[ImportDetailController::class,'update']);
-    Route::get('/destroy-importdetail/{id}',[ImportDetailController::class,'destroy']);
 
     //Coupon
     Route::get('/view-coupon',[CouponController::class,'index']);

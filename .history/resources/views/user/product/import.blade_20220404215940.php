@@ -268,7 +268,15 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div id="load_importdetail"></div>
+                    <form class="form" id="form_edit_import">
+                        <div class=" card-body">
+                            <input type="hidden" id="edit_detail_id">
+
+                        </div>
+                        <div class="card-footer">
+                            <button id="update_import" type="button" class="btn btn-primary mr-2">Cập nhật</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>

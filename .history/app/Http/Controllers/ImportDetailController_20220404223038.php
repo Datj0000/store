@@ -96,20 +96,19 @@ class detailController extends Controller
         if (Auth::check()) {
             $check = ImportDetail::query()->where('product_id', $request->product_id)->first();
             if (!$check){
-                $detail = new ImportDetail();
-                $detail->import_id = $request->import_id;
-                $detail->product_id = $request->product_id;
-                $detail->detail_drive = $request->detail_drive;
-                $detail->detail_import_price = $request->detail_import_price;
-                $detail->detail_sell_price = $request->detail_sell_price;
-                $detail->coupon_date_start = $request->coupon_date_start;
-                $detail->coupon_date_end = $request->coupon_date_end;
-                $detail->detail_quantity = $request->detail_quantity;
-                $detail->detail_vat = $request->detail_vat;
-                $get_image = $request->file('detail_image');
+                $product = new ImportDetail();
+                $product->import_id = $request->import_id;
+                $product->product_id = $request->product_id;
+                $product->detail_drive = $request->detail_drive;
+                $product->detail_import_price = $request->detail_import_price;
+                $product->detail_sell_price = $request->detail_sell_price;
+                $product->coupon_date_start = $request->coupon_date_start;
+                $product->coupon_date_end = $request->coupon_date_end;
+                $product->detail_quantity = $request->detail_quantity;
+                $product->detail_vat = $request->detail_vat;
                 if ($get_image) {
-                    if ($detail->detail_image) {
-                        $destinationPath = 'uploads/product/' . $detail->detail_image;
+                    if ($product->customer) {
+                        $destinationPath = 'uploads/product/' . $product->customer_image;
                         if (file_exists($destinationPath)) {
                             unlink($destinationPath);
                         }
@@ -118,9 +117,9 @@ class detailController extends Controller
                     $name_image = current(explode('.', $get_name_image));
                     $new_image =  $name_image . rand(0, 99) . '.' . $get_image->getClientOriginalExtension();
                     $get_image->move('uploads/product', $new_image);
-                    $detail->detail_image = $new_image;
+                    $product->product_image = $new_image;
                 }
-                $detail->save();
+                $product->save();
                 return 1;
             } else{
                 return 0;
@@ -141,12 +140,12 @@ class detailController extends Controller
         if (Auth::check()) {
             $check = Product::query()->where('product_name','=', $request->product_name)->where('id','!=', $id)->first();
             if (!$check){
-                $detail = Product::query()->whereId($id)->first();
-                $detail->product_name = $request->product_name;
-                $detail->category_id = $request->category_id;
-                $detail->brand_id = $request->brand_id;
-                $detail->unit_id = $request->unit_id;
-                $detail->save();
+                $product = Product::query()->whereId($id)->first();
+                $product->product_name = $request->product_name;
+                $product->category_id = $request->category_id;
+                $product->brand_id = $request->brand_id;
+                $product->unit_id = $request->unit_id;
+                $product->save();
                 return 1;
             } else{
                 return 0;

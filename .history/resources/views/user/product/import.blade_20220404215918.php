@@ -256,19 +256,27 @@
             </div>
         </div>
     </div>
-    {{-- ViewDetail --}}
-    <div class="modal fade" id="exampleModalSizeSm5" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel2"
+    {{-- Edit --}}
+    <div class="modal fade" id="exampleModalSizeSm4" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel2"
          aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Chi tiết hoá đơn nhập hàng</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Sửa nhập hàng</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <i aria-hidden="true" class="ki ki-close"></i>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div id="load_importdetail"></div>
+                    <form class="form" id="form_edit_import">
+                        <div class=" card-body">
+                            <input type="hidden" id="edit_detail_id">
+
+                        </div>
+                        <div class="card-footer">
+                            <button id="update_import" type="button" class="btn btn-primary mr-2">Cập nhật</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
