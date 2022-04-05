@@ -20,6 +20,7 @@ class ImportDetailController extends Controller
             $data = ImportDetail::query()->select('products.product_name', 'importdetails.*')
                 ->join('products', 'products.id', '=', 'importdetails.product_id')
                 ->where('import_id', $id)->get();
+                $output = '';
             $output = '
             <input type="hidden" id="importdetail_id" value="'.$id.'"/>
             <div class="card-body">

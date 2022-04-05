@@ -20,73 +20,74 @@ class ImportDetailController extends Controller
             $data = ImportDetail::query()->select('products.product_name', 'importdetails.*')
                 ->join('products', 'products.id', '=', 'importdetails.product_id')
                 ->where('import_id', $id)->get();
-            $output = '
-            <input type="hidden" id="importdetail_id" value="'.$id.'"/>
-            <div class="card-body">
-                <table class="table table-separate table-head-custom table-checkable display nowrap" cellspacing="0"
-                    width="100%">
-                    <thead>
-                        <tr>
-                            <th>STT</th>
-                            <th>Hình ảnh</th>
-                            <th>Tên sản phẩm</th>
-                            <th>Link drive</th>
-                            <th>Giá nhập</th>
-                            <th>Giá bán</th>
-                            <th>Số lượng</th>
-                            <th>VAT</th>
-                            <th>Bảo hành từ</th>
-                            <th>Bảo hành đến</th>
-                            <th>Chức năng</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-            ';
-            $data_count = $data->count();
-            if ($data_count > 0) {
-                $i = 0;
-                foreach ($data as $key => $item) {
-                    $i++;
-                    $output .= '
-                        <tr>
-                            <td>' . $i . '</td>';
-                            if($item->detail_image){
-                                $output .='<div class="comment__shape">
-                                    <img class="comment__img" src="'.url('uploads/product/'.$item->detail_image.'').'">
-                                </div>';
-                            }else {
-                                $output .='<div class="comment__shape">
-                                    <img class="comment__img" src="'.url('asset/media/users/noimage.png').'">
-                                </div>';
-                            }
-                            $output .='
-                            <td>'.$item->product_name.'</td>
-                            <td>'.$item->detail_drive.'</td>
-                            <td>'.$item->detail_import_price.'</td>
-                            <td>'.$item->detail_sell_price.'</td>
-                            <td>'.$item->detail_quantity.'</td>
-                            <td>'.$item->detail_vat.'</td>
-                            <td>'.$item->coupon_date_start.'</td>
-                            <td>'.$item->coupon_date_end.'</td>
-                            <td>
-                                <span data-id='.$item->id.' class="edit_detail btn btn-sm btn-clean btn-icon" title="Sửa">
-                                    <i class="la la-edit"></i>
-                                </span>
-                                <span data-id='.$item->id.' class="delete_detail btn btn-sm btn-clean btn-icon" title="Xoá">
-                                    <i class="la la-trash"></i>
-                                </span>
-                            </td>
-                        </tr>
-                    ';
-                }
-            } else {
-                $output .= '<tr> <td colspan="11">Hoá đơn nhập hàng này chưa có sản phẩm</td></tr>';
-            }
-            $output .= '
-                    </tbody>
-                </table>
-            </div>
-            ';
+                $output = '';
+            // $output = '
+            // <input type="hidden" id="importdetail_id" value="'.$id.'"/>
+            // <div class="card-body">
+            //     <table class="table table-separate table-head-custom table-checkable display nowrap" cellspacing="0"
+            //         width="100%">
+            //         <thead>
+            //             <tr>
+            //                 <th>STT</th>
+            //                 <th>Hình ảnh</th>
+            //                 <th>Tên sản phẩm</th>
+            //                 <th>Link drive</th>
+            //                 <th>Giá nhập</th>
+            //                 <th>Giá bán</th>
+            //                 <th>Số lượng</th>
+            //                 <th>VAT</th>
+            //                 <th>Bảo hành từ</th>
+            //                 <th>Bảo hành đến</th>
+            //                 <th>Chức năng</th>
+            //             </tr>
+            //         </thead>
+            //         <tbody>
+            // ';
+            // $data_count = $data->count();
+            // if ($data_count > 0) {
+            //     $i = 0;
+            //     foreach ($data as $key => $item) {
+            //         $i++;
+            //         $output .= '
+            //             <tr>
+            //                 <td>' . $i . '</td>';
+            //                 if($item->detail_image){
+            //                     $output .='<div class="comment__shape">
+            //                         <img class="comment__img" src="'.url('uploads/product/'.$item->detail_image.'').'">
+            //                     </div>';
+            //                 }else {
+            //                     $output .='<div class="comment__shape">
+            //                         <img class="comment__img" src="'.url('asset/media/users/noimage.png').'">
+            //                     </div>';
+            //                 }
+            //                 $output .='
+            //                 <td>'.$item->product_name.'</td>
+            //                 <td>'.$item->detail_drive.'</td>
+            //                 <td>'.$item->detail_import_price.'</td>
+            //                 <td>'.$item->detail_sell_price.'</td>
+            //                 <td>'.$item->detail_quantity.'</td>
+            //                 <td>'.$item->detail_vat.'</td>
+            //                 <td>'.$item->coupon_date_start.'</td>
+            //                 <td>'.$item->coupon_date_end.'</td>
+            //                 <td>
+            //                     <span data-id='.$item->id.' class="edit_detail btn btn-sm btn-clean btn-icon" title="Sửa">
+            //                         <i class="la la-edit"></i>
+            //                     </span>
+            //                     <span data-id='.$item->id.' class="delete_detail btn btn-sm btn-clean btn-icon" title="Xoá">
+            //                         <i class="la la-trash"></i>
+            //                     </span>
+            //                 </td>
+            //             </tr>
+            //         ';
+            //     }
+            // } else {
+            //     $output .= '<tr> <td colspan="11">Hoá đơn nhập hàng này chưa có sản phẩm</td></tr>';
+            // }
+            // $output .= '
+            //         </tbody>
+            //     </table>
+            // </div>
+            // ';
             return $output;
         }
     }

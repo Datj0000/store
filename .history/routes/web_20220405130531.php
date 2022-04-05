@@ -99,8 +99,9 @@ Route::group(['middleware' => 'mod'], function(){
     Route::post('/update-import/{id}',[ImportController::class,'update']);
     Route::get('/destroy-import/{id}',[ImportController::class,'destroy']);
 
-    //ImportDetail
-    Route::get('/fetchdata-importdetail/{id}',[ImportDetailController::class,'fetchdata']);
+    //Import
+    Route::get('/view-importdetail',[ImportDetailController::class,'index']);
+    Route::get('/fetchdata-importdetail',[ImportDetailController::class,'fetchdata']);
     Route::post('/create-importdetail',[ImportDetailController::class,'create']);
     Route::get('/edit-importdetail/{id}',[ImportDetailController::class, 'edit']);
     Route::post('/update-importdetail/{id}',[ImportDetailController::class,'update']);

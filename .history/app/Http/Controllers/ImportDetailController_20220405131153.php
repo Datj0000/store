@@ -17,8 +17,8 @@ class ImportDetailController extends Controller
     public function fetchdata(int $id)
     {
         if (Auth::check()) {
-            $data = ImportDetail::query()->select('products.product_name', 'importdetails.*')
-                ->join('products', 'products.id', '=', 'importdetails.product_id')
+            $data = ImportDetail::query()->select('products.product_name', 'details.*')
+                ->join('products', 'products.id', '=', 'details.product_id')
                 ->where('import_id', $id)->get();
             $output = '
             <input type="hidden" id="importdetail_id" value="'.$id.'"/>

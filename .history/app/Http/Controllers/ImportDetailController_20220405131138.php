@@ -17,11 +17,11 @@ class ImportDetailController extends Controller
     public function fetchdata(int $id)
     {
         if (Auth::check()) {
-            $data = ImportDetail::query()->select('products.product_name', 'importdetails.*')
-                ->join('products', 'products.id', '=', 'importdetails.product_id')
+            $data = ImportDetail::query()->select('products.product_name', 'details.*')
+                ->join('products', 'products.id', '=', 'details.product_id')
                 ->where('import_id', $id)->get();
             $output = '
-            <input type="hidden" id="importdetail_id" value="'.$id.'"/>
+            <input type="hidden" id="detail_server_id" value="'.$id.'"/>
             <div class="card-body">
                 <table class="table table-separate table-head-custom table-checkable display nowrap" cellspacing="0"
                     width="100%">

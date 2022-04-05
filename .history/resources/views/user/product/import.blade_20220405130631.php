@@ -259,7 +259,7 @@
     {{-- ViewDetail --}}
     <div class="modal fade" id="exampleModalSizeSm5" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel2"
          aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Chi tiết hoá đơn nhập hàng</h5>
@@ -291,7 +291,7 @@
 <script src="{{ asset('asset/js/pages/crud/file-upload/image-input.js') }}"></script>
 <script type="text/javascript">
     function load_detail(id){
-        axios.get('fetchdata-importdetail/' + id)
+        axios.get('vfetchdata-importdetail/' + id)
             .then(function(response) {
                 $("#load_importdetail").html(response.data);
             })
