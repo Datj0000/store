@@ -78,15 +78,14 @@ class CustomerController extends Controller
     public function autocomplete(Request $request)
     {
         if (Auth::check()) {
-            $customer = Customer::query()
-            ->where('customer_name', 'LIKE', '%' . $request->query . '%')
-            ->where('customer_phone', 'LIKE', '%' . $request->query . '%')->get();
-            if ($customer->count() > 0) {
+            // $coupon = Coupon::query()->where('coupon_status','=', 0)->where('coupon_code', $data['query'])->get();
+            $coupon = Coupon::query()->where('coupon_status','=', 0)->where('coupon_code', 'LIKE', '%' . $request->query . '%')->get();
+            if ($coupon->count() > 0) {
                 $output = '
                 <ul class="dropdown-menu2">';
-                foreach ($customer as $key => $val) {
+                foreach ($coupon as $key => $val) {
                     $output .= '
-                        <li class="li_search_customer" data-id="'.$val->id.'">' . $val->customer_name . ' - ' . $val->customer_phone . '</li>
+                        <li class="li_search_coupon">' . $val->coupon_code . '</li>
                    ';
                 }
                 $output .= '</ul>';

@@ -285,7 +285,7 @@
                             </div>
                             <div class="form-group">
                                 <label>Thương hiệu sản phẩm:</label>
-                                <select id="edit_brand_id" name="brand" class="form-control edit_choose">
+                                <select id="edit_brand_id" name="brand" class="form-control">
                                     @if($brand->count() > 0)
                                         <option value disabled selected hidden>Chọn thương hiệu sản phẩm</option>
                                         @foreach ($brand as $key => $item)

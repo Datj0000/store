@@ -123,7 +123,7 @@ class ProductController extends Controller
                 }
             }
             else{
-                $output .= '<option value="">Không có sản phẩm ở danh mục và thương hiệu này</option>';
+                $output .= '<option value="">Không có sản phẩm ở danh mục và thương hiệu này    </option>';
             }
             return $output;
         }

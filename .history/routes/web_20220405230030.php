@@ -92,8 +92,7 @@ Route::group(['middleware' => 'mod'], function(){
     Route::get('/edit-product/{id}',[ProductController::class, 'edit']);
     Route::post('/update-product/{id}',[ProductController::class,'update']);
     Route::get('/destroy-product/{id}',[ProductController::class,'destroy']);
-    Route::post('/load-product',[ProductController::class,'load']);
-
+    load-product
     //Import
     Route::get('/view-import',[ImportController::class,'index']);
     Route::get('/fetchdata-import',[ImportController::class,'fetchdata']);

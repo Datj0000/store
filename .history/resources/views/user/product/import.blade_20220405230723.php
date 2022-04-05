@@ -183,7 +183,7 @@
                             <div class="form-group">
                                 <label>Sản phẩm:</label>
                                 <select id="product_id" name="product" class="form-control">
-                                    <option value="">Vui lòng chọn danh mục và thương hiệu của sản phẩm</option>
+                                    <option value="">Chưa có sản phẩm</option>
                                     {{-- @if($product->count() > 0)
                                         <option value disabled selected hidden>Chọn sản phẩm</option>
                                         @foreach ($product as $key => $item)
@@ -285,7 +285,7 @@
                             </div>
                             <div class="form-group">
                                 <label>Thương hiệu sản phẩm:</label>
-                                <select id="edit_brand_id" name="brand" class="form-control edit_choose">
+                                <select id="edit_brand_id" name="brand" class="form-control">
                                     @if($brand->count() > 0)
                                         <option value disabled selected hidden>Chọn thương hiệu sản phẩm</option>
                                         @foreach ($brand as $key => $item)
@@ -298,7 +298,7 @@
                             </div>
                             <div class="form-group">
                                 <label>Danh mục sản phẩm:</label>
-                                <select id="edit_category_id" name="category" class="form-control edit_choose">
+                                <select id="edit_category_id" name="category" class="form-control">
                                     @if($category->count() > 0)
                                         <option value disabled selected hidden>Chọn danh mục sản phẩm</option>
                                         @foreach ($category as $key => $item)
@@ -428,9 +428,9 @@
     }
     $(document).ready(function() {
         $('.choose').on('change', function() {
-            var brand_id = $('#brand_id').val();
-            var category_id = $('#category_id').val();
-            if(brand_id != "" && category_id!= ""){
+            var brand = $('#brand_id').val();
+            var category = $('#category_id').val();
+            if(brand != "" && category!= ""){
                 axios({
                     url: "load-product",
                     method: "POST",
@@ -438,32 +438,11 @@
                         'X-CSRF-TOKEN': $('meta[name = "csrf-token" ]').attr('content')
                     },
                     data: {
-                        brand_id: brand_id,
-                        category_id: category_id
+                        query: query
                     },
                 })
                 .then(function (response) {
                     $('#product_id').html(response.data);
-                });
-            }
-        });
-        $('.edit_choose').on('change', function() {
-            var brand_id = $('#edit_brand_id').val();
-            var category_id = $('#edit_category_id').val();
-            if(brand_id != "" && category_id!= ""){
-                axios({
-                    url: "load-product",
-                    method: "POST",
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name = "csrf-token" ]').attr('content')
-                    },
-                    data: {
-                        brand_id: brand_id,
-                        category_id: category_id
-                    },
-                })
-                .then(function (response) {
-                    $('#edit_product_id').html(response.data);
                 });
             }
         });

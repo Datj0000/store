@@ -77,6 +77,21 @@ class CustomerController extends Controller
     }
     public function autocomplete(Request $request)
     {
+        $data = $request->all();
+        if ($data['query']) {
+            $customer = Customer::query()->where('customer_name', 'LIKE', '%' . $data['query'] . '%')->get();
+            if ($customer->count() > 0) {
+                $output = '
+                <ul class="dropdown-menu2">';
+                foreach ($customer as $key => $val) {
+                    $output .= '
+                        <li class="li_search_customer" data-id="'.$val->id.'">' . $val->customer_name . ' - ' . $val->customer_phone . '</li>
+                   ';
+                }
+                $output .= '</ul>';
+                return $output;
+            }
+        }
         if (Auth::check()) {
             $customer = Customer::query()
             ->where('customer_name', 'LIKE', '%' . $request->query . '%')

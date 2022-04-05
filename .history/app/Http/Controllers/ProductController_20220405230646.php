@@ -121,11 +121,8 @@ class ProductController extends Controller
                 foreach ($product as $key => $val) {
                     $output .= '<option value="'.$val->id.'">' . $val->product_name . '</option>';
                 }
+                return $output;
             }
-            else{
-                $output .= '<option value="">Không có sản phẩm ở danh mục và thương hiệu này</option>';
-            }
-            return $output;
         }
     }
 }

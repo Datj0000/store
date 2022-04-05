@@ -93,7 +93,7 @@ class CouponController extends Controller
     public function autocomplete(Request $request)
     {
         if (Auth::check()) {
-            // $coupon = Coupon::query()->where('coupon_status','=', 0)->where('coupon_code', $request->query)->get();
+            // $coupon = Coupon::query()->where('coupon_status','=', 0)->where('coupon_code', $data['query'])->get();
             $coupon = Coupon::query()->where('coupon_status','=', 0)->where('coupon_code', 'LIKE', '%' . $request->query . '%')->get();
             if ($coupon->count() > 0) {
                 $output = '

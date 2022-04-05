@@ -92,9 +92,10 @@ class CouponController extends Controller
     }
     public function autocomplete(Request $request)
     {
-        if (Auth::check()) {
-            // $coupon = Coupon::query()->where('coupon_status','=', 0)->where('coupon_code', $request->query)->get();
-            $coupon = Coupon::query()->where('coupon_status','=', 0)->where('coupon_code', 'LIKE', '%' . $request->query . '%')->get();
+        $data = $request->all();
+        if ($data['query']) {
+            // $coupon = Coupon::query()->where('coupon_status','=', 0)->where('coupon_code', $data['query'])->get();
+            $coupon = Coupon::query()->where('coupon_status','=', 0)->where('coupon_code', 'LIKE', '%' . $data['query'] . '%')->get();
             if ($coupon->count() > 0) {
                 $output = '
                 <ul class="dropdown-menu2">';
@@ -104,6 +105,17 @@ class CouponController extends Controller
                    ';
                 }
                 $output .= '</ul>';
+                return $output;
+            }
+        }
+        if (Auth::check()) {
+            if ($product->count() > 0) {
+                $output = '';
+                foreach ($product as $key => $val) {
+                    $output .= '
+                        <option value="'.$val->id.'">' . $val->product_name . '</option>
+                    ';
+                }
                 return $output;
             }
         }

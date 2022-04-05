@@ -116,16 +116,32 @@ class ProductController extends Controller
     {
         if (Auth::check()) {
             $product = Product::query()->where('brand_id','=', $request->brand_id)->where('category_id','=', $request->category_id)->get();
-            if ($product->count() > 0) {
-                $output = '';
-                foreach ($product as $key => $val) {
-                    $output .= '<option value="'.$val->id.'">' . $val->product_name . '</option>';
+            if ($coupon->count() > 0) {
+                $output = '
+                <ul class="dropdown-menu2">';
+                foreach ($coupon as $key => $val) {
+                    $output .= '
+                        <li class="li_search_coupon">' . $val->coupon_code . '</li>
+                   ';
                 }
+                $output .= '</ul>';
+                return $output;
             }
-            else{
-                $output .= '<option value="">Không có sản phẩm ở danh mục và thương hiệu này</option>';
+        }
+        $data = $request->all();
+        if ($data['query']) {
+            $coupon = Coupon::query()->where('coupon_status','=', 0)->where('coupon_code', 'LIKE', '%' . $data['query'] . '%')->get();
+            if ($coupon->count() > 0) {
+                $output = '
+                <ul class="dropdown-menu2">';
+                foreach ($coupon as $key => $val) {
+                    $output .= '
+                        <li class="li_search_coupon">' . $val->coupon_code . '</li>
+                   ';
+                }
+                $output .= '</ul>';
+                return $output;
             }
-            return $output;
         }
     }
 }
