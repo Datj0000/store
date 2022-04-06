@@ -9,6 +9,7 @@ use App\Models\Product;
 use App\Models\Category;
 use App\Models\Brand;
 use App\Models\Unit;
+use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
@@ -29,10 +30,12 @@ class ProductController extends Controller
     public function fetchdata():\Illuminate\Http\JsonResponse
     {
         if (Auth::check()) {
-            $data = Product::query()->select('brands.brand_name', 'categories.category_name','units.unit_name', 'products.*')
+            $data = Product::query()->select('brands.brand_name', 'categories.category_name','units.unit_name', 'products.*', DB::raw('SUM(importdetails.detail_quantity) As quantity'))
+                ->leftJoin('importdetails', 'importdetails.product_id', '=', 'products.id')
                 ->join('brands', 'brands.id', '=', 'products.brand_id')
                 ->join('categories', 'categories.id', '=', 'products.category_id')
                 ->join('units', 'units.id', '=', 'products.unit_id')
+                ->groupBy('brands.brand_name','categories.category_name','units.unit_name','products.id','products.product_image','products.product_name','products.brand_id','products.category_id','products.unit_id', 'products.created_at', 'products.updated_at')
                 ->get();
             return response()->json([
                 "data" => $data,
@@ -109,8 +112,13 @@ class ProductController extends Controller
     public function destroy(int $id)
     {
         if (Auth::check()) {
-            Product::query()->whereId($id)->delete();
-            return 1;
+            $check = ImportDetail::query()->where('product_id','=',$id)->first();
+            if($check){
+                return 0;
+            } else{
+                Product::query()->whereId($id)->delete();
+                return 1;
+            }
         }
     }
     public function load(Request $request)
@@ -222,10 +230,10 @@ class ProductController extends Controller
                                 <a href='.$item->detail_drive.' target="_blank" class="btn btn-sm btn-clean btn-icon" title="Link hình ảnh/video">
                                     <i class="lab la-google-drive"></i>
                                 </a>
-                                <span data-id='.$item->id.' class="edit_importdetail btn btn-sm btn-clean btn-icon" title="Sửa">
+                                <span data-id='.$item->id.' class="edit_productdetail btn btn-sm btn-clean btn-icon" title="Sửa">
                                     <i class="la la-edit"></i>
                                 </span>
-                                <span data-import_id='.$item->import_id.' data-id='.$item->id.' class="destroy_importdetail btn btn-sm btn-clean btn-icon" title="Xoá">
+                                <span data-product_id='.$item->product_id.' data-id='.$item->id.' class="destroy_productdetail btn btn-sm btn-clean btn-icon" title="Xoá">
                                     <i class="la la-trash"></i>
                                 </span>
                             </td>';

@@ -501,7 +501,7 @@
                 {
                     'data': null,
                     render: function(data, type, row) {
-                        return formatter.format(row.import_price);
+                        return formatter.format(row.total);
                     }
                 },
                 {
@@ -513,7 +513,7 @@
                 {
                     'data': null,
                     render: function(data, type, row) {
-                        return formatter.format(row.import_price + row.import_fee_ship);
+                        return formatter.format(row.total + row.import_fee_ship);
                     }
                 },
                 {
@@ -532,7 +532,7 @@
 									<ul class="nav nav-hoverable flex-column">\
 							    		<li data-toggle="modal" data-target="#exampleModalSizeSm3" data-id='${row.id}' class="add_product_import nav-item"><a class="nav-link" href="#"><i class="nav-icon la la-edit"></i><span class="nav-text">Thêm sản phẩm</span></a></li>\
 							    		<li onclick="load_importdetail(${row.id})" data-toggle="modal" data-target="#exampleModalSizeSm5" class="nav-item"><a class="nav-link" href="#"><i class="nav-icon la la-leaf"></i><span class="nav-text">Danh sách</span></a></li>\
-							    		<li class="nav-item"><a class="nav-link" href="#"><i class="nav-icon la la-print"></i><span class="nav-text">In hoá đơn</span></a></li>\
+							    		<li class="nav-item"><a class="nav-link" target="_blank" href="print-import/${row.id}"><i class="nav-icon la la-print"></i><span class="nav-text">In hoá đơn</span></a></li>\
 									</ul>\
 							  	</div>\
 							</div>\

@@ -58,7 +58,7 @@
                             </div>
                         </div>
                         <div class="card-footer">
-                            <button id="create_user" type="button" class="btn btn-primary mr-2">Lưu</button>
+                            <button id="create_user" type="button" class="btn btn-primary mr-2">Thêm mới</button>
                             <button type="reset" class="btn btn-secondary">Nhập lại</button>
                         </div>
                     </form>

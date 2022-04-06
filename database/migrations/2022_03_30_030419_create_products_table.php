@@ -20,8 +20,6 @@ return new class extends Migration
             $table->integer('category_id');
             $table->integer('brand_id');
             $table->integer('unit_id');
-            $table->integer('product_soldout')->default(0);
-            $table->integer('product_quantity')->default(0);
             $table->timestamps();
         });
     }

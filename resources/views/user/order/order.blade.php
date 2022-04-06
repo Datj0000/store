@@ -120,30 +120,7 @@
                     <form class="form" id="form_edit_order">
                         <div class="card-body">
                             <input type="hidden" id="edit_order_id">
-                            <div class="form-group">
-                                <label>Họ và tên:</label>
-                                <input name="name" type="text" class="form-control form-control-solid" id="edit_order_name" placeholder="Họ và tên" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==255) return false;" />
-                            </div>
-                            <div class="form-group">
-                                <label>Số điện thoại:</label>
-                                <input name="phone" type="text" class="form-control form-control-solid" id="edit_order_phone" placeholder="Số điện thoại" />
-                            </div>
-                            <div class="form-group">
-                                <label>Địa chỉ:</label>
-                                <input name="address" type="text" class="form-control form-control-solid" id="edit_order_address" placeholder="Địa chỉ" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==255) return false;"/>
-                            </div>
-                            @if(Auth::user()->role <= 1)
-                                <div class="form-group">
-                                    <label>Loại đơn hàng:</label>
-                                    <select name="role" id="edit_order_role" class="form-control">
-                                        <option value disabled selected hidden>Chọn loại đơn hàng</option>
-                                        <option value="0">đơn hàng thường</option>
-                                        <option value="1">đơn hàng vip</option>
-                                    </select>
-                                </div>
-                            @else
-                                <input type="hidden" name="role" id="edit_order_role">
-                            @endif
+
                         </div>
                         <div class="card-footer">
                             <button id="update_order" type="button" class="btn btn-primary mr-2">Lưu</button>
@@ -192,6 +169,7 @@
                     },
                 })
                 .then(function (response) {
+                    console.log(response.data)
                     $('#search_coupon').fadeIn();
                     $('#search_coupon').html(response.data);
                 });

@@ -10,6 +10,9 @@ use App\Models\Product;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\App;
+//use Dompdf\Dompdf;
 
 class ImportController extends Controller
 {
@@ -34,9 +37,11 @@ class ImportController extends Controller
     public function fetchdata():\Illuminate\Http\JsonResponse
     {
         if (Auth::check()) {
-            $data = Import::query()->select('suppliers.supplier_name', 'imports.*')
+            $data = Import::query()->select('suppliers.supplier_name', DB::raw('SUM(importdetails.detail_import_price) As total'), 'imports.*')
+                ->leftJoin('importdetails', 'importdetails.import_id', '=', 'imports.id')
                 ->join('suppliers', 'suppliers.id', '=', 'imports.supplier_id')
-                ->get();
+                ->groupBy('suppliers.supplier_name','imports.id','imports.import_fee_ship','imports.supplier_id', 'imports.created_at', 'imports.updated_at')
+                ->orderBy('id', 'Desc')->get();
             return response()->json([
                 "data" => $data,
             ]);
@@ -82,6 +87,23 @@ class ImportController extends Controller
                 Import::query()->whereId($id)->delete();
                 return 1;
             }
+        }
+    }
+
+    public function print(int $id)
+    {
+        if (Auth::check()) {
+            $pdf = App::make('dompdf.wrapper');
+            $pdf->loadHTML($this->print_convert($id));
+            return $pdf->stream();
+        }
+    }
+    public function print_convert(int $id)
+    {
+        if (Auth::check()) {
+            $import = Import::query()->whereId($id)->first();
+            $output = "<h4>Thông tin khách hàng</h4>";
+            return $output;
         }
     }
 }

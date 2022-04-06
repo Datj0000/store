@@ -234,9 +234,6 @@
                     },
                     email: {
                         validators: {
-                            notEmpty: {
-                                message: 'Vui lòng điền thông tin'
-                            },
                             emailAddress: {
                                 message: 'Vui lòng kiểm tra email'
                             }
@@ -244,9 +241,6 @@
                     },
                     mst: {
                         validators: {
-                            notEmpty: {
-                                message: 'Vui lòng điền thông tin'
-                            },
                             stringLength: {
                                 min: 10,
                                 message: 'Vui lòng kiểm tra lại mã số thuê',
@@ -298,9 +292,6 @@
                     },
                     email: {
                         validators: {
-                            notEmpty: {
-                                message: 'Vui lòng điền thông tin'
-                            },
                             emailAddress: {
                                 message: 'Vui lòng kiểm tra email'
                             }
@@ -308,9 +299,6 @@
                     },
                     mst: {
                         validators: {
-                            notEmpty: {
-                                message: 'Vui lòng điền thông tin'
-                            },
                             stringLength: {
                                 min: 10,
                                 message: 'Vui lòng kiểm tra lại mã số thuê',

@@ -243,7 +243,6 @@
                 <th>Thương hiệu</th>
                 <th>Danh mục</th>
                 <th>Đơn vị</th>
-                <th>Bán được</th>
                 <th>Tồn kho</th>
                 <th>Chức năng</th>
             </tr>
@@ -274,13 +273,14 @@
     }
     $(document).ready(function() {
         var i = 0;
+        var formatter = new Intl.NumberFormat();
         var table = $('#kt_datatable').DataTable({
             ajax: 'fetchdata-product',
             columns: [
                 {
                     'data': null,
                     render: function() {
-                        return i += 1
+                        return i += 1.
                     }
                 },
                 {
@@ -323,10 +323,10 @@
                     'data': 'unit_name'
                 },
                 {
-                    'data': 'product_soldout'
-                },
-                {
-                    'data': 'product_quantity'
+                    'data': null,
+                    render: function(data, type, row) {
+                        return formatter.format(row.quantity);
+                    }
                 },
                 {
                     'data': null,
@@ -631,7 +631,7 @@
                             Swal.fire({
                                 icon: "error",
                                 title: "Thất bại",
-                                text: "Đang có đơn hàng dùng sản phẩm này!",
+                                text: "Không thể xoá sản phẩm này!",
                                 showConfirmButton: false,
                                 timer: 1500
                             });
@@ -642,6 +642,163 @@
                     });
                 }
             });
+        });
+        $(document).on('click', '.edit_importdetail', function(e) {
+            e.preventDefault();
+            $('#exampleModalSizeSm4').modal();
+            $('#exampleModalSizeSm4').css("z-index","2000");
+            var id = $(this).data('id');
+            axios({
+                url: 'edit-importdetail/' + id,
+                method: 'GET',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name = "csrf-token" ]').attr('content')
+                },
+            })
+                .then(function (response) {
+                    $('#edit_importdetail_id').val(response.data.id);
+                    $('.view_image').css("background-image", "url(uploads/import/" +response.data.detail_image + ")");
+                    $('#edit_product_id').val(response.data.product_id);
+                    $('#edit_importdetail_import_id').val(response.data.import_id);
+                    $('#edit_importdetail_import_price').val(response.data.detail_import_price);
+                    $('#edit_importdetail_sell_price').val(response.data.detail_sell_price);
+                    $('#edit_importdetail_date_start').val(response.data.detail_date_start);
+                    $('#edit_importdetail_date_end').val(response.data.detail_date_end);
+                    $('#edit_importdetail_quantity').val(response.data.detail_quantity);
+                    $('#edit_importdetail_drive').val(response.data.detail_drive);
+                    $('#edit_importdetail_vat').val(response.data.detail_vat);
+                    validation4.validate();
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        });
+        $(document).on('click', '#update_importdetail', function(e) {
+            e.preventDefault();
+            var id = $('#edit_importdetail_id').val();
+            var import_id = $('#edit_importdetail_import_id').val();
+            var product_id = $('#edit_product_id').val();
+            var detail_image = $('#edit_importdetail_image').get(0).files[0];
+            var detail_import_price = $('#edit_importdetail_import_price').val();
+            var detail_sell_price = $('#edit_importdetail_sell_price').val();
+            var detail_date_start = $('#edit_importdetail_date_start').val();
+            var detail_date_end = $('#edit_importdetail_date_end').val();
+            var detail_quantity = $('#edit_importdetail_quantity').val();
+            var detail_drive = $('#edit_importdetail_drive').val();
+            var detail_vat = $('#edit_importdetail_vat').val();
+            validation4.validate().then(function(status) {
+                if (status == 'Valid') {
+                    var form_data = new FormData();
+                    form_data.append("import_id", import_id);
+                    form_data.append("product_id", product_id);
+                    form_data.append("detail_image", detail_image);
+                    form_data.append("detail_import_price", detail_import_price);
+                    form_data.append("detail_sell_price", detail_sell_price);
+                    form_data.append("detail_date_start", detail_date_start);
+                    form_data.append("detail_date_end", detail_date_end);
+                    form_data.append("detail_quantity", detail_quantity);
+                    form_data.append("detail_drive", detail_drive);
+                    form_data.append("detail_vat", detail_vat);
+                    axios({
+                        url: 'update-importdetail/'+id,
+                        method: 'POST',
+                        data: form_data,
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name = "csrf-token" ]').attr('content'),
+                            'cache': false,
+                            'Content-Type' : false,
+                            'processData': false,
+                        },
+                        withCredentials: true,
+                    })
+                        .then(function (response) {
+                            if (response.data == 1) {
+                                Swal.fire({
+                                    icon: "success",
+                                    title: "Thành công",
+                                    text: "Sửa sản phẩm thành công!",
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                });
+                                i = 0;
+                                table.ajax.reload();
+                                load_importdetail(import_id)
+                            } else if (response.data == 0) {
+                                Swal.fire({
+                                    icon: "error",
+                                    title: "Thất bại",
+                                    text: "Sản phẩm này đã tồn tại!",
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                });
+                            }
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
+                } else {
+                    swal.fire({
+                        text: "Xin lỗi, có vẻ như đã phát hiện thấy một số lỗi, vui lòng thử lại .",
+                        icon: "error",
+                        buttonsStyling: false,
+                        confirmButtonText: "Đồng ý!",
+                        customClass: {
+                            confirmButton: "btn font-weight-bold btn-light-primary"
+                        }
+                    }).then(function () {
+                        KTUtil.scrollTop();
+                    });
+                }
+            });
+        });
+        $(document).on('click', '.destroy_productdetail', function(e) {
+            e.preventDefault();
+            var id = $(this).data('id');
+            var product_id = $(this).data('product_id');
+            Swal.fire({
+                title: "Xoá nhập hàng",
+                text: "Bạn có chắc là muốn xóa sản phẩm không?",
+                icon: "question",
+                showCancelButton: true,
+                confirmButtonText: "Đồng ý!",
+                cancelButtonText: "Không"
+            })
+                .then(function(result) {
+                    if (result.value) {
+                        axios({
+                            url: 'destroy-importdetail/' + id,
+                            method: 'GET',
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name = "csrf-token" ]').attr('content')
+                            },
+                        })
+                            .then(function (response) {
+                                if (response.data == 1) {
+                                    Swal.fire({
+                                        icon: "success",
+                                        title: "Thành công",
+                                        text: "Xoá sản phẩm thành công!",
+                                        showConfirmButton: false,
+                                        timer: 1500
+                                    });
+                                    i = 0;
+                                    table.ajax.reload();
+                                    load_productdetail(product_id)
+                                } else if (response.data == 0) {
+                                    Swal.fire({
+                                        icon: "error",
+                                        title: "Thất bại",
+                                        text: "Đang có đơn hàng dùng sản phẩm này!",
+                                        showConfirmButton: false,
+                                        timer: 1500
+                                    });
+                                }
+                            })
+                            .catch(function (error) {
+                                console.log(error);
+                            });
+                    }
+                });
         });
     })
 </script>

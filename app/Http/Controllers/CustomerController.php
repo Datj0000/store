@@ -78,9 +78,9 @@ class CustomerController extends Controller
     public function autocomplete(Request $request)
     {
         if (Auth::check()) {
-            $customer = Customer::query()
-            ->where('customer_name', 'LIKE', '%' . $request->query . '%')
-            ->where('customer_phone', 'LIKE', '%' . $request->query . '%')->get();
+            $data = $request->all();
+            $customer = Customer::query()->where('customer_name', 'LIKE', '%' . $data['query'] . '%')
+            ->orwhere('customer_phone', 'LIKE', '%' . $data['query'] . '%')->get();
             if ($customer->count() > 0) {
                 $output = '
                 <ul class="dropdown-menu2">';

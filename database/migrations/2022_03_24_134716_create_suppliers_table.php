@@ -17,8 +17,8 @@ return new class extends Migration
             $table->id();
             $table->string('supplier_name');
             $table->string('supplier_phone');
-            $table->string('supplier_email');
-            $table->integer('supplier_mst');
+            $table->string('supplier_email')->nullable();
+            $table->bigInteger('supplier_mst')->nullable();
             $table->string('supplier_address');
             $table->string('supplier_information');
             $table->string('supplier_debt')->default(0);

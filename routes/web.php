@@ -98,6 +98,7 @@ Route::group(['middleware' => 'mod'], function(){
     Route::get('/edit-import/{id}',[ImportController::class, 'edit']);
     Route::post('/update-import/{id}',[ImportController::class,'update']);
     Route::get('/destroy-import/{id}',[ImportController::class,'destroy']);
+    Route::get('/print-import/{id}',[ImportController::class,'print']);
 
     //ImportDetail
     Route::get('/fetchdata-importdetail/{id}',[ImportDetailController::class,'fetchdata']);
@@ -105,6 +106,7 @@ Route::group(['middleware' => 'mod'], function(){
     Route::get('/edit-importdetail/{id}',[ImportDetailController::class, 'edit']);
     Route::post('/update-importdetail/{id}',[ImportDetailController::class,'update']);
     Route::get('/destroy-importdetail/{id}',[ImportDetailController::class,'destroy']);
+    Route::get('/barcode',[ImportDetailController::class,'barcode']);
 
     //Coupon
     Route::get('/view-coupon',[CouponController::class,'index']);
