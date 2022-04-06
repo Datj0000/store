@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->integer('import_id');
             $table->integer('product_id');
-            $table->string('detail_image');
+            $table->string('detail_image')->nullable();
             $table->double('detail_import_price');
             $table->double('detail_sell_price');
             $table->date('detail_date_start');

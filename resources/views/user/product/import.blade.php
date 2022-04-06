@@ -612,13 +612,6 @@
         var validation3 = FormValidation.formValidation(
             form3, {
                 fields: {
-                    image: {
-                        validators: {
-                            notEmpty: {
-                                message: 'Vui lòng chọn ảnh cho sản phẩm'
-                            },
-                        }
-                    },
                     product: {
                         validators: {
                             notEmpty: {

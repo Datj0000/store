@@ -132,7 +132,9 @@ class ProductController extends Controller
     public function load_detail(int $id)
     {
         if (Auth::check()) {
-            $detail = ImportDetail::query()->select('products.product_name', 'importdetails.*')
+            $detail = ImportDetail::query()->select('suppliers.supplier_name','suppliers.created_at as supplier_time', 'products.product_name', 'imports.supplier_id', 'importdetails.*')
+                ->join('imports', 'imports.id', '=', 'importdetails.import_id')
+                ->join('suppliers', 'suppliers.id', '=', 'imports.supplier_id')
                 ->join('products', 'products.id', '=', 'importdetails.product_id')
                 ->where('product_id', $id)->get();
             $output = '
@@ -146,21 +148,23 @@ class ProductController extends Controller
                             if(Auth::user()->role <= 1){
                                 $output .='
                                 <th scope="col">Nhà cung cấp</th>
-                                <th scope="col">Giá nhập</th>
                                 <th scope="col">VAT</th>
+                                <th scope="col">Giá nhập</th>
                                 ';
                             }
                             $output .='
-                            <th scope="col">Giá bán</th>
-                            <th scope="col">Số lượng</th>
-                            <th scope="col">Bảo hành từ</th>
-                            <th scope="col">Bảo hành đến</th>
-                            ';
+                                <th scope="col">Giá bán</th>
+                                <th scope="col">Số lượng</th>';
+                            if(Auth::user()->role <= 1){
+                                $output .='<th scope="col">Thời gian nhập</th>';
+                            }
+                            $output .='
+                                <th scope="col">Bảo hành từ</th>
+                                <th scope="col">Bảo hành đến</th>';
                             if(Auth::user()->role <= 1){
                                 $output .='<th scope="col">Chức năng</th>';
                             }
                             $output .='
-
                         </tr>
                     </thead>
                     <tbody>
@@ -176,35 +180,44 @@ class ProductController extends Controller
                     $output .= '
                         <tr>
                             <td scope="row">' . $i . '</td>';
-                    if($item->detail_image){
-                        $output .='
-                                <td>
-                                    <div class="product__shape">
-                                        <img class="product__img" src="'.url('uploads/import/'.$item->detail_image.'').'">
-                                    </div>
-                                </td>';
-                    }else {
-                        $output .='
-                                <td>
-                                    <div class="product__shape">
-                                        <img class="product__img" src="'.url('asset/media/users/noimage.png').'">
-                                    </div>
-                                </td>';
-                    }
-                    $output .='
-                            <td>'.$item->product_name.'</td>
-                            <td>'.number_format($item->detail_import_price, 0, ',', '.').'đ'.'</td>
-                            <td>'.number_format($item->detail_sell_price, 0, ',', '.').'đ'.'</td>
-                            <td>'.$item->detail_quantity.'</td>';
+                            if($item->detail_image){
+                                $output .='
+                                    <td>
+                                        <div class="product__shape">
+                                            <img class="product__img" src="'.url('uploads/import/'.$item->detail_image.'').'">
+                                        </div>
+                                    </td>';
+                            }else {
+                                $output .='
+                                    <td>
+                                        <div class="product__shape">
+                                            <img class="product__img" src="'.url('asset/media/users/noimage.png').'">
+                                        </div>
+                                    </td>';
+                            }
+
+                    $output .='<td>'.$item->product_name.'</td>';
+                            if(Auth::user()->role <= 1){
+                                $output .='<td>'.$item->supplier_name.'</td>';
                                 if($item->detail_vat){
                                     $output .='<td>'.$item->detail_vat.'</td>';
                                 }else {
                                     $output .='<td>Không có</td>';
                                 }
+                                $output .='<td>'.number_format($item->detail_import_price, 0, ',', '.').'đ'.'</td>';
+                            }
+
+                    $output .='
+                            <td>'.number_format($item->detail_sell_price, 0, ',', '.').'đ'.'</td>
+                            <td>'.$item->detail_quantity.'</td>';
+                    if(Auth::user()->role <= 1){
+                        $output .=' <td>'.$item->supplier_time.'</td>';
+                    }
                     $output .='
                             <td>'.$item->detail_date_start.'</td>
-                            <td>'.$item->detail_date_end.'</td>
-                            <td>'.number_format($subtotal, 0, ',', '.').'đ'.'</td>
+                            <td>'.$item->detail_date_end.'</td>';
+                    if(Auth::user()->role <= 1){
+                        $output .='
                             <td>
                                 <a href='.$item->detail_drive.' target="_blank" class="btn btn-sm btn-clean btn-icon" title="Link hình ảnh/video">
                                     <i class="lab la-google-drive"></i>
@@ -215,11 +228,11 @@ class ProductController extends Controller
                                 <span data-import_id='.$item->import_id.' data-id='.$item->id.' class="destroy_importdetail btn btn-sm btn-clean btn-icon" title="Xoá">
                                     <i class="la la-trash"></i>
                                 </span>
-                            </td>
-                        </tr>
-                    ';
+                            </td>';
+                    }
                 }
                 $output .= '
+                            </tr>
                         </tbody>
                     </table>
                 </div>';
