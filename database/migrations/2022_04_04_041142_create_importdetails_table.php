@@ -17,13 +17,15 @@ return new class extends Migration
             $table->id();
             $table->integer('import_id');
             $table->integer('product_id');
+            $table->text('barcodes');
+            $table->bigInteger('product_code');
             $table->string('detail_image')->nullable();
             $table->double('detail_import_price');
             $table->double('detail_sell_price');
             $table->date('detail_date_start');
             $table->date('detail_date_end');
             $table->integer('detail_quantity');
-            $table->string('detail_drive');
+            $table->string('detail_drive')->nullable();
             $table->string('detail_vat')->nullable();
             $table->timestamps();
         });

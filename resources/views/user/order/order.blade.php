@@ -35,7 +35,7 @@
     <div class="card-header flex-wrap py-5">
         <div class="card-title">
             <h3 class="card-label">Danh sách đơn hàng
-                <span class="d-block text-muted pt-2 font-size-sm">Quả lý danh sách đơn hàng</span>
+                <span class="d-block text-muted pt-2 font-size-sm">Quản lý danh sách đơn hàng</span>
             </h3>
         </div>
         <div class="card-toolbar">
@@ -53,7 +53,7 @@
     </div>
     {{-- Add --}}
     <div class="modal fade" id="exampleModalPopovers2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Thêm đơn hàng</h5>
@@ -66,8 +66,8 @@
                         <div class="card-body">
                             <div class="form-group">
                                 <label>Khách hàng:</label>
-                                <input type="hidden" name="" id="customer_id">
-                                <input name="customer" type="text" class="form-control form-control-solid" id="customer_name" placeholder="Họ và tên" autocomplete="off" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==255) return false;"/>
+                                <input type="hidden" name="customer" id="customer_id">
+                                <input type="text" class="form-control form-control-solid" id="customer_name" placeholder="Họ và tên" autocomplete="off" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==255) return false;"/>
                                 <div id="search_customer"></div>
                             </div>
                             {{-- <div class="form-group">
@@ -97,6 +97,24 @@
                                     <div id="search_coupon"></div>
                                 </div>
                             @endif
+                            <div class="form-group">
+                                <label>Tìm kiếm sản phẩm theo mã vạch hoặc tên sản phẩm:</label>
+                                <input type="text" class="form-control form-control-solid" id="order_fee_ship" autocomplete="off" placeholder="Tìm kiếm" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==20) return false;"/>
+                                <div id="search_product"></div>
+                            </div>
+                            <table class="table table-separate table-head-custom table-checkable display nowrap" cellspacing="0" width="100%" id="table_order_detail">
+                                <thead>
+                                    <tr>
+                                        <th>STT</th>
+                                        <th>Hình ảnh</th>
+                                        <th>Tên sản phẩm</th>
+                                        <th>Giá bán</th>
+                                        <th>Số lượng</th>
+                                        <th>Thành tiền</th>
+                                    </tr>
+                                    <div id="load_order_detail"></div>
+                                </thead>
+                            </table>
                         </div>
                         <div class="card-footer">
                             <button id="create_order" type="button" class="btn btn-primary mr-2">Thêm mới</button>

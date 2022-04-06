@@ -642,9 +642,6 @@
                     },
                     drive: {
                         validators: {
-                            notEmpty: {
-                                message: 'Vui lòng điền thông tin'
-                            },
                             uri: {
                                 message: 'Vui lòng kiểm tra lại đường dẫn'
                             },
@@ -705,9 +702,6 @@
                     },
                     drive: {
                         validators: {
-                            notEmpty: {
-                                message: 'Vui lòng điền thông tin'
-                            },
                             uri: {
                                 message: 'Vui lòng kiểm tra lại đường dẫn'
                             },
@@ -939,15 +933,26 @@
                     })
                         .then(function (response) {
                             console.log(response.data);
-                            Swal.fire({
-                                icon: "success",
-                                title: "Thành công",
-                                text: "Thêm sản phẩm thành công!",
-                                showConfirmButton: false,
-                                timer: 1500
-                            });
-                            i = 0;
-                            table.ajax.reload();
+                            if (response.data == 1) {
+                                Swal.fire({
+                                    icon: "success",
+                                    title: "Thành công",
+                                    text: "Thêm sản phẩm thành công!",
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                });
+                                i = 0;
+                                table.ajax.reload();
+                                load_importdetail(import_id)
+                            } else if (response.data == 0) {
+                                Swal.fire({
+                                    icon: "error",
+                                    title: "Thất bại",
+                                    text: "Sản phẩm này đã tồn tại!",
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                });
+                            }
                         })
                         .catch(function (error) {
                             console.log(error);

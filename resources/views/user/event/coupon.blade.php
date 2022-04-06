@@ -200,7 +200,7 @@
                 {
                     'data': null,
                     render: function(data, type, row) {
-                        if (row.coupon_condition == 1) {
+                        if (row.coupon_condition == 0) {
                             return `${row.coupon_number} %`;
                         } else {
                             return formatter.format(row.coupon_number);

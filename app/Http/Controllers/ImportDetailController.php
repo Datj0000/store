@@ -2,15 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Brand;
-use App\Models\Category;
 use App\Models\Import;
 use App\Models\ImportDetail;
-use App\Models\Product;
-use App\Models\Supplier;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use Picqer\Barcode\BarcodeGeneratorHTML;
 
 class ImportDetailController extends Controller
 {
@@ -48,7 +45,7 @@ class ImportDetailController extends Controller
                 $total = 0;
                 foreach ($detail as $key => $item) {
                     $i++;
-                    $subtotal = $item->detail_sell_price * $item->detail_quantity;
+                    $subtotal = $item->detail_import_price * $item->detail_quantity;
                     $total += $subtotal;
                     $output .= '
                         <tr>
@@ -131,8 +128,15 @@ class ImportDetailController extends Controller
     public function create(Request $request, int $id)
     {
         if (Auth::check()) {
-            $check = ImportDetail::query()->where('product_id','=', $request->product_id)->first();
+            $check = ImportDetail::query()->where('product_id','=', $request->product_id)->where('import_id','=', $id)->first();
             if (!$check){
+                do {
+                    $product_code = rand(106890122,1000000000);
+                    $check = ImportDetail::query()->where('product_code','=', $product_code)->first();
+                    $generator = new BarcodeGeneratorHTML();
+                    $barcodes = $generator->getBarcode($product_code, $generator::TYPE_STANDARD_2_5, 2, 60);
+                }
+                while ($check);
                 $detail = new ImportDetail();
                 $detail->import_id = $id;
                 $detail->product_id = $request->product_id;
@@ -143,6 +147,8 @@ class ImportDetailController extends Controller
                 $detail->detail_quantity = $request->detail_quantity;
                 $detail->detail_drive = $request->detail_drive;
                 $detail->detail_vat = $request->detail_vat;
+                $detail->product_code = $product_code;
+                $detail->barcodes = $barcodes;
                 $get_image = $request->file('detail_image');
                 if ($get_image) {
                     $get_name_image = $get_image->getClientOriginalName();
