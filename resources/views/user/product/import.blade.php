@@ -158,7 +158,7 @@
                                 <label>Thương hiệu sản phẩm:</label>
                                 <select id="brand_id" name="brand" class="form-control choose">
                                     @if($brand->count() > 0)
-                                        <option value disabled selected hidden>Chọn thương hiệu sản phẩm</option>
+                                        <option value="" disabled selected hidden>Chọn thương hiệu sản phẩm</option>
                                         @foreach ($brand as $key => $item)
                                             <option value="{{ $item->id }}">{{ $item->brand_name }}</option>
                                         @endforeach
@@ -171,7 +171,7 @@
                                 <label>Danh mục sản phẩm:</label>
                                 <select id="category_id" name="category" class="form-control choose">
                                     @if($category->count() > 0)
-                                        <option value disabled selected hidden>Chọn danh mục sản phẩm</option>
+                                        <option value="" disabled selected hidden>Chọn danh mục sản phẩm</option>
                                         @foreach ($category as $key => $item)
                                             <option value="{{ $item->id }}">{{ $item->category_name }}</option>
                                         @endforeach
@@ -397,7 +397,9 @@
                 <th>Mã đơn nhập hàng</th>
                 <th>Thời gian tạo</th>
                 <th>Nhà cung cấp</th>
+                <th>Tổng tiền</th>
                 <th>Phí ship</th>
+                <th>Thành tiền</th>
                 <th>Chức năng</th>
             </tr>
             </thead>
@@ -430,7 +432,7 @@
         $('.choose').on('change', function() {
             var brand_id = $('#brand_id').val();
             var category_id = $('#category_id').val();
-            if(brand_id != "" && category_id!= ""){
+            if(brand_id != "" && category_id != ""){
                 axios({
                     url: "load-product",
                     method: "POST",
@@ -499,7 +501,19 @@
                 {
                     'data': null,
                     render: function(data, type, row) {
+                        return formatter.format(row.import_price);
+                    }
+                },
+                {
+                    'data': null,
+                    render: function(data, type, row) {
                         return formatter.format(row.import_fee_ship);
+                    }
+                },
+                {
+                    'data': null,
+                    render: function(data, type, row) {
+                        return formatter.format(row.import_price + row.import_fee_ship);
                     }
                 },
                 {
@@ -512,11 +526,11 @@
                         return `\
                             <div class="dropdown dropdown-inline">\
 								<a href="javascript:;" class="btn btn-sm btn-clean btn-icon" data-toggle="dropdown">\
-	                                <i class="la la-cog"></i>\
+	                                <i class="la la-list"></i>\
 	                            </a>\
 							  	<div class="dropdown-menu dropdown-menu-sm dropdown-menu-right">\
 									<ul class="nav nav-hoverable flex-column">\
-							    		<li data-toggle="modal" data-target="#exampleModalSizeSm3" class="nav-item"><a class="nav-link" href="#"><i class="nav-icon la la-edit"></i><span class="nav-text">Thêm sản phẩm</span></a></li>\
+							    		<li data-toggle="modal" data-target="#exampleModalSizeSm3" data-id='${row.id}' class="add_product_import nav-item"><a class="nav-link" href="#"><i class="nav-icon la la-edit"></i><span class="nav-text">Thêm sản phẩm</span></a></li>\
 							    		<li onclick="load_importdetail(${row.id})" data-toggle="modal" data-target="#exampleModalSizeSm5" class="nav-item"><a class="nav-link" href="#"><i class="nav-icon la la-leaf"></i><span class="nav-text">Danh sách</span></a></li>\
 							    		<li class="nav-item"><a class="nav-link" href="#"><i class="nav-icon la la-print"></i><span class="nav-text">In hoá đơn</span></a></li>\
 									</ul>\
@@ -889,6 +903,11 @@
                     }
                 });
         });
+        $(document).on('click', '.add_product_import', function(e) {
+            e.preventDefault();
+            var id = $(this).data('id');
+            $('#import_id').val(id)
+        });
         $(document).on('click', '#create_importdetail', function(e) {
             e.preventDefault();
             var id = $('#import_id').val();
@@ -934,6 +953,8 @@
                                 showConfirmButton: false,
                                 timer: 1500
                             });
+                            i = 0;
+                            table.ajax.reload();
                         })
                         .catch(function (error) {
                             console.log(error);
@@ -956,7 +977,7 @@
         $(document).on('click', '.edit_importdetail', function(e) {
             e.preventDefault();
             $('#exampleModalSizeSm4').modal();
-            $('#exampleModalSizeSm4').css("z-index","100000000");
+            $('#exampleModalSizeSm4').css("z-index","2000");
             var id = $(this).data('id');
             axios({
                 url: 'edit-importdetail/' + id,
@@ -1030,6 +1051,8 @@
                                         showConfirmButton: false,
                                         timer: 1500
                                     });
+                                    i = 0;
+                                    table.ajax.reload();
                                     load_importdetail(import_id)
                                 } else if (response.data == 0) {
                                     Swal.fire({
@@ -1089,6 +1112,8 @@
                                         showConfirmButton: false,
                                         timer: 1500
                                     });
+                                    i = 0;
+                                    table.ajax.reload();
                                     load_importdetail(import_id)
                                 } else if (response.data == 0) {
                                     Swal.fire({

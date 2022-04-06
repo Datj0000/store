@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->integer('supplier_id');
             $table->double('import_fee_ship');
+            $table->double('import_price')->default(0);
             $table->timestamps();
         });
     }

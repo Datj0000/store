@@ -128,7 +128,7 @@ class ImportDetailController extends Controller
         }
     }
 
-    public function create(Request $request, int $id):int
+    public function create(Request $request, int $id)
     {
         if (Auth::check()) {
             $check = ImportDetail::query()->where('product_id','=', $request->product_id)->first();
@@ -152,6 +152,9 @@ class ImportDetailController extends Controller
                     $detail->detail_image = $new_image;
                 }
                 $detail->save();
+                $import = Import::query()->whereId($id)->first();
+                $import->import_price += $request->detail_import_price;
+                $import->save();
                 return 1;
             } else{
                 return 0;
@@ -167,12 +170,16 @@ class ImportDetailController extends Controller
         }
     }
 
-    public function update(Request $request,int $id):int
+    public function update(Request $request,int $id)
     {
         if (Auth::check()) {
             $check = ImportDetail::query()->where('product_id','=', $request->product_id)->where('import_id','!=', $request->import_id)->first();
             if (!$check){
                 $detail = ImportDetail::query()->whereId($id)->first();
+                $import = Import::query()->whereId($request->import_id)->first();
+                $import->import_price -= $detail->detail_import_price;
+                $import->import_price += $request->detail_import_price;
+                $import->save();
                 $detail->product_id = $request->product_id;
                 $detail->detail_import_price = $request->detail_import_price;
                 $detail->detail_sell_price = $request->detail_sell_price;
@@ -206,7 +213,11 @@ class ImportDetailController extends Controller
     public function destroy(int $id)
     {
         if (Auth::check()) {
-            ImportDetail::query()->whereId($id)->delete();
+            $detail = ImportDetail::query()->whereId($id)->first();
+            $import = Import::query()->whereId($id)->first();
+            $import->import_price -= $detail->detail_import_price;
+            $import->save();
+            $detail->delete();
             return 1;
         }
     }

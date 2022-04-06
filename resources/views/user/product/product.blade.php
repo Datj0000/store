@@ -1,11 +1,11 @@
 <style>
-    .comment__shape {
+    .product__shape {
         width: 5rem;
         height: 5rem;
         border: 1px solid #fff4de;
     }
 
-    .comment__img {
+    .product__img {
         width: 100%;
         height: 100%
     }
@@ -214,6 +214,24 @@
             </div>
         </div>
     </div>
+    {{-- View product detail --}}
+    <div class="modal fade" id="exampleModalSizeSm" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel2"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Danh sách sản phẩm trong kho</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <i aria-hidden="true" class="ki ki-close"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="load_productdetail"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
     <div class="card-body">
         <table class="table table-separate table-head-custom table-checkable display nowrap" cellspacing="0" width="100%" id="kt_datatable">
             <thead>
@@ -235,6 +253,25 @@
 </div>
 <script src="{{ asset('asset/js/pages/crud/file-upload/image-input.js') }}"></script>
 <script type="Text/javascript">
+    function load_productdetail(id){
+        axios.get('load-productdetail/' + id)
+            .then(function(response) {
+                $("#load_productdetail").html(response.data);
+                $('#responsive2').DataTable({
+                    "ordering": false,
+                    "responsive": true,
+                    "searching": false,
+                    "bPaginate": false,
+                    "bLengthChange": false,
+                    "bFilter": true,
+                    "bInfo": false,
+                    "bAutoWidth": false
+                });
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }
     $(document).ready(function() {
         var i = 0;
         var table = $('#kt_datatable').DataTable({
@@ -254,14 +291,14 @@
                     render: function(data, type, row) {
                         if(row.product_image){
                             return `\
-                            <div class="comment__shape">
-                                <img class="comment__img" src="{{url('uploads/product/${row.product_image}')}}">
+                            <div class="product__shape">
+                                <img class="product__img" src="{{url('uploads/product/${row.product_image}')}}">
                             </div>
                             `
                         }else {
                             return `\
-                            <div class="comment__shape">
-                                <img class="comment__img" src="{{url('asset/media/users/noimage.png')}}">
+                            <div class="product__shape">
+                                <img class="product__img" src="{{url('asset/media/users/noimage.png')}}">
                             </div>
                             `
                         }
@@ -299,6 +336,9 @@
                     autoHide: false,
                     render: function(data, type, row) {
                         return `\
+                            <span onclick="load_productdetail(${row.id})" data-toggle="modal" data-target="#exampleModalSizeSm" class="btn btn-sm btn-clean btn-icon" title="Danh sách sản phẩm trong kho">\
+								<i class="la la-list"></i>\
+							</span>\
                             <span data-toggle="modal" data-target="#exampleModalPopovers2" data-id='${row.id}' class="edit_product btn btn-sm btn-clean btn-icon" title="Sửa">\
 								<i class="la la-edit"></i>\
 							</span>\

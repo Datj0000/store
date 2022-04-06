@@ -86,13 +86,10 @@ Route::group(['middleware' => 'mod'], function(){
     Route::get('/destroy-unit/{id}',[UnitController::class,'destroy']);
 
     //Product
-    Route::get('/view-product',[ProductController::class,'index']);
-    Route::get('/fetchdata-product',[ProductController::class,'fetchdata']);
     Route::post('/create-product',[ProductController::class,'create']);
     Route::get('/edit-product/{id}',[ProductController::class, 'edit']);
     Route::post('/update-product/{id}',[ProductController::class,'update']);
     Route::get('/destroy-product/{id}',[ProductController::class,'destroy']);
-    Route::post('/load-product',[ProductController::class,'load']);
 
     //Import
     Route::get('/view-import',[ImportController::class,'index']);
@@ -119,6 +116,12 @@ Route::group(['middleware' => 'mod'], function(){
     Route::get('/destroy-coupon/{id}',[CouponController::class,'destroy']);
     Route::post('/autocomplete-coupon',[CouponController::class,'autocomplete']);
 });
+//Product
+Route::get('/view-product',[ProductController::class,'index']);
+Route::get('/fetchdata-product',[ProductController::class,'fetchdata']);
+Route::post('/load-product',[ProductController::class,'load']);
+Route::get('/load-productdetail/{id}',[ProductController::class,'load_detail']);
+
 //Customer
 Route::get('/view-customer',[CustomerController::class,'index']);
 Route::get('/fetchdata-customer',[CustomerController::class,'fetchdata']);

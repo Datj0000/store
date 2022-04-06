@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ImportDetail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Product;
@@ -123,7 +124,107 @@ class ProductController extends Controller
                 }
             }
             else{
-                $output .= '<option value="">Không có sản phẩm ở danh mục và thương hiệu này</option>';
+                $output = '<option value="">Không có sản phẩm ở danh mục và thương hiệu này</option>';
+            }
+            return $output;
+        }
+    }
+    public function load_detail(int $id)
+    {
+        if (Auth::check()) {
+            $detail = ImportDetail::query()->select('products.product_name', 'importdetails.*')
+                ->join('products', 'products.id', '=', 'importdetails.product_id')
+                ->where('product_id', $id)->get();
+            $output = '
+            <div class="card-body">
+            <table class="table table-separate table-head-custom table-checkable display nowrap" cellspacing="0" width="100%" id="responsive2">
+                    <thead>
+                        <tr>
+                            <th scope="col">STT</th>
+                            <th scope="col">Hình ảnh</th>
+                            <th scope="col">Tên sản phẩm</th>';
+                            if(Auth::user()->role <= 1){
+                                $output .='
+                                <th scope="col">Nhà cung cấp</th>
+                                <th scope="col">Giá nhập</th>
+                                <th scope="col">VAT</th>
+                                ';
+                            }
+                            $output .='
+                            <th scope="col">Giá bán</th>
+                            <th scope="col">Số lượng</th>
+                            <th scope="col">Bảo hành từ</th>
+                            <th scope="col">Bảo hành đến</th>
+                            ';
+                            if(Auth::user()->role <= 1){
+                                $output .='<th scope="col">Chức năng</th>';
+                            }
+                            $output .='
+
+                        </tr>
+                    </thead>
+                    <tbody>
+            ';
+            $detail_count = $detail->count();
+            if ($detail_count > 0) {
+                $i = 0;
+                $total = 0;
+                foreach ($detail as $key => $item) {
+                    $i++;
+                    $subtotal = $item->detail_sell_price * $item->detail_quantity;
+                    $total += $subtotal;
+                    $output .= '
+                        <tr>
+                            <td scope="row">' . $i . '</td>';
+                    if($item->detail_image){
+                        $output .='
+                                <td>
+                                    <div class="product__shape">
+                                        <img class="product__img" src="'.url('uploads/import/'.$item->detail_image.'').'">
+                                    </div>
+                                </td>';
+                    }else {
+                        $output .='
+                                <td>
+                                    <div class="product__shape">
+                                        <img class="product__img" src="'.url('asset/media/users/noimage.png').'">
+                                    </div>
+                                </td>';
+                    }
+                    $output .='
+                            <td>'.$item->product_name.'</td>
+                            <td>'.number_format($item->detail_import_price, 0, ',', '.').'đ'.'</td>
+                            <td>'.number_format($item->detail_sell_price, 0, ',', '.').'đ'.'</td>
+                            <td>'.$item->detail_quantity.'</td>';
+                                if($item->detail_vat){
+                                    $output .='<td>'.$item->detail_vat.'</td>';
+                                }else {
+                                    $output .='<td>Không có</td>';
+                                }
+                    $output .='
+                            <td>'.$item->detail_date_start.'</td>
+                            <td>'.$item->detail_date_end.'</td>
+                            <td>'.number_format($subtotal, 0, ',', '.').'đ'.'</td>
+                            <td>
+                                <a href='.$item->detail_drive.' target="_blank" class="btn btn-sm btn-clean btn-icon" title="Link hình ảnh/video">
+                                    <i class="lab la-google-drive"></i>
+                                </a>
+                                <span data-id='.$item->id.' class="edit_importdetail btn btn-sm btn-clean btn-icon" title="Sửa">
+                                    <i class="la la-edit"></i>
+                                </span>
+                                <span data-import_id='.$item->import_id.' data-id='.$item->id.' class="destroy_importdetail btn btn-sm btn-clean btn-icon" title="Xoá">
+                                    <i class="la la-trash"></i>
+                                </span>
+                            </td>
+                        </tr>
+                    ';
+                }
+                $output .= '
+                        </tbody>
+                    </table>
+                </div>';
+            } else {
+                $output .= '<tr style="text-align: center" ><td colspan="11">Trong kho chưa có sản phẩm này</td></tr>';
             }
             return $output;
         }
