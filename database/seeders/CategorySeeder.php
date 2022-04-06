@@ -54,6 +54,9 @@ class CategorySeeder extends Seeder
             [
                 'category_name' => 'Loa',
             ],
+            [
+                'category_name' => 'Lót chuột',
+            ],
         );
     }
 }

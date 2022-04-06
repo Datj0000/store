@@ -16,13 +16,12 @@ class SupplierSeeder extends Seeder
     {
         Supplier::query()->create(
             [
-                'unit_name' => 'Cái',
-            ],
-            [
-                'unit_name' => 'Bộ',
-            ],
-            [
-                'unit_name' => 'Mét',
+                'supplier_name' => 'Cái',
+                'supplier_phone' => 'Bộ',
+                'supplier_email' => 'Mét',
+                'supplier_mst' => '5700133674',
+                'supplier_address' => 'Hạ Long',
+                'supplier_information' => 'MB bank 999999993599',
             ],
         );
     }
