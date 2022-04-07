@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\ImportDetail;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Product;
@@ -137,6 +138,28 @@ class ProductController extends Controller
             return $output;
         }
     }
+    public function autocomplete(Request $request)
+    {
+        if (Auth::check()) {
+            $data = $request->all();
+            $product = Product::query()->where('product_name', 'LIKE', '%' . $data['query'] . '%')
+                ->join('brands', 'brands.id', '=', 'products.brand_id')
+                ->join('importdetails', 'importdetails.product_id', '=', 'products.id')
+                ->orwhere('product_code', 'LIKE', '%' . $data['query'] . '%')->get();
+            if ($product->count() > 0) {
+                $output = '
+                    <ul class="dropdown-menu2">';
+                        foreach ($product as $key => $val) {
+                            $output .= '
+                                    <li class="li_search_product" data-code="'.$val->product_code.'">' . $val->product_code . ' - ' . $val->brand_name . '  ' . $val->product_name . ' - Bảo hành đến: ' . Carbon::parse($val->detail_date_end)->format('d/m/Y') . ' - Giá: ' . number_format($val->detail_sell_price, 0, ',', '.') . ' đ' . '</li>
+                               ';
+                        }
+                $output .= '</ul>';
+                return $output;
+            }
+        }
+    }
+
     public function load_detail(int $id)
     {
         if (Auth::check()) {

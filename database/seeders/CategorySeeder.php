@@ -46,7 +46,7 @@ class CategorySeeder extends Seeder
                 'category_name' => 'Webcam',
             ],
             [
-                'category_name' => 'Nguồn máy tinh',
+                'category_name' => 'Nguồn máy tính',
             ],
             [
                 'category_name' => 'Case',

@@ -11,7 +11,6 @@ use App\Models\Supplier;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\App;
 //use Dompdf\Dompdf;
 
 class ImportController extends Controller
@@ -93,17 +92,17 @@ class ImportController extends Controller
     public function print(int $id)
     {
         if (Auth::check()) {
-            $pdf = App::make('dompdf.wrapper');
-            $pdf->loadHTML($this->print_convert($id));
-            return $pdf->stream();
-        }
-    }
-    public function print_convert(int $id)
-    {
-        if (Auth::check()) {
             $import = Import::query()->whereId($id)->first();
-            $output = "<h4>Thông tin khách hàng</h4>";
-            return $output;
+            $supplier = Supplier::query()->whereId($import->supplier_id)->first();
+            $detail = ImportDetail::query()->select('products.product_name', 'importdetails.*')
+                ->join('products', 'products.id', '=', 'importdetails.product_id')
+                ->where('import_id', $id)->get();
+            $pdf = \PDF::loadView('pdf.import', [
+                'import' => $import,
+                'supplier' => $supplier,
+                'details' => $detail
+            ]);
+            return $pdf->stream();
         }
     }
 }

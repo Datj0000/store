@@ -378,8 +378,7 @@
                 }
             }
         );
-
-        $(document).on('click', '#create_coupon', function(e) {
+        $('#create_coupon').click(function(e) {
             e.preventDefault();
             var coupon_name = $('#coupon_name').val();
             var coupon_code = $('#coupon_code').val();
@@ -432,24 +431,21 @@
                             coupon_status: coupon_status,
                         },
                     })
-                        .then(function (response) {
-                            if (response.data == 1) {
-                                Swal.fire({
-                                    icon: "success",
-                                    title: "Thành công",
-                                    text: "Thêm mã giảm giá thành công!",
-                                    showConfirmButton: false,
-                                    timer: 1500
-                                });
-                                i = 0;
-                                table.ajax.reload();
-                            } else if (response.data == 0) {
-                                Swal.fire("Thất bại", "Mã giảm giá đã nhập rồi!", "error");
-                            }
-                        })
-                        .catch(function (error) {
-                            console.log(error);
-                        });
+                    .then(function (response) {
+                        if (response.data == 1) {
+                            Swal.fire({
+                                icon: "success",
+                                title: "Thành công",
+                                text: "Thêm mã giảm giá thành công!",
+                                showConfirmButton: false,
+                                timer: 1500
+                            });
+                            i = 0;
+                            table.ajax.reload();
+                        } else if (response.data == 0) {
+                            Swal.fire("Thất bại", "Mã giảm giá đã nhập rồi!", "error");
+                        }
+                    });
                 }
             });
         });
@@ -506,7 +502,7 @@
                     console.log(error);
                 });
         });
-        $(document).on('click', '#update_coupon', function(e) {
+        $('#update_coupon').click(function(e) {
             e.preventDefault();
             var id = $('#edit_coupon_id').val();
             var coupon_name = $('#edit_coupon_name').val();
@@ -572,9 +568,6 @@
                             } else if (response.data == 0) {
                                 Swal.fire("Thất bại", "mã giảm giá đã trùng tên!", "error");
                             }
-                        })
-                        .catch(function (error) {
-                            console.log(error);
                         });
                 }
             });
@@ -599,30 +592,30 @@
                                 'X-CSRF-TOKEN': $('meta[name = "csrf-token" ]').attr('content')
                             },
                         })
-                            .then(function (response) {
-                                if (response.data == 1) {
-                                    Swal.fire({
-                                        icon: "success",
-                                        title: "Thành công",
-                                        text: "Xoá mã giảm giá thành công!",
-                                        showConfirmButton: false,
-                                        timer: 1500
-                                    });
-                                    i = 0;
-                                    table.ajax.reload();
-                                } else if (response.data == 0) {
-                                    Swal.fire({
-                                        icon: "error",
-                                        title: "Thất bại",
-                                        text: "Đang có sản phẩm dùng mã giảm giá này!",
-                                        showConfirmButton: false,
-                                        timer: 1500
-                                    });
-                                }
-                            })
-                            .catch(function (error) {
-                                console.log(error);
-                            });
+                        .then(function (response) {
+                            if (response.data == 1) {
+                                Swal.fire({
+                                    icon: "success",
+                                    title: "Thành công",
+                                    text: "Xoá mã giảm giá thành công!",
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                });
+                                i = 0;
+                                table.ajax.reload();
+                            } else if (response.data == 0) {
+                                Swal.fire({
+                                    icon: "error",
+                                    title: "Thất bại",
+                                    text: "Đang có sản phẩm dùng mã giảm giá này!",
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                });
+                            }
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
                     }
                 });
         });

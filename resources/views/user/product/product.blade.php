@@ -439,7 +439,7 @@
                 }
             }
         );
-        $(document).on('click', '#create_product', function(e) {
+        $('#create_product').click(function(e) {
             e.preventDefault();
             var product_image = $('#product_image').get(0).files[0];
             var product_name = $('#product_name').val();
@@ -487,9 +487,6 @@
                                 timer: 1500
                             });
                         }
-                    })
-                    .catch(function (error) {
-                        console.log(error);
                     });
                 } else {
                     swal.fire({
@@ -524,12 +521,9 @@
                     $('#edit_brand_id').val(response.data.brand_id);
                     $('#edit_unit_id').val(response.data.unit_id);
                     validation2.validate();
-                })
-                .catch(function (error) {
-                    console.log(error);
                 });
         });
-        $(document).on('click', '#update_product', function(e) {
+        $('#update_product').click(function(e) {
             e.preventDefault();
             var id = $('#edit_product_id').val();
             var product_image = $('#edit_product_image').get(0).files[0];
@@ -636,9 +630,6 @@
                                 timer: 1500
                             });
                         }
-                    })
-                    .catch(function (error) {
-                        console.log(error);
                     });
                 }
             });
@@ -673,7 +664,7 @@
                     console.log(error);
                 });
         });
-        $(document).on('click', '#update_importdetail', function(e) {
+        $('#update_importdetail').click(function(e) {
             e.preventDefault();
             var id = $('#edit_importdetail_id').val();
             var import_id = $('#edit_importdetail_import_id').val();
@@ -732,9 +723,6 @@
                                     timer: 1500
                                 });
                             }
-                        })
-                        .catch(function (error) {
-                            console.log(error);
                         });
                 } else {
                     swal.fire({
@@ -793,9 +781,6 @@
                                         timer: 1500
                                     });
                                 }
-                            })
-                            .catch(function (error) {
-                                console.log(error);
                             });
                     }
                 });

@@ -406,6 +406,7 @@
         </table>
     </div>
 </div>
+
 <script src="{{ asset('asset/js/pages/crud/forms/widgets/bootstrap-datepicker.js') }}"></script>
 <script src="{{ asset('asset/js/pages/crud/file-upload/image-input.js') }}"></script>
 <script type="text/javascript">
@@ -728,7 +729,7 @@
                 }
             }
         );
-        $(document).on('click', '#create_import', function(e) {
+        $('#create_import').click(function(e) {
             e.preventDefault();
             var supplier_id = $('#supplier_id').val();
             var import_fee_ship = $('#import_fee_ship').val();
@@ -757,9 +758,6 @@
                             table.ajax.reload();
                             $('#exampleModalSizeSm3').modal();
                             $('#import_id').val(response.data);
-                        })
-                        .catch(function (error) {
-                            console.log(error);
                         });
                 } else {
                     swal.fire({
@@ -791,9 +789,6 @@
                     $('#edit_supplier_id').val(response.data.supplier_id);
                     $('#edit_import_fee_ship').val(response.data.import_fee_ship);
                     validation2.validate();
-                })
-                .catch(function (error) {
-                    console.log(error);
                 });
         });
         $(document).on('click', '#update_import', function(e) {
@@ -824,9 +819,6 @@
                             });
                             i = 0;
                             table.ajax.reload();
-                        })
-                        .catch(function (error) {
-                            console.log(error);
                         });
                 } else {
                     swal.fire({
@@ -883,9 +875,6 @@
                                         timer: 1500
                                     });
                                 }
-                            })
-                            .catch(function (error) {
-                                console.log(error);
                             });
                     }
                 });
@@ -895,7 +884,7 @@
             var id = $(this).data('id');
             $('#import_id').val(id)
         });
-        $(document).on('click', '#create_importdetail', function(e) {
+        $('#create_importdetail').click(function(e) {
             e.preventDefault();
             var id = $('#import_id').val();
             var detail_image = $('#importdetail_image').get(0).files[0];
@@ -953,9 +942,6 @@
                                     timer: 1500
                                 });
                             }
-                        })
-                        .catch(function (error) {
-                            console.log(error);
                         });
                 } else {
                     swal.fire({
@@ -997,12 +983,9 @@
                     $('#edit_importdetail_drive').val(response.data.detail_drive);
                     $('#edit_importdetail_vat').val(response.data.detail_vat);
                     validation4.validate();
-                })
-                .catch(function (error) {
-                    console.log(error);
                 });
         });
-        $(document).on('click', '#update_importdetail', function(e) {
+        $('#update_importdetail').click(function(e) {
             e.preventDefault();
             var id = $('#edit_importdetail_id').val();
             var import_id = $('#edit_importdetail_import_id').val();
@@ -1061,9 +1044,6 @@
                                         timer: 1500
                                     });
                                 }
-                        })
-                        .catch(function (error) {
-                            console.log(error);
                         });
                 } else {
                     swal.fire({
@@ -1122,9 +1102,6 @@
                                         timer: 1500
                                     });
                                 }
-                            })
-                            .catch(function (error) {
-                                console.log(error);
                             });
                     }
                 });

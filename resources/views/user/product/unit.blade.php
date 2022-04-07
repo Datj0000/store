@@ -186,8 +186,7 @@
                 }
             }
         );
-
-        $(document).on('click', '#create_unit', function(e) {
+        $('#create_unit').click(function(e) {
             e.preventDefault();
             var unit_name = $('#unit_name').val();
             var unit_desc = $('#unit_desc').val();
@@ -218,9 +217,6 @@
                             } else if (response.data == 0) {
                                 Swal.fire("Thất bại", "Đơn vị đã nhập rồi!", "error");
                             }
-                        })
-                        .catch(function (error) {
-                            console.log(error);
                         });
                 } else {
                     swal.fire({
@@ -248,16 +244,13 @@
                 },
             })
                 .then(function (response) {
-                    $('#edit_unit_id').val(response.data.unit_id);
+                    $('#edit_unit_id').val(response.data.id);
                     $('#edit_unit_name').val(response.data.unit_name);
                     $('#edit_unit_desc').val(response.data.unit_desc);
                     validation2.validate();
-                })
-                .catch(function (error) {
-                    console.log(error);
                 });
         });
-        $(document).on('click', '#update_unit', function(e) {
+        $('#update_unit').click(function(e) {
             e.preventDefault();
             var id = $('#edit_unit_id').val();
             var unit_name = $('#edit_unit_name').val();
@@ -289,9 +282,6 @@
                             } else if (response.data == 0) {
                                 Swal.fire("Thất bại", "Đơn vị đã trùng tên!", "error");
                             }
-                        })
-                        .catch(function (error) {
-                            console.log(error);
                         });
                 } else {
                     swal.fire({
@@ -328,30 +318,27 @@
                                 'X-CSRF-TOKEN': $('meta[name = "csrf-token" ]').attr('content')
                             },
                         })
-                            .then(function (response) {
-                                if (response.data == 1) {
-                                    Swal.fire({
-                                        icon: "success",
-                                        title: "Thành công",
-                                        text: "Xoá đơn vị thành công!",
-                                        showConfirmButton: false,
-                                        timer: 1500
-                                    });
-                                    i = 0;
-                                    table.ajax.reload();
-                                } else if (response.data == 0) {
-                                    Swal.fire({
-                                        icon: "error",
-                                        title: "Thất bại",
-                                        text: "Đang có sản phẩm dùng đơn vị này!",
-                                        showConfirmButton: false,
-                                        timer: 1500
-                                    });
-                                }
-                            })
-                            .catch(function (error) {
-                                console.log(error);
-                            });
+                        .then(function (response) {
+                            if (response.data == 1) {
+                                Swal.fire({
+                                    icon: "success",
+                                    title: "Thành công",
+                                    text: "Xoá đơn vị thành công!",
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                });
+                                i = 0;
+                                table.ajax.reload();
+                            } else if (response.data == 0) {
+                                Swal.fire({
+                                    icon: "error",
+                                    title: "Thất bại",
+                                    text: "Đang có sản phẩm dùng đơn vị này!",
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                });
+                            }
+                        });
                     }
                 });
         });

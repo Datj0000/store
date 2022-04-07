@@ -282,7 +282,7 @@
                 }
             }
         );
-        $(document).on('click', '#create_user', function(e) {
+        $('#create_user').click(function(e) {
             var email = $('#email').val();
             var name = $('#name').val();
             var phone = $('#phone').val();
@@ -318,9 +318,6 @@
                             i = 0;
                             table.ajax.reload();
                         }
-                    })
-                    .catch(function (error) {
-                        console.log(error);
                     });
                 } else {
                     swal.fire({
@@ -351,12 +348,9 @@
                 $('#edit_id').val(response.data.id);
                 $('#edit_name').val(response.data.name);
                 $('#edit_role').val(response.data.role);
-            })
-            .catch(function (error) {
-                console.log(error);
             });
         });
-        $(document).on('click', '#update_user', function(e) {
+        $('#update_user').click(function(e) {
             var id = $('#edit_id').val();
             var role = $('#edit_role').val();
             axios({
@@ -379,9 +373,6 @@
                 });
                 i = 0;
                 table.ajax.reload();
-            })
-            .catch(function (error) {
-                console.log(error);
             });
         });
         $(document).on('click', '.destroy_user', function(e) {
@@ -414,9 +405,6 @@
                             });
                             i = 0;
                             table.ajax.reload();
-                        })
-                        .catch(function (error) {
-                            console.log(error);
                         });
                     }
                 });

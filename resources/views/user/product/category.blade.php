@@ -186,8 +186,7 @@
                 }
             }
         );
-
-        $(document).on('click', '#create_category', function(e) {
+        $('#create_category').click(function(e) {
             e.preventDefault();
             var category_name = $('#category_name').val();
             var category_desc = $('#category_desc').val();
@@ -218,9 +217,6 @@
                             } else if (response.data == 0) {
                                 Swal.fire("Thất bại", "Danh mục đã nhập rồi!", "error");
                             }
-                        })
-                        .catch(function (error) {
-                            console.log(error);
                         });
                 } else {
                     swal.fire({
@@ -252,12 +248,9 @@
                     $('#edit_category_name').val(response.data.category_name);
                     $('#edit_category_desc').val(response.data.category_desc);
                     validation2.validate();
-                })
-                .catch(function (error) {
-                    console.log(error);
                 });
         });
-        $(document).on('click', '#update_category', function(e) {
+        $('#update_category').click(function(e) {
             e.preventDefault();
             var id = $('#edit_category_id').val();
             var category_name = $('#edit_category_name').val();
@@ -289,9 +282,6 @@
                             } else if (response.data == 0) {
                                 Swal.fire("Thất bại", "Danh mục đã trùng tên!", "error");
                             }
-                        })
-                        .catch(function (error) {
-                            console.log(error);
                         });
                 } else {
                     swal.fire({
@@ -328,30 +318,27 @@
                                 'X-CSRF-TOKEN': $('meta[name = "csrf-token" ]').attr('content')
                             },
                         })
-                            .then(function (response) {
-                                if (response.data == 1) {
-                                    Swal.fire({
-                                        icon: "success",
-                                        title: "Thành công",
-                                        text: "Xoá danh mục thành công!",
-                                        showConfirmButton: false,
-                                        timer: 1500
-                                    });
-                                    i = 0;
-                                    table.ajax.reload();
-                                } else if (response.data == 0) {
-                                    Swal.fire({
-                                        icon: "error",
-                                        title: "Thất bại",
-                                        text: "Đang có sản phẩm thuộc danh mục này!",
-                                        showConfirmButton: false,
-                                        timer: 1500
-                                    });
-                                }
-                            })
-                            .catch(function (error) {
-                                console.log(error);
-                            });
+                        .then(function (response) {
+                            if (response.data == 1) {
+                                Swal.fire({
+                                    icon: "success",
+                                    title: "Thành công",
+                                    text: "Xoá danh mục thành công!",
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                });
+                                i = 0;
+                                table.ajax.reload();
+                            } else if (response.data == 0) {
+                                Swal.fire({
+                                    icon: "error",
+                                    title: "Thất bại",
+                                    text: "Đang có sản phẩm thuộc danh mục này!",
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                });
+                            }
+                        });
                     }
                 });
         });

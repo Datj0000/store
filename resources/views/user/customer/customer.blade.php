@@ -267,7 +267,7 @@
                 }
             }
         );
-        $(document).on('click', '#create_customer', function(e) {
+        $('#create_customer').click(function(e) {
             var customer_name = $('#customer_name').val();
             var customer_phone = $('#customer_phone').val();
             var customer_address = $('#customer_address').val();
@@ -301,9 +301,6 @@
                                 i = 0;
                                 table.ajax.reload();
                             }
-                        })
-                        .catch(function (error) {
-                            console.log(error);
                         });
                 } else {
                     swal.fire({
@@ -330,18 +327,15 @@
                     'X-CSRF-TOKEN': $('meta[name = "csrf-token" ]').attr('content')
                 },
             })
-                .then(function (response) {
-                    $('#edit_customer_id').val(response.data.id);
-                    $('#edit_customer_name').val(response.data.customer_name);
-                    $('#edit_customer_phone').val(response.data.customer_phone);
-                    $('#edit_customer_address').val(response.data.customer_address);
-                    $('#edit_customer_role').val(response.data.customer_role);
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
+            .then(function (response) {
+                $('#edit_customer_id').val(response.data.id);
+                $('#edit_customer_name').val(response.data.customer_name);
+                $('#edit_customer_phone').val(response.data.customer_phone);
+                $('#edit_customer_address').val(response.data.customer_address);
+                $('#edit_customer_role').val(response.data.customer_role);
+            });
         });
-        $(document).on('click', '#update_customer', function(e) {
+        $('#update_customer').click(function(e) {
             var id = $('#edit_customer_id').val();
             var customer_name = $('#edit_customer_name').val();
             var customer_phone = $('#edit_customer_phone').val();
@@ -362,24 +356,21 @@
                             customer_role: customer_role
                         },
                     })
-                        .then(function (response) {
-                            if (response.data == 1) {
-                                Swal.fire("", "Khách hàng này đã tồn tại!","warning");
-                            } else {
-                                Swal.fire({
-                                    icon: "success",
-                                    title: "Thành công",
-                                    text: "Cập nhật khách hàng thành công!",
-                                    showConfirmButton: false,
-                                    timer: 1500
-                                });
-                                i = 0;
-                                table.ajax.reload();
-                            }
-                        })
-                        .catch(function (error) {
-                            console.log(error);
-                        });
+                    .then(function (response) {
+                        if (response.data == 1) {
+                            Swal.fire("", "Khách hàng này đã tồn tại!","warning");
+                        } else {
+                            Swal.fire({
+                                icon: "success",
+                                title: "Thành công",
+                                text: "Cập nhật khách hàng thành công!",
+                                showConfirmButton: false,
+                                timer: 1500
+                            });
+                            i = 0;
+                            table.ajax.reload();
+                        }
+                    });
                 } else {
                     swal.fire({
                         text: "Xin lỗi, có vẻ như đã phát hiện thấy một số lỗi, vui lòng thử lại .",
@@ -415,20 +406,17 @@
                                 'X-CSRF-TOKEN': $('meta[name = "csrf-token" ]').attr('content')
                             },
                         })
-                            .then(function () {
-                                Swal.fire({
-                                    icon: "success",
-                                    title: "Thành công",
-                                    text: "Xoá khách hàng thành công!",
-                                    showConfirmButton: false,
-                                    timer: 1500
-                                });
-                                i = 0;
-                                table.ajax.reload();
-                            })
-                            .catch(function (error) {
-                                console.log(error);
+                        .then(function () {
+                            Swal.fire({
+                                icon: "success",
+                                title: "Thành công",
+                                text: "Xoá khách hàng thành công!",
+                                showConfirmButton: false,
+                                timer: 1500
                             });
+                            i = 0;
+                            table.ajax.reload();
+                        });
                     }
                 });
         });

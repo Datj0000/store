@@ -7,6 +7,9 @@
     <title>FunnyDev Store</title>
     <meta name=viewport content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name=csrf-token content="{{ csrf_token() }}">
+    <meta http-equiv='cache-control' content='no-cache'>
+    <meta http-equiv='expires' content='0'>
+    <meta http-equiv='pragma' content='no-cache'>
     <link rel=stylesheet href="//fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" />
     <link href="{{ asset('asset/css/themes/layout/header/base/light.css') }}" rel=stylesheet type=text/css />
     <link href="{{ asset('asset/css/themes/layout/header/menu/light.css') }}" rel=stylesheet type=text/css />
@@ -15,7 +18,15 @@
     <link href="{{ asset('asset/plugins/global/plugins.bundle.css') }}" rel=stylesheet type=text/css />
     <link href="{{ asset('asset/css/style.bundle.css') }}" rel=stylesheet type=text/css />
     <link href="{{ asset('asset/plugins/custom/datatables/datatables.bundle.css') }}" rel=stylesheet type=text/css />
-    <link rel="shortcut icon" href="{{ asset('/favicon.ico') }}" />
+    <link rel="shortcut icon" href="{{ url('asset/media/logos/favicon.ico') }}" />
+    <style>
+        select{
+            padding: 7px 0;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+        }
+    </style>
 </head>
 
 <body id=kt_body
@@ -261,7 +272,7 @@
 												</span>
                                         </li>
                                         <li class="menu-item" aria-haspopup="true">
-                                            <a id=view_supplier class="menu-link">
+                                            <a id=# class="menu-link">
                                                 <i class="menu-bullet menu-bullet-dot">
                                                     <span></span>
                                                 </i>
@@ -269,7 +280,7 @@
                                             </a>
                                         </li>
                                         <li class="menu-item" aria-haspopup="true">
-                                            <a id=view_category class="menu-link">
+                                            <a id=# class="menu-link">
                                                 <i class="menu-bullet menu-bullet-dot">
                                                     <span></span>
                                                 </i>
@@ -277,7 +288,7 @@
                                             </a>
                                         </li>
                                         <li class="menu-item" aria-haspopup="true">
-                                            <a id=view_brand class="menu-link">
+                                            <a id=# class="menu-link">
                                                 <i class="menu-bullet menu-bullet-dot">
                                                     <span></span>
                                                 </i>
@@ -285,7 +296,7 @@
                                             </a>
                                         </li>
                                         <li class="menu-item" aria-haspopup="true">
-                                            <a id=view_unit class="menu-link">
+                                            <a id=# class="menu-link">
                                                 <i class="menu-bullet menu-bullet-dot">
                                                     <span></span>
                                                 </i>
@@ -293,7 +304,7 @@
                                             </a>
                                         </li>
                                         <li class="menu-item" aria-haspopup="true">
-                                            <a id=view_product class="menu-link">
+                                            <a id=# class="menu-link">
                                                 <i class="menu-bullet menu-bullet-dot">
                                                     <span></span>
                                                 </i>
@@ -301,7 +312,7 @@
                                             </a>
                                         </li>
                                         <li class="menu-item" aria-haspopup="true">
-                                            <a id="view_import" class="menu-link">
+                                            <a id=# class="menu-link">
                                                 <i class="menu-bullet menu-bullet-dot">
                                                     <span></span>
                                                 </i>
@@ -592,7 +603,7 @@
         var KTAppSettings={breakpoints:{sm:576,md:768,lg:992,xl:1200,xxl:1400},colors:{theme:{base:{white:"#ffffff",primary:"#3699FF",secondary:"#E5EAEE",success:"#1BC5BD",info:"#8950FC",warning:"#FFA800",danger:"#F64E60",light:"#E4E6EF",dark:"#181C32"},light:{white:"#ffffff",primary:"#E1F0FF",secondary:"#EBEDF3",success:"#C9F7F5",info:"#EEE5FF",warning:"#FFF4DE",danger:"#FFE2E5",light:"#F3F6F9",dark:"#D6D6E0"},inverse:{white:"#ffffff",primary:"#ffffff",secondary:"#3F4254",success:"#ffffff",info:"#ffffff",warning:"#ffffff",danger:"#ffffff",light:"#464E5F",dark:"#ffffff"}},gray:{"gray-100":"#F3F6F9","gray-200":"#EBEDF3","gray-300":"#E4E6EF","gray-400":"#D1D3E0","gray-500":"#B5B5C3","gray-600":"#7E8299","gray-700":"#5E6278","gray-800":"#3F4254","gray-900":"#181C32"}},"font-family":"Poppins"};
     </script>
     <script src="//code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src=//cdn.ckeditor.com/ckeditor5/27.1.0/classic/ckeditor.js></script>
+{{--    <script src=//cdn.ckeditor.com/ckeditor5/27.1.0/classic/ckeditor.js></script>--}}
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="{{ asset('asset/plugins/global/plugins.bundle.js') }}"></script>
     <script src="{{ asset('asset/js/scripts.bundle.js') }}"></script>

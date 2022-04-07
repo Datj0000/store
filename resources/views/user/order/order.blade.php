@@ -30,6 +30,84 @@
     .hide{
         display: none;
     }
+     .cart__shape {
+         width: 5rem;
+         height: 5rem;
+         border: 1px solid #fff4de;
+     }
+
+    .cart__img {
+        width: 100%;
+        height: 100%
+    }
+
+    .wrap-num-product {
+        width: 140px;
+        height: 45px;
+        border: 1px solid #e6e6e6;
+        border-radius: 3px;
+        overflow: hidden;
+        float: left;
+    }
+
+    .btn-num-product-up,
+    .btn-num-product-down {
+        width: 45px;
+        height: 100%;
+        cursor: pointer;
+    }
+
+    .num-product {
+        width: calc(100% - 90px);
+        height: 100%;
+        border-left: 1px solid #e6e6e6;
+        border-right: 1px solid #e6e6e6;
+        background-color: #f7f7f7;
+    }
+
+    input.num-product {
+        -moz-appearance: textfield;
+        appearance: none;
+        -webkit-appearance: none;
+        outline: none;
+        border: none;
+    }
+
+    input.num-product::-webkit-outer-spin-button,
+    input.num-product::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+        outline: none;
+        border: none;
+    }
+    .hov-btn3:hover {
+        border-color: #717fe0;
+        background-color: #717fe0;
+        color: #fff;
+    }
+
+    .hov-btn3:hover i {
+        color: #fff;
+    }
+
+    .flex-w,.flex-c-m {
+        display: -webkit-box;
+        display: -webkit-flex;
+        display: -moz-box;
+        display: -ms-flexbox;
+        display: flex;
+        justify-content: center;
+        -ms-align-items: center;
+        align-items: center;
+    }
+    .txt-center {text-align: center;}
+    .flex-w {
+        -webkit-flex-wrap: wrap;
+        -moz-flex-wrap: wrap;
+        -ms-flex-wrap: wrap;
+        -o-flex-wrap: wrap;
+        flex-wrap: wrap;
+    }
 </style>
 <div class="card card-custom">
     <div class="card-header flex-wrap py-5">
@@ -39,16 +117,16 @@
             </h3>
         </div>
         <div class="card-toolbar">
-    <span class="btn btn-primary font-weight-bolder" data-toggle="modal" data-target="#exampleModalPopovers2">
-    <span class="svg-icon svg-icon-md">
-    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
-    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-    <rect x="0" y="0" width="24" height="24" />
-    <circle fill="#000000" cx="9" cy="15" r="6" />
-    <path d="M8.8012943,7.00241953 C9.83837775,5.20768121 11.7781543,4 14,4 C17.3137085,4 20,6.6862915 20,10 C20,12.2218457 18.7923188,14.1616223 16.9975805,15.1987057 C16.9991904,15.1326658 17,15.0664274 17,15 C17,10.581722 13.418278,7 9,7 C8.93357256,7 8.86733422,7.00080962 8.8012943,7.00241953 Z" fill="#000000" opacity="0.3" />
-    </g>
-    </svg>
-    </span>Thêm mới</span>
+            <span class="btn btn-primary font-weight-bolder" data-toggle="modal" data-target="#exampleModalPopovers2">
+            <span class="svg-icon svg-icon-md">
+            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                    <rect x="0" y="0" width="24" height="24" />
+                    <circle fill="#000000" cx="9" cy="15" r="6" />
+                    <path d="M8.8012943,7.00241953 C9.83837775,5.20768121 11.7781543,4 14,4 C17.3137085,4 20,6.6862915 20,10 C20,12.2218457 18.7923188,14.1616223 16.9975805,15.1987057 C16.9991904,15.1326658 17,15.0664274 17,15 C17,10.581722 13.418278,7 9,7 C8.93357256,7 8.86733422,7.00080962 8.8012943,7.00241953 Z" fill="#000000" opacity="0.3" />
+                </g>
+            </svg>
+            </span>Thêm mới</span>
         </div>
     </div>
     {{-- Add --}}
@@ -70,14 +148,6 @@
                                 <input type="text" class="form-control form-control-solid" id="customer_name" placeholder="Họ và tên" autocomplete="off" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==255) return false;"/>
                                 <div id="search_customer"></div>
                             </div>
-                            {{-- <div class="form-group">
-                                <label>Trạng thái thanh toán:</label>
-                                <select name="method" id="order_method" class="form-control">
-                                    <option value disabled selected hidden>Chọn hình thức giao hàng</option>
-                                    <option value="0">Nhận tại cửa hàng</option>
-                                    <option value="1">Giao đến nhà</option>
-                                </select>
-                            </div> --}}
                             <div class="form-group">
                                 <label>Hình thức giao hàng:</label>
                                 <select name="method" id="order_method" class="form-control">
@@ -90,6 +160,14 @@
                                 <label>Phí lắp đặt:</label>
                                 <input name="feeship" type="number" class="form-control form-control-solid" id="order_fee_ship" placeholder="Phí lắp đặt" min="0" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==20) return false;"/>
                             </div>
+                            <div class="form-group">
+                                <label>Hình thức thanh toán:</label>
+                                <select name="method" id="order_method" class="form-control">
+                                    <option value disabled selected hidden>Chọn hình thức thanh toán</option>
+                                    <option value="0">Tiền mặt</option>
+                                    <option value="1">Chuyển khoản</option>
+                                </select>
+                            </div>
                             @if(Auth::user()->role <= 1)
                                 <div class="form-group">
                                     <label>Mã giảm giá:</label>
@@ -99,22 +177,10 @@
                             @endif
                             <div class="form-group">
                                 <label>Tìm kiếm sản phẩm theo mã vạch hoặc tên sản phẩm:</label>
-                                <input type="text" class="form-control form-control-solid" id="order_fee_ship" autocomplete="off" placeholder="Tìm kiếm" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==20) return false;"/>
+                                <input type="text" class="form-control form-control-solid" id="product_name" autocomplete="off" placeholder="Tìm kiếm" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==20) return false;"/>
                                 <div id="search_product"></div>
                             </div>
-                            <table class="table table-separate table-head-custom table-checkable display nowrap" cellspacing="0" width="100%" id="table_order_detail">
-                                <thead>
-                                    <tr>
-                                        <th>STT</th>
-                                        <th>Hình ảnh</th>
-                                        <th>Tên sản phẩm</th>
-                                        <th>Giá bán</th>
-                                        <th>Số lượng</th>
-                                        <th>Thành tiền</th>
-                                    </tr>
-                                    <div id="load_order_detail"></div>
-                                </thead>
-                            </table>
+                            <div id="load_cart"></div>
                         </div>
                         <div class="card-footer">
                             <button id="create_order" type="button" class="btn btn-primary mr-2">Thêm mới</button>
@@ -138,7 +204,6 @@
                     <form class="form" id="form_edit_order">
                         <div class="card-body">
                             <input type="hidden" id="edit_order_id">
-
                         </div>
                         <div class="card-footer">
                             <button id="update_order" type="button" class="btn btn-primary mr-2">Lưu</button>
@@ -161,7 +226,94 @@
         </table>
     </div>
 </div>
-<script type="text/javascript">
+<script>
+    load_cart();
+    function add_cart(code){
+        axios.get('add-cart/' + code)
+            .then(function(response) {
+                if(response.data == 1){
+                    load_cart();
+                }else if(response.data == 0) {
+                    swal.fire({
+                        icon: "error",
+                        title: "Thất bại",
+                        text: "Sản phẩm đã có trong giỏ hàng!",
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                }
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }
+    function load_cart(){
+        axios.get('load-cart')
+            .then(function(response) {
+                $("#load_cart").html(response.data);
+                $('#table_cart').DataTable({
+                    "ordering": false,
+                    "responsive": true,
+                    "searching": false,
+                    "bPaginate": false,
+                    "bLengthChange": false,
+                    "bFilter": true,
+                    "bInfo": false,
+                    "bAutoWidth": false
+                });
+                $('.btn-num-product-down').click(function() {
+                    var session_id = $(this).data('session_id');
+                    var numProduct = Number($(this).next().val());
+                    if (numProduct > 1) $(this).next().val(numProduct - 1);
+                    var product_quantity = numProduct - 1;
+                    if (numProduct > 1) {
+                        var product_quantity = numProduct - 1;
+                    } else {
+                        var product_quantity = 1;
+                    }
+                    update_cart(session_id, product_quantity);
+                });
+                $('.btn-num-product-up').click(function() {
+                    var session_id = $(this).data('session_id');
+                    var numProduct = Number($(this).prev().val());
+                    $(this).prev().val(numProduct + 1);
+                    var max_product_quantity = $('.product_quantity_' + session_id).val();
+                    var product_quantity = numProduct + 1;
+                    if (product_quantity > max_product_quantity) {
+                        update_cart(session_id, max_product_quantity);
+                        Swal.fire({
+                            icon: "warning",
+                            title: "Cảnh báo",
+                            text: "Sản phẩm chỉ còn " + max_product_quantity + " sản phẩm!",
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+                    } else {
+                        update_cart(session_id, product_quantity);
+                    }
+                });
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }
+    function update_cart(session_id, product_quantity) {
+        axios({
+            url: 'update-cart',
+            method: "POST",
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name = "csrf-token" ]').attr('content')
+            },
+            data: {
+                session_id: session_id,
+                product_quantity: product_quantity
+            },
+        })
+            .then(function (response) {
+                load_cart();
+            });
+    }
+
     $(document).ready(function() {
         $('#order_method').change(function() {
             var query = $(this).val();
@@ -186,19 +338,19 @@
                         query: query
                     },
                 })
-                .then(function (response) {
-                    console.log(response.data)
-                    $('#search_coupon').fadeIn();
-                    $('#search_coupon').html(response.data);
-                });
+                    .then(function (response) {
+                        $('#search_coupon').fadeIn();
+                        $('#search_coupon').html(response.data);
+                        $('.li_search_coupon').click(function() {
+                            $('#order_coupon').val($(this).text());
+                            $('#search_coupon').fadeOut();
+                        });
+                    });
             } else {
                 $('#search_coupon').fadeOut();
             }
         });
-        $(document).on('click', '.li_search_coupon', function() {
-            $('#order_coupon').val($(this).text());
-            $('#search_coupon').fadeOut();
-        });
+
         $('#customer_name').keyup(function() {
             var query = $(this).val();
             if (query != '') {
@@ -212,18 +364,44 @@
                         query: query
                     },
                 })
-                .then(function (response) {
-                    $('#search_customer').fadeIn();
-                    $('#search_customer').html(response.data);
-                });
+                    .then(function (response) {
+                        $('#search_customer').fadeIn();
+                        $('#search_customer').html(response.data);
+                        $('.li_search_customer').click(function() {
+                            $('#customer_id').val($(this).data('id'));
+                            $('#customer_name').val($(this).text());
+                            $('#search_customer').fadeOut();
+                        });
+                    });
             } else {
                 $('#search_customer').fadeOut();
             }
         });
-        $(document).on('click', '.li_search_customer', function() {
-            $('#customer_id').val($(this).data('id'));
-            $('#customer_name').val($(this).text());
-            $('#search_customer').fadeOut();
+        $('#product_name').keyup(function() {
+            var query = $(this).val();
+            if (query != '') {
+                axios({
+                    url: "autocomplete-product",
+                    method: "POST",
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name = "csrf-token" ]').attr('content')
+                    },
+                    data: {
+                        query: query
+                    },
+                })
+                    .then(function (response) {
+                        $('#search_product').fadeIn();
+                        $('#search_product').html(response.data);
+                        $('.li_search_product').click(function() {
+                            $('#product_name').val('');
+                            $('#search_product').fadeOut();
+                            add_cart($(this).data('code'));
+                        });
+                    });
+            } else {
+                $('#search_product').fadeOut();
+            }
         });
         var i = 0;
         // var table = $('#kt_datatable').DataTable({
@@ -269,11 +447,11 @@
         //             render: function(data, type, row) {
         //                 return `\
         //                     <span data-toggle="modal" data-target="#exampleModalPopovers" data-id='${row.id}' class="edit_order btn btn-sm btn-clean btn-icon" title="Sửa">\
-		// 						<i class="la la-edit"></i>\
-		// 					</span>\
+        // 						<i class="la la-edit"></i>\
+        // 					</span>\
         //                     <span data-id='${row.id}' class="destroy_order btn btn-sm btn-clean btn-icon" title="Xoá">\
-		// 						<i class="la la-trash"></i>\
-		// 					</span>\
+        // 						<i class="la la-trash"></i>\
+        // 					</span>\
         //                     `
         //             }
         //         },
@@ -528,6 +706,42 @@
                                 console.log(error);
                             });
                     }
+                });
+        });
+        $(document).on('change', '.cart_qty', function(e) {
+            var session_id = $(this).data('session_id');
+            var max_product_quantity = $('.product_quantity_' + session_id).val();
+            var product_quantity = $(this).val();
+            if (product_quantity < 1) {
+                product_quantity = 1;
+            }
+            if (product_quantity > max_product_quantity) {
+                product_quantity = max_product_quantity;
+                Swal.fire({
+                    icon: "warning",
+                    title: "Cảnh báo",
+                    text: "Sản phẩm chỉ còn " + max_product_quantity + " sản phẩm!",
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            }
+            update_cart(session_id, product_quantity);
+        });
+        $(document).on('click', '.destroy_cart', function(e) {
+            e.preventDefault();
+            var session_id = $(this).data('session_id');
+            axios({
+                url: 'destroy-cart/' + session_id,
+                method: 'GET',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name = "csrf-token" ]').attr('content')
+                },
+            })
+                .then(function () {
+                    load_cart()
+                })
+                .catch(function (error) {
+                    console.log(error);
                 });
         });
     })

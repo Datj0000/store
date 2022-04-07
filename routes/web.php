@@ -122,6 +122,7 @@ Route::get('/view-product',[ProductController::class,'index']);
 Route::get('/fetchdata-product',[ProductController::class,'fetchdata']);
 Route::post('/load-product',[ProductController::class,'load']);
 Route::get('/load-productdetail/{id}',[ProductController::class,'load_detail']);
+Route::post('/autocomplete-product',[ProductController::class,'autocomplete']);
 
 //Customer
 Route::get('/view-customer',[CustomerController::class,'index']);
@@ -139,6 +140,10 @@ Route::post('/create-order',[OrderController::class,'create']);
 Route::get('/edit-order/{id}',[OrderController::class, 'edit']);
 Route::post('/update-order/{id}',[OrderController::class,'update']);
 Route::get('/destroy-order/{id}',[OrderController::class,'destroy']);
+Route::get('/add-cart/{code}',[OrderController::class,'add_cart']);
+Route::get('/load-cart',[OrderController::class,'load_cart']);
+Route::post('/update-cart',[OrderController::class,'update_cart']);
+Route::get('/destroy-cart/{id}',[OrderController::class,'destroy_cart']);
 
 //OrderDetail
 Route::get('/fetchdata-orderdetail/{id}',[OrderDetailController::class,'fetchdata']);

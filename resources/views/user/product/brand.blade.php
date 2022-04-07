@@ -186,7 +186,7 @@
                 }
             }
         );
-        $(document).on('click', '#create_brand', function(e) {
+        $('#create_brand').click(function(e) {
             e.preventDefault();
             var brand_name = $('#brand_name').val();
             var brand_desc = $('#brand_desc').val();
@@ -217,9 +217,6 @@
                             } else if (response.data == 0) {
                                 Swal.fire("Thất bại", "Thương hiệu đã nhập rồi!", "error");
                             }
-                        })
-                        .catch(function (error) {
-                            console.log(error);
                         });
                 } else {
                     swal.fire({
@@ -256,7 +253,7 @@
                     console.log(error);
                 });
         });
-        $(document).on('click', '#update_brand', function(e) {
+        $('#update_brand').click(function(e) {
             e.preventDefault();
             var id = $('#edit_brand_id').val();
             var brand_name = $('#edit_brand_name').val();
@@ -288,9 +285,6 @@
                             } else if (response.data == 0) {
                                 Swal.fire("Thất bại", "Thương hiệu đã trùng tên!", "error");
                             }
-                        })
-                        .catch(function (error) {
-                            console.log(error);
                         });
                 } else {
                     swal.fire({
@@ -347,9 +341,6 @@
                                         timer: 1500
                                     });
                                 }
-                            })
-                            .catch(function (error) {
-                                console.log(error);
                             });
                     }
                 });
