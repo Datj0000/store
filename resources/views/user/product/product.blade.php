@@ -325,7 +325,7 @@
                 {
                     'data': null,
                     render: function(data, type, row) {
-                        return formatter.format(row.quantity);
+                        return formatter.format(row.quantity - row.soldout);
                     }
                 },
                 {

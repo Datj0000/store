@@ -162,7 +162,7 @@
                             </div>
                             <div class="form-group">
                                 <label>Hình thức thanh toán:</label>
-                                <select name="method" id="order_method" class="form-control">
+                                <select name="methodpay" id="order_methodpay" class="form-control">
                                     <option value disabled selected hidden>Chọn hình thức thanh toán</option>
                                     <option value="0">Tiền mặt</option>
                                     <option value="1">Chuyển khoản</option>
@@ -220,6 +220,8 @@
                 <th>STT</th>
                 <th>Mã đơn hàng</th>
                 <th>Thời gian tạo</th>
+                <th>Tên khách hàng</th>
+                <th>Thanh toán</th>
                 <th>Chức năng</th>
             </tr>
             </thead>
@@ -228,6 +230,20 @@
 </div>
 <script>
     load_cart();
+    function use_coupon(coupon){
+        axios({
+            url: "use-coupon",
+            method: "POST",
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name = "csrf-token" ]').attr('content')
+            },
+            data:{
+                coupon: coupon
+            }
+        }).then(function (){
+            load_cart();
+        });
+    }
     function add_cart(code){
         axios.get('add-cart/' + code)
             .then(function(response) {
@@ -265,7 +281,6 @@
                     var session_id = $(this).data('session_id');
                     var numProduct = Number($(this).next().val());
                     if (numProduct > 1) $(this).next().val(numProduct - 1);
-                    var product_quantity = numProduct - 1;
                     if (numProduct > 1) {
                         var product_quantity = numProduct - 1;
                     } else {
@@ -313,7 +328,6 @@
                 load_cart();
             });
     }
-
     $(document).ready(function() {
         $('#order_method').change(function() {
             var query = $(this).val();
@@ -323,7 +337,36 @@
             } else if(query == 0) {
                 $('.feeship').removeClass('show');
                 $('.feeship').addClass('hide');
+                axios({
+                    url: "feeship",
+                    method: "POST",
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name = "csrf-token" ]').attr('content')
+                    },
+                    data: {
+                        data: 0
+                    },
+                })
+                    .then(function (response) {
+                        load_cart();
+                    });
             }
+        });
+        $('#order_fee_ship').keyup(function() {
+            var data = $(this).val();
+            axios({
+                url: "feeship",
+                method: "POST",
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name = "csrf-token" ]').attr('content')
+                },
+                data: {
+                    data: data
+                },
+            })
+            .then(function (response) {
+                load_cart();
+            });
         });
         $('#order_coupon').keyup(function() {
             var query = $(this).val();
@@ -338,19 +381,20 @@
                         query: query
                     },
                 })
-                    .then(function (response) {
-                        $('#search_coupon').fadeIn();
-                        $('#search_coupon').html(response.data);
-                        $('.li_search_coupon').click(function() {
-                            $('#order_coupon').val($(this).text());
-                            $('#search_coupon').fadeOut();
-                        });
+                .then(function (response) {
+                    $('#search_coupon').fadeIn();
+                    $('#search_coupon').html(response.data);
+                    $('.li_search_coupon').click(function() {
+                        $('#order_coupon').val($(this).text());
+                        $('#search_coupon').fadeOut();
+                        use_coupon($(this).text());
                     });
+                });
             } else {
+                use_coupon($(this).text());
                 $('#search_coupon').fadeOut();
             }
         });
-
         $('#customer_name').keyup(function() {
             var query = $(this).val();
             if (query != '') {
@@ -371,6 +415,7 @@
                             $('#customer_id').val($(this).data('id'));
                             $('#customer_name').val($(this).text());
                             $('#search_customer').fadeOut();
+                            validation.validate();
                         });
                     });
             } else {
@@ -404,100 +449,96 @@
             }
         });
         var i = 0;
-        // var table = $('#kt_datatable').DataTable({
-        //     ajax: 'fetchdata-order',
-        //     columns: [{
-        //         'data': null,
-        //         render: function() {
-        //             return i = i + 1
-        //             }
-        //         },
-        //         {
-        //             'data': 'order_name'
-        //         },
-        //         {
-        //             'data': 'order_phone'
-        //         },
-        //         {
-        //             'data': 'order_address'
-        //         },
-        //         {
-        //             'data': null,
-        //             sortable: false,
-        //             overflow: 'visible',
-        //             autoHide: false,
-        //             render: function(data, type, row) {
-        //                 if (row.order_role == 0) {
-        //                     return `\
-        //                     <span class="label label-lg label-light label-inline">đơn hàng thường</span>\
-        //                     `;
-        //                 } else {
-        //                     return `\
-        //                     <span class="label label-lg label-light label-inline">đơn hàng vip</span>\
-        //                     `;
-        //                 }
-        //             }
-        //         },
-        //         {
-        //             'data': null,
-        //             sortable: false,
-        //             width: '75px',
-        //             overflow: 'visible',
-        //             autoHide: false,
-        //             render: function(data, type, row) {
-        //                 return `\
-        //                     <span data-toggle="modal" data-target="#exampleModalPopovers" data-id='${row.id}' class="edit_order btn btn-sm btn-clean btn-icon" title="Sửa">\
-        // 						<i class="la la-edit"></i>\
-        // 					</span>\
-        //                     <span data-id='${row.id}' class="destroy_order btn btn-sm btn-clean btn-icon" title="Xoá">\
-        // 						<i class="la la-trash"></i>\
-        // 					</span>\
-        //                     `
-        //             }
-        //         },
-        //     ],
-        //     responsive: true,
-        //     language: {
-        //         processing: "Đang tải dữ liệu",
-        //         search: "Tìm kiếm:",
-        //         lengthMenu: "Hiển thị _MENU_ hàng",
-        //         info: "Hiển thị từ _START_ đến _END_ trong _TOTAL_ hàng",
-        //         infoEmpty: "Không có dữ liệu",
-        //         loadingRecords: "Đang tải dữ liệu",
-        //         zeroRecords: "Không tìm kiếm được dữ liệu",
-        //         emptyTable: "Không có dữ liệu",
-        //     },
-        // });
+        var table = $('#kt_datatable').DataTable({
+            ajax: 'fetchdata-order',
+            columns: [{
+                'data': null,
+                render: function() {
+                    return i = i + 1
+                    }
+                },
+                {
+                    'data': null,
+                    render: function(data, type, row) {
+                        return `DH`+('00000'+`${row.id}`).slice(-5)
+                    }
+                },
+                {
+                    'data': null,
+                    render: function(data, type, row) {
+                        return moment(row.created_at).format('H:mm DD-MM-YYYY');
+                    }
+                },
+                {
+                    'data': 'customer_name'
+                },
+                {
+                    'data': null,
+                    render: function(data, type, row) {
+                        if(row.order_methodpay == 0){
+                            return `<span class="label label-lg label-light label-inline">Tiền mặt</span>`;
+                        }
+                        else {
+                            return `<span class="label label-lg label-light label-inline">Chuyển khoản</span>`;
+                        }
+                    }
+                },
+                {
+                    'data': null,
+                    sortable: false,
+                    width: '75px',
+                    overflow: 'visible',
+                    autoHide: false,
+                    render: function(data, type, row) {
+                        return `\
+                            <span data-toggle="modal" data-target="#exampleModalPopovers" data-id='${row.id}' class="edit_order btn btn-sm btn-clean btn-icon" title="Sửa">\
+        						<i class="la la-edit"></i>\
+        					</span>\
+                            <span data-id='${row.id}' class="destroy_order btn btn-sm btn-clean btn-icon" title="Xoá">\
+        						<i class="la la-trash"></i>\
+        					</span>\
+                            `
+                    }
+                },
+            ],
+            responsive: true,
+            language: {
+                processing: "Đang tải dữ liệu",
+                search: "Tìm kiếm:",
+                lengthMenu: "Hiển thị _MENU_ hàng",
+                info: "Hiển thị từ _START_ đến _END_ trong _TOTAL_ hàng",
+                infoEmpty: "Không có dữ liệu",
+                loadingRecords: "Đang tải dữ liệu",
+                zeroRecords: "Không tìm kiếm được dữ liệu",
+                emptyTable: "Không có dữ liệu",
+            },
+        });
         var validation;
         var form = KTUtil.getById('form_create_order');
         validation = FormValidation.formValidation(
             form, {
                 fields: {
-                    // name: {
-                    //     validators: {
-                    //         notEmpty: {
-                    //             message: 'Vui lòng không để trống mục này'
-                    //         },
-                    //     }
-                    // },
-                    // phone: {
-                    //     validators: {
-                    //         notEmpty: {
-                    //             message: 'Vui lòng không để trống mục này'
-                    //         },
-                    //         phone: {
-                    //             country: 'US',
-                    //             message: 'Vui lòng kiểm tra lại số điện thoại'
-                    //         }
-                    //     }
-                    // },
-                    // address: {
-                    //     validators: {
-                    //         notEmpty: {
-                    //             message: 'Vui lòng không để trống mục này'
-                    //         },
-                    //     }
-                    // },
+                    customer: {
+                        validators: {
+                            notEmpty: {
+                                message: 'Vui lòng chọn khách hàng'
+                            },
+                        }
+                    },
+                    method: {
+                        validators: {
+                            notEmpty: {
+                                message: 'Vui lòng chọn hình thức giao hàng'
+                            },
+                        }
+                    },
+                    methodpay: {
+                        validators: {
+                            notEmpty: {
+                                message: 'Vui lòng chọn hình thức thanh toán'
+                            },
+                        }
+                    },
                 },
                 plugins: {
                     trigger: new FormValidation.plugins.Trigger(),
@@ -542,59 +583,47 @@
                 }
             }
         );
-        $(document).on('click', '#create_order', function(e) {
-            var customer_id = $('#customer_id').data('value');
-            console.log(customer_id);
-            // var order_phone = $('#order_phone').val();
-            // var order_address = $('#order_address').val();
-            // var order_role = $('#order_role').val();
-            // validation.validate().then(function(status) {
-            //     if (status == 'Valid') {
-            //         axios({
-            //             url: 'create-order',
-            //             method: 'POST',
-            //             headers: {
-            //                 'X-CSRF-TOKEN': $('meta[name = "csrf-token" ]').attr('content')
-            //             },
-            //             data: {
-            //                 order_name: order_name,
-            //                 order_phone: order_phone,
-            //                 order_address: order_address,
-            //                 order_role: order_role
-            //             },
-            //         })
-            //             .then(function (response) {
-            //                 if (response.data == 1) {
-            //                     Swal.fire("", "đơn hàng này đã tồn tại!","warning");
-            //                 } else {
-            //                     Swal.fire({
-            //                         icon: "success",
-            //                         title: "Thành công",
-            //                         text: "Tạo đơn hàng thành công!",
-            //                         showConfirmButton: false,
-            //                         timer: 1500
-            //                     });
-            //                     i = 0;
-            //                     table.ajax.reload();
-            //                 }
-            //             })
-            //             .catch(function (error) {
-            //                 console.log(error);
-            //             });
-            //     } else {
-            //         swal.fire({
-            //             text: "Xin lỗi, có vẻ như đã phát hiện thấy một số lỗi, vui lòng thử lại .",
-            //             icon: "error",
-            //             buttonsStyling: false,
-            //             confirmButtonText: "Đồng ý!",
-            //             customClass: {
-            //                 confirmButton: "btn font-weight-bold btn-light-primary"
-            //             }
-            //         }).then(function () {
-            //             KTUtil.scrollTop();
-            //         });
-            //     }
-            // });
+        $('#create_order').click(function(e) {
+            var customer_id = $('#customer_id').val();
+            var order_methodpay = $('#order_methodpay').val();
+            validation.validate().then(function(status) {
+                if (status == 'Valid') {
+                    axios({
+                        url: 'create-order',
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name = "csrf-token" ]').attr('content')
+                        },
+                        data: {
+                            customer_id: customer_id,
+                            order_methodpay: order_methodpay,
+                        },
+                    })
+                    .then(function (response) {
+                        Swal.fire({
+                            icon: "success",
+                            title: "Thành công",
+                            text: "Tạo đơn hàng thành công!",
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+                        i = 0;
+                        table.ajax.reload();
+                    });
+                } else {
+                    swal.fire({
+                        text: "Xin lỗi, có vẻ như đã phát hiện thấy một số lỗi, vui lòng thử lại .",
+                        icon: "error",
+                        buttonsStyling: false,
+                        confirmButtonText: "Đồng ý!",
+                        customClass: {
+                            confirmButton: "btn font-weight-bold btn-light-primary"
+                        }
+                    }).then(function () {
+                        KTUtil.scrollTop();
+                    });
+                }
+            });
         });
         $(document).on('click', '.edit_order', function(e) {
             e.preventDefault();
@@ -606,16 +635,14 @@
                     'X-CSRF-TOKEN': $('meta[name = "csrf-token" ]').attr('content')
                 },
             })
-                .then(function (response) {
-                    $('#edit_order_id').val(response.data.id);
-                    $('#edit_order_name').val(response.data.order_name);
-                    $('#edit_order_phone').val(response.data.order_phone);
-                    $('#edit_order_address').val(response.data.order_address);
-                    $('#edit_order_role').val(response.data.order_role);
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
+            .then(function (response) {
+                $('#edit_order_id').val(response.data.id);
+                $('#edit_order_name').val(response.data.order_name);
+                $('#edit_order_phone').val(response.data.order_phone);
+                $('#edit_order_address').val(response.data.order_address);
+                $('#edit_order_role').val(response.data.order_role);
+                validation2.validate();
+            });
         });
         $(document).on('click', '#update_order', function(e) {
             var id = $('#edit_order_id').val();

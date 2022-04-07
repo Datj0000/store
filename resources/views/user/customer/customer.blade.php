@@ -153,13 +153,9 @@
                     autoHide: false,
                     render: function(data, type, row) {
                         if (row.customer_role == 0) {
-                            return `\
-                            <span class="label label-lg label-light label-inline">Khách hàng thường</span>\
-                            `;
+                            return `<span class="label label-lg label-light label-inline">Khách hàng thường</span>`;
                         } else {
-                            return `\
-                            <span class="label label-lg label-light label-inline">khách hàng vip</span>\
-                            `;
+                            return `<span class="label label-lg label-light label-inline">Khách hàng vip</span>`;
                         }
                     }
                 },
@@ -333,6 +329,7 @@
                 $('#edit_customer_phone').val(response.data.customer_phone);
                 $('#edit_customer_address').val(response.data.customer_address);
                 $('#edit_customer_role').val(response.data.customer_role);
+                validation2.validate();
             });
         });
         $('#update_customer').click(function(e) {

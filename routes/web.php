@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\InsuranceController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\SupplierController;
@@ -116,6 +117,15 @@ Route::group(['middleware' => 'mod'], function(){
     Route::post('/update-coupon/{id}',[CouponController::class,'update']);
     Route::get('/destroy-coupon/{id}',[CouponController::class,'destroy']);
     Route::post('/autocomplete-coupon',[CouponController::class,'autocomplete']);
+    Route::post('/use-coupon',[CouponController::class,'use']);
+
+    //Insurance
+    Route::get('/view-insurance',[InsuranceController::class,'index']);
+    Route::get('/fetchdata-insurance',[InsuranceController::class,'fetchdata']);
+    Route::post('/create-insurance',[InsuranceController::class,'create']);
+    Route::get('/edit-insurance/{id}',[InsuranceController::class, 'edit']);
+    Route::post('/update-insurance/{id}',[InsuranceController::class,'update']);
+    Route::get('/destroy-insurance/{id}',[InsuranceController::class,'destroy']);
 });
 //Product
 Route::get('/view-product',[ProductController::class,'index']);
@@ -144,6 +154,7 @@ Route::get('/add-cart/{code}',[OrderController::class,'add_cart']);
 Route::get('/load-cart',[OrderController::class,'load_cart']);
 Route::post('/update-cart',[OrderController::class,'update_cart']);
 Route::get('/destroy-cart/{id}',[OrderController::class,'destroy_cart']);
+Route::post('/feeship',[OrderController::class,'feeship']);
 
 //OrderDetail
 Route::get('/fetchdata-orderdetail/{id}',[OrderDetailController::class,'fetchdata']);

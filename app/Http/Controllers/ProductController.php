@@ -31,7 +31,7 @@ class ProductController extends Controller
     public function fetchdata():\Illuminate\Http\JsonResponse
     {
         if (Auth::check()) {
-            $data = Product::query()->select('brands.brand_name', 'categories.category_name','units.unit_name', 'products.*', DB::raw('SUM(importdetails.detail_quantity) As quantity'))
+            $data = Product::query()->select('brands.brand_name', 'categories.category_name','units.unit_name', 'products.*', DB::raw('SUM(importdetails.detail_quantity) As quantity'), DB::raw('SUM(importdetails.detail_soldout) As soldout'))
                 ->leftJoin('importdetails', 'importdetails.product_id', '=', 'products.id')
                 ->join('brands', 'brands.id', '=', 'products.brand_id')
                 ->join('categories', 'categories.id', '=', 'products.category_id')

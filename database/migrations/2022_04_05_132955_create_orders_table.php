@@ -16,11 +16,9 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->integer('customer_id');
-            $table->integer('order_payment_status');
-            $table->integer('order_status')->default(0);
+            $table->integer('order_methodpay');
+            $table->double('order_coupon')->nullable();
             $table->double('order_fee_ship')->default(0);
-            $table->string('order_coupon')->nullable();
-            $table->text('order_note')->nullable();
             $table->timestamps();
         });
     }

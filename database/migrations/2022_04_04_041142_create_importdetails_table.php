@@ -25,6 +25,7 @@ return new class extends Migration
             $table->date('detail_date_start');
             $table->date('detail_date_end');
             $table->integer('detail_quantity');
+            $table->integer('detail_soldout')->default(0);
             $table->string('detail_drive')->nullable();
             $table->string('detail_vat')->nullable();
             $table->timestamps();

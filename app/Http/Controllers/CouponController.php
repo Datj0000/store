@@ -7,6 +7,7 @@ use App\Models\Product;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 class CouponController extends Controller
 {
@@ -106,6 +107,26 @@ class CouponController extends Controller
                 }
                 $output .= '</ul>';
                 return $output;
+            }
+        }
+    }
+    public function use(Request $request)
+    {
+        if (Auth::check()) {
+            $coupon = Coupon::query()->where('coupon_code', $request->coupon)->first();
+            if($coupon){
+                $coupon_session = Session::get('coupon');
+                if ($coupon_session == true) {
+                    Session::put('coupon', null);
+                }
+                $cou[] = array(
+                    'coupon_code' => $coupon->coupon_code,
+                    'coupon_condition' => $coupon->coupon_condition,
+                    'coupon_number' => $coupon->coupon_number,
+                );
+                Session::put('coupon', $cou);
+            } else{
+                Session::put('coupon', null);
             }
         }
     }

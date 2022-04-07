@@ -203,21 +203,21 @@
                             unit_desc: unit_desc,
                         },
                     })
-                        .then(function (response) {
-                            if (response.data == 1) {
-                                Swal.fire({
-                                    icon: "success",
-                                    title: "Thành công",
-                                    text: "Thêm đơn vị thành công!",
-                                    showConfirmButton: false,
-                                    timer: 1500
-                                });
-                                i = 0;
-                                table.ajax.reload();
-                            } else if (response.data == 0) {
-                                Swal.fire("Thất bại", "Đơn vị đã nhập rồi!", "error");
-                            }
-                        });
+                    .then(function (response) {
+                        if (response.data == 1) {
+                            Swal.fire({
+                                icon: "success",
+                                title: "Thành công",
+                                text: "Thêm đơn vị thành công!",
+                                showConfirmButton: false,
+                                timer: 1500
+                            });
+                            i = 0;
+                            table.ajax.reload();
+                        } else if (response.data == 0) {
+                            Swal.fire("Thất bại", "Đơn vị đã nhập rồi!", "error");
+                        }
+                    });
                 } else {
                     swal.fire({
                         text: "Xin lỗi, có vẻ như đã phát hiện thấy một số lỗi, vui lòng thử lại .",
@@ -243,12 +243,12 @@
                     'X-CSRF-TOKEN': $('meta[name = "csrf-token" ]').attr('content')
                 },
             })
-                .then(function (response) {
-                    $('#edit_unit_id').val(response.data.id);
-                    $('#edit_unit_name').val(response.data.unit_name);
-                    $('#edit_unit_desc').val(response.data.unit_desc);
-                    validation2.validate();
-                });
+            .then(function (response) {
+                $('#edit_unit_id').val(response.data.id);
+                $('#edit_unit_name').val(response.data.unit_name);
+                $('#edit_unit_desc').val(response.data.unit_desc);
+                validation2.validate();
+            });
         });
         $('#update_unit').click(function(e) {
             e.preventDefault();
@@ -268,21 +268,21 @@
                             unit_desc: unit_desc,
                         },
                     })
-                        .then(function (response) {
-                            if (response.data == 1) {
-                                Swal.fire({
-                                    icon: "success",
-                                    title: "Thành công",
-                                    text: "Sửa đơn vị thành công!",
-                                    showConfirmButton: false,
-                                    timer: 1500
-                                });
-                                i = 0;
-                                table.ajax.reload();
-                            } else if (response.data == 0) {
-                                Swal.fire("Thất bại", "Đơn vị đã trùng tên!", "error");
-                            }
-                        });
+                    .then(function (response) {
+                        if (response.data == 1) {
+                            Swal.fire({
+                                icon: "success",
+                                title: "Thành công",
+                                text: "Sửa đơn vị thành công!",
+                                showConfirmButton: false,
+                                timer: 1500
+                            });
+                            i = 0;
+                            table.ajax.reload();
+                        } else if (response.data == 0) {
+                            Swal.fire("Thất bại", "Đơn vị đã trùng tên!", "error");
+                        }
+                    });
                 } else {
                     swal.fire({
                         text: "Xin lỗi, có vẻ như đã phát hiện thấy một số lỗi, vui lòng thử lại .",
@@ -309,38 +309,38 @@
                 confirmButtonText: "Đồng ý!",
                 cancelButtonText: "Không"
             })
-                .then(function(result) {
-                    if (result.value) {
-                        axios({
-                            url: 'destroy-unit/' + id,
-                            method: 'GET',
-                            headers: {
-                                'X-CSRF-TOKEN': $('meta[name = "csrf-token" ]').attr('content')
-                            },
-                        })
-                        .then(function (response) {
-                            if (response.data == 1) {
-                                Swal.fire({
-                                    icon: "success",
-                                    title: "Thành công",
-                                    text: "Xoá đơn vị thành công!",
-                                    showConfirmButton: false,
-                                    timer: 1500
-                                });
-                                i = 0;
-                                table.ajax.reload();
-                            } else if (response.data == 0) {
-                                Swal.fire({
-                                    icon: "error",
-                                    title: "Thất bại",
-                                    text: "Đang có sản phẩm dùng đơn vị này!",
-                                    showConfirmButton: false,
-                                    timer: 1500
-                                });
-                            }
-                        });
-                    }
-                });
+            .then(function(result) {
+                if (result.value) {
+                    axios({
+                        url: 'destroy-unit/' + id,
+                        method: 'GET',
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name = "csrf-token" ]').attr('content')
+                        },
+                    })
+                    .then(function (response) {
+                        if (response.data == 1) {
+                            Swal.fire({
+                                icon: "success",
+                                title: "Thành công",
+                                text: "Xoá đơn vị thành công!",
+                                showConfirmButton: false,
+                                timer: 1500
+                            });
+                            i = 0;
+                            table.ajax.reload();
+                        } else if (response.data == 0) {
+                            Swal.fire({
+                                icon: "error",
+                                title: "Thất bại",
+                                text: "Đang có sản phẩm dùng đơn vị này!",
+                                showConfirmButton: false,
+                                timer: 1500
+                            });
+                        }
+                    });
+                }
+            });
         });
     })
 </script>
