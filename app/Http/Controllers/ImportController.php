@@ -39,7 +39,7 @@ class ImportController extends Controller
             $data = Import::query()->select('suppliers.supplier_name', DB::raw('SUM(importdetails.detail_import_price) As total'), 'imports.*')
                 ->leftJoin('importdetails', 'importdetails.import_id', '=', 'imports.id')
                 ->join('suppliers', 'suppliers.id', '=', 'imports.supplier_id')
-                ->groupBy('suppliers.supplier_name','imports.id','imports.import_fee_ship','imports.supplier_id', 'imports.created_at', 'imports.updated_at')
+                ->groupBy('suppliers.supplier_name','imports.import_code','imports.id','imports.import_fee_ship','imports.supplier_id', 'imports.created_at', 'imports.updated_at')
                 ->orderBy('id', 'Desc')->get();
             return response()->json([
                 "data" => $data,
@@ -51,6 +51,10 @@ class ImportController extends Controller
     {
         if (Auth::check()) {
             $import = new Import();
+            do {
+                $import_code = rand(106890122,1000000000);
+                $check = Import::query()->where('import_code','=', $import_code)->first();
+            } while ($check);
             $import->supplier_id = $request->supplier_id;
             $import->import_fee_ship = $request->import_fee_ship;
             $import->save();

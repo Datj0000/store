@@ -238,7 +238,6 @@
             <tr>
                 <th>STT</th>
                 <th>Hình ảnh</th>
-                <th>Mã sản phẩm</th>
                 <th>Sản phẩm</th>
                 <th>Thương hiệu</th>
                 <th>Danh mục</th>
@@ -302,12 +301,6 @@
                             </div>
                             `
                         }
-                    }
-                },
-                {
-                    'data': null,
-                    render: function(data, type, row) {
-                        return `SP`+('00000'+`${row.id}`).slice(-5)
                     }
                 },
                 {

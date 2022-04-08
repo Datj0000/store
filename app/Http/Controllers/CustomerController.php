@@ -81,17 +81,19 @@ class CustomerController extends Controller
             $data = $request->all();
             $customer = Customer::query()->where('customer_name', 'LIKE', '%' . $data['query'] . '%')
             ->orwhere('customer_phone', 'LIKE', '%' . $data['query'] . '%')->get();
-            if ($customer->count() > 0) {
+
                 $output = '
                 <ul class="dropdown-menu2">';
-                foreach ($customer as $key => $val) {
-                    $output .= '
-                        <li class="li_search_customer" data-id="'.$val->id.'">' . $val->customer_name . ' - ' . $val->customer_phone . '</li>
-                   ';
+                $output .= '<li class="li_add_customer">Thêm khách hàng mới</li>';
+                if ($customer->count() > 0) {
+                    foreach ($customer as $key => $val) {
+                        $output .= '
+                            <li class="li_search_customer" data-id="'.$val->id.'">' . $val->customer_name . ' - ' . $val->customer_phone . '</li>
+                       ';
+                    }
                 }
                 $output .= '</ul>';
                 return $output;
-            }
         }
     }
 }

@@ -95,8 +95,13 @@ class CouponController extends Controller
     {
         if (Auth::check()) {
             $data = $request->all();
+            $today = Carbon::now('Asia/Ho_Chi_Minh')->format('Y-m-d');
             // $coupon = Coupon::query()->where('coupon_status','=', 0)->where('coupon_code', $request->query)->get();
-            $coupon = Coupon::query()->where('coupon_status','=', 0)->where('coupon_code', 'LIKE', '%' . $data['query']. '%')->get();
+            $coupon = Coupon::query()->where('coupon_status','=', 0)
+                ->where('coupon_code', 'LIKE', '%' . $data['query']. '%')
+                ->where('coupon_date_start', '<=' ,$today)
+                ->where('coupon_date_end', '>=' ,$today)
+                ->get();
             if ($coupon->count() > 0) {
                 $output = '
                 <ul class="dropdown-menu2">';
@@ -113,9 +118,18 @@ class CouponController extends Controller
     public function use(Request $request)
     {
         if (Auth::check()) {
-            $coupon = Coupon::query()->where('coupon_code', $request->coupon)->first();
+            $today = Carbon::now('Asia/Ho_Chi_Minh')->format('Y-m-d');
+            $coupon = Coupon::query()->where('coupon_status','=', 0)
+                ->where('coupon_code', '=', $request->coupon)
+                ->where('coupon_date_start', '<=' ,$today)
+                ->where('coupon_date_end', '>=' ,$today)
+                ->first();
             if($coupon){
-                $coupon_session = Session::get('coupon');
+                if($request->type == 0){
+                    $coupon_session = Session::get('coupon');
+                }else{
+                    $coupon_session = Session::get('edit_coupon');
+                }
                 if ($coupon_session == true) {
                     Session::put('coupon', null);
                 }
@@ -124,9 +138,18 @@ class CouponController extends Controller
                     'coupon_condition' => $coupon->coupon_condition,
                     'coupon_number' => $coupon->coupon_number,
                 );
-                Session::put('coupon', $cou);
+                if($request->type == 0){
+                    Session::put('coupon', $cou);
+                }else{
+                    Session::put('edit_coupon', $cou);
+                }
             } else{
-                Session::put('coupon', null);
+                if($request->type == 0){
+                    Session::forget('coupon');
+                }else{
+                    Session::forget('edit_coupon');
+                }
+
             }
         }
     }

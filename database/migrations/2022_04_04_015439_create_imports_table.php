@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('imports', function (Blueprint $table) {
             $table->id();
+            $table->bigInteger('import_code');
             $table->integer('supplier_id');
             $table->double('import_fee_ship');
             $table->timestamps();

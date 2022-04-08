@@ -142,18 +142,25 @@ class ProductController extends Controller
     {
         if (Auth::check()) {
             $data = $request->all();
-            $product = Product::query()->where('product_name', 'LIKE', '%' . $data['query'] . '%')
+            $product = Product::query()->select('importdetails.detail_import_price','importdetails.detail_sell_price','importdetails.product_code','brands.brand_name', 'products.*')
                 ->join('brands', 'brands.id', '=', 'products.brand_id')
                 ->join('importdetails', 'importdetails.product_id', '=', 'products.id')
+                ->where('product_name', 'LIKE', '%' . $data['query'] . '%')
                 ->orwhere('product_code', 'LIKE', '%' . $data['query'] . '%')->get();
             if ($product->count() > 0) {
-                $output = '
-                    <ul class="dropdown-menu2">';
-                        foreach ($product as $key => $val) {
-                            $output .= '
-                                    <li class="li_search_product" data-code="'.$val->product_code.'">' . $val->product_code . ' - ' . $val->brand_name . '  ' . $val->product_name . ' - Bảo hành đến: ' . Carbon::parse($val->detail_date_end)->format('d/m/Y') . ' - Giá: ' . number_format($val->detail_sell_price, 0, ',', '.') . ' đ' . '</li>
-                               ';
+                $output = '<ul class="dropdown-menu2">';
+                foreach ($product as $key => $val){
+                    $detail = ImportDetail::query()->where('product_id','=',$val->id)->first();
+                    if($detail){
+                        if($detail->detail_quantity - $detail->detail_soldout > 0){
+                            if(Auth::user()->role <= 1){
+                                $output .= '<li class="li_search_product" data-code="'.$val->product_code.'">' . $val->product_code . ' - ' . $val->brand_name . '  ' . $val->product_name . ' - Bảo hành đến: ' . Carbon::parse($val->detail_date_end)->format('d/m/Y') . ' - Giá nhập: ' . number_format($val->detail_import_price, 0, ',', '.') . ' đ' . ' - Giá bán: ' . number_format($val->detail_sell_price, 0, ',', '.') . ' đ' . '</li>';
+                            } else{
+                                $output .= '<li class="li_search_product" data-code="'.$val->product_code.'">' . $val->product_code . ' - ' . $val->brand_name . '  ' . $val->product_name . ' - Bảo hành đến: ' . Carbon::parse($val->detail_date_end)->format('d/m/Y') . ' - Giá bán: ' . number_format($val->detail_sell_price, 0, ',', '.') . ' đ' . '</li>';
+                            }
                         }
+                    }
+                }
                 $output .= '</ul>';
                 return $output;
             }
@@ -176,26 +183,26 @@ class ProductController extends Controller
                             <th scope="col">STT</th>
                             <th scope="col">Hình ảnh</th>
                             <th scope="col">Tên sản phẩm</th>';
-                            if(Auth::user()->role <= 1){
-                                $output .='
+            if(Auth::user()->role <= 1){
+                $output .='
                                 <th scope="col">Nhà cung cấp</th>
                                 <th scope="col">VAT</th>
                                 <th scope="col">Giá nhập</th>
                                 ';
-                            }
-                            $output .='
+            }
+            $output .='
                                 <th scope="col">Giá bán</th>
                                 <th scope="col">Số lượng</th>';
-                            if(Auth::user()->role <= 1){
-                                $output .='<th scope="col">Thời gian nhập</th>';
-                            }
-                            $output .='
+            if(Auth::user()->role <= 1){
+                $output .='<th scope="col">Thời gian nhập</th>';
+            }
+            $output .='
                                 <th scope="col">Bảo hành từ</th>
                                 <th scope="col">Bảo hành đến</th>';
-                            if(Auth::user()->role <= 1){
-                                $output .='<th scope="col">Chức năng</th>';
-                            }
-                            $output .='
+            if(Auth::user()->role <= 1){
+                $output .='<th scope="col">Chức năng</th>';
+            }
+            $output .='
                         </tr>
                     </thead>
                     <tbody>
@@ -211,32 +218,32 @@ class ProductController extends Controller
                     $output .= '
                         <tr>
                             <td scope="row">' . $i . '</td>';
-                            if($item->detail_image){
-                                $output .='
+                    if($item->detail_image){
+                        $output .='
                                     <td>
                                         <div class="product__shape">
                                             <img class="product__img" src="'.url('uploads/import/'.$item->detail_image.'').'">
                                         </div>
                                     </td>';
-                            }else {
-                                $output .='
+                    }else {
+                        $output .='
                                     <td>
                                         <div class="product__shape">
                                             <img class="product__img" src="'.url('asset/media/users/noimage.png').'">
                                         </div>
                                     </td>';
-                            }
+                    }
 
                     $output .='<td>'.$item->product_name.'</td>';
-                            if(Auth::user()->role <= 1){
-                                $output .='<td>'.$item->supplier_name.'</td>';
-                                if($item->detail_vat){
-                                    $output .='<td>'.$item->detail_vat.'</td>';
-                                }else {
-                                    $output .='<td>Không có</td>';
-                                }
-                                $output .='<td>'.number_format($item->detail_import_price, 0, ',', '.').'đ'.'</td>';
-                            }
+                    if(Auth::user()->role <= 1){
+                        $output .='<td>'.$item->supplier_name.'</td>';
+                        if($item->detail_vat){
+                            $output .='<td>'.$item->detail_vat.'</td>';
+                        }else {
+                            $output .='<td>Không có</td>';
+                        }
+                        $output .='<td>'.number_format($item->detail_import_price, 0, ',', '.').'đ'.'</td>';
+                    }
 
                     $output .='
                             <td>'.number_format($item->detail_sell_price, 0, ',', '.').'đ'.'</td>

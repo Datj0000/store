@@ -15,10 +15,12 @@ return new class extends Migration
     {
         Schema::create('insurances', function (Blueprint $table) {
             $table->id();
-            $table->integer('order_id');
+            $table->integer('insurances_method');
+            $table->integer('supplier_id')->nullable();
+            $table->integer('order_id')->nullable();
             $table->bigInteger('product_code');
-            $table->integer('insurance_status');
-            $table->double('insurance_price')->default(0);
+            $table->integer('insurance_status')->default(0);
+            $table->double('insurance_fee')->default(0);
             $table->timestamps();
         });
     }

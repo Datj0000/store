@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('customer_name');
             $table->string('customer_phone');
             $table->string('customer_address');
-            $table->integer('customer_role');
+            $table->integer('customer_role')->default(0);
             $table->timestamps();
         });
     }

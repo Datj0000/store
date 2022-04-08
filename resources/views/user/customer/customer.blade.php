@@ -104,7 +104,7 @@
                             @endif
                         </div>
                         <div class="card-footer">
-                            <button id="update_customer" type="button" class="btn btn-primary mr-2">Lưu</button>
+                            <button id="update_customer" type="button" class="btn btn-primary mr-2">Cập nhật</button>
                         </div>
                     </form>
                 </div>

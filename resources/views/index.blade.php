@@ -58,7 +58,7 @@
             </button>
         </div>
     </div>
-    <div class="d-flex flex-column flex-root">
+    <div class="d-flex flex-column flex-root" style="user-select: none">
         <div class="d-flex flex-row flex-column-fluid page">
             <div class="aside aside-left aside-fixed d-flex flex-column flex-row-auto" id=kt_aside>
                 <div class="brand flex-column-auto" id=kt_brand>
@@ -89,8 +89,8 @@
                     <div id=kt_aside_menu class="aside-menu my-4" data-menu-vertical=1 data-menu-scroll=1
                         data-menu-dropdown-timeout=500>
                         <ul class=menu-nav>
-                            <li class=" menu-item menu-item-active" aria-haspopup=true>
-                                <a id=all_statistical class=menu-link>
+                            <li id=all_statistical class=" menu-item menu-item-active" aria-haspopup=true>
+                                <a class=menu-link>
                                     <span class="svg-icon menu-icon">
                                         <svg xmlns="http://www.w3.org/2000/svg"
                                             xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px"
@@ -105,8 +105,8 @@
                                     <span class=menu-text>Tổng quan</span>
                                 </a>
                             </li>
-                            <li class=" menu-item" aria-haspopup=true>
-                                <a id=view_order class=menu-link>
+                            <li id=view_order class=" menu-item" aria-haspopup=true>
+                                <a class=menu-link>
                                     <span class="svg-icon menu-icon">
                                         <svg xmlns="http://www.w3.org/2000/svg"
                                              xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px"
@@ -149,48 +149,48 @@
 													<span class="menu-text">Sản phẩm</span>
 												</span>
                                         </li>
-                                        <li class="menu-item" aria-haspopup="true">
-                                            <a id=view_supplier class="menu-link">
+                                        <li id=view_supplier class="menu-item" aria-haspopup="true">
+                                            <a class="menu-link">
                                                 <i class="menu-bullet menu-bullet-dot">
                                                     <span></span>
                                                 </i>
                                                 <span class="menu-text">Nhà cung cấp</span>
                                             </a>
                                         </li>
-                                        <li class="menu-item" aria-haspopup="true">
-                                            <a id=view_category class="menu-link">
+                                        <li id=view_category class="menu-item" aria-haspopup="true">
+                                            <a class="menu-link">
                                                 <i class="menu-bullet menu-bullet-dot">
                                                     <span></span>
                                                 </i>
                                                 <span class="menu-text">Danh mục</span>
                                             </a>
                                         </li>
-                                        <li class="menu-item" aria-haspopup="true">
-                                            <a id=view_brand class="menu-link">
+                                        <li id=view_brand class="menu-item" aria-haspopup="true">
+                                            <a class="menu-link">
                                                 <i class="menu-bullet menu-bullet-dot">
                                                     <span></span>
                                                 </i>
                                                 <span class="menu-text">Thương hiệu</span>
                                             </a>
                                         </li>
-                                        <li class="menu-item" aria-haspopup="true">
-                                            <a id=view_unit class="menu-link">
+                                        <li id=view_unit class="menu-item" aria-haspopup="true">
+                                            <a class="menu-link">
                                                 <i class="menu-bullet menu-bullet-dot">
                                                     <span></span>
                                                 </i>
                                                 <span class="menu-text">Đơn vị</span>
                                             </a>
                                         </li>
-                                        <li class="menu-item" aria-haspopup="true">
-                                            <a id=view_product class="menu-link">
+                                        <li id=view_product class="menu-item" aria-haspopup="true">
+                                            <a class="menu-link">
                                                 <i class="menu-bullet menu-bullet-dot">
                                                     <span></span>
                                                 </i>
                                                 <span class="menu-text">Sản phẩm</span>
                                             </a>
                                         </li>
-                                        <li class="menu-item" aria-haspopup="true">
-                                            <a id="view_import" class="menu-link">
+                                        <li id="view_import" class="menu-item" aria-haspopup="true">
+                                            <a class="menu-link">
                                                 <i class="menu-bullet menu-bullet-dot">
                                                     <span></span>
                                                 </i>
@@ -200,8 +200,8 @@
                                     </ul>
                                 </div>
                             </li>
-                            <li class=" menu-item" aria-haspopup=true>
-                                <a id=view_customer class=menu-link>
+                            <li id=view_customer class="menu-item" aria-haspopup=true>
+                                <a class=menu-link>
                                     <span class="svg-icon menu-icon">
                                         <svg xmlns="http://www.w3.org/2000/svg"
                                              xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px"
@@ -216,8 +216,8 @@
                                     <span class=menu-text>Khách hàng</span>
                                 </a>
                             </li>
-                            <li class=" menu-item" aria-haspopup=true>
-                                <a id=view_coupon class=menu-link>
+                            <li id=view_coupon class="menu-item" aria-haspopup=true>
+                                <a class=menu-link>
                                     <span class="svg-icon menu-icon">
                                         <svg xmlns="http://www.w3.org/2000/svg"
                                              xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px"
@@ -231,8 +231,8 @@
                                     <span class=menu-text>Mã giảm giá</span>
                                 </a>
                             </li>
-                            <li class=" menu-item" aria-haspopup=true>
-                                <a id=view_insurance class=menu-link>
+                            <li id=view_insurance class=" menu-item" aria-haspopup=true>
+                                <a class=menu-link>
                                     <span class="svg-icon menu-icon">
                                         <svg xmlns="http://www.w3.org/2000/svg"
                                              xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px"
@@ -373,50 +373,6 @@
                         <div class="header-menu-wrapper header-menu-wrapper-left" id=kt_header_menu_wrapper>
                         </div>
                         <div class=topbar>
-                            <div class=dropdown>
-{{--                                <div class=topbar-item data-toggle=dropdown data-offset=10px,0px>--}}
-{{--                                    <div class="btn btn-icon btn-clean btn-dropdown btn-lg mr-1">--}}
-{{--                                        <?php--}}
-{{--                                        $language = session()->get('language');--}}
-{{--                                        if ($language == 'vi') {--}}
-{{--                                            ?>--}}
-{{--                                        <img class="h-20px w-20px rounded-sm"--}}
-{{--                                            src="{{ asset('asset/media/svg/flags/220-vietnam.svg') }}" />--}}
-{{--                                        <?php--}}
-{{--                                        }--}}
-{{--                                        else{--}}
-{{--                                            ?>--}}
-{{--                                        <img class="h-20px w-20px rounded-sm"--}}
-{{--                                            src="{{ asset('asset/media/svg/flags/226-united-states.svg') }}" />--}}
-{{--                                        <?php--}}
-{{--                                        }--}}
-{{--                                    ?>--}}
-{{--                                    </div>--}}
-{{--                                </div>--}}
-{{--                                <div--}}
-{{--                                    class="dropdown-menu p-0 m-0 dropdown-menu-anim-up dropdown-menu-sm dropdown-menu-right">--}}
-{{--                                    <ul class="navi navi-hover py-4">--}}
-{{--                                        <li class=navi-item>--}}
-{{--                                            <a href data-lang=vi class="changelanguage navi-link">--}}
-{{--                                                <span class="symbol symbol-20 mr-3">--}}
-{{--                                                    <img src="{{ asset('asset/media/svg/flags/220-vietnam.svg') }}"--}}
-{{--                                                        alt />--}}
-{{--                                                </span>--}}
-{{--                                                <span class=navi-text>@lang('lang.vietnam')</span>--}}
-{{--                                            </a>--}}
-{{--                                        </li>--}}
-{{--                                        <li class="navi-item active">--}}
-{{--                                            <a href data-lang=en class="changelanguage navi-link">--}}
-{{--                                                <span class="symbol symbol-20 mr-3">--}}
-{{--                                                    <img src="{{ asset('asset/media/svg/flags/226-united-states.svg') }}"--}}
-{{--                                                        alt />--}}
-{{--                                                </span>--}}
-{{--                                                <span class=navi-text>@lang('lang.english')</span>--}}
-{{--                                            </a>--}}
-{{--                                        </li>--}}
-{{--                                    </ul>--}}
-{{--                                </div>--}}
-                            </div>
                             <div class=topbar-item>
                                 <div class="btn btn-icon btn-icon-mobile w-auto btn-clean d-flex align-items-center btn-lg px-2"
                                     id=kt_quick_user_toggle>
@@ -609,8 +565,8 @@
     <script src="{{ asset('asset/js/scripts.bundle.js') }}"></script>
     <script src="{{ asset('asset/plugins/custom/datatables/datatables.bundle.js') }}"></script>
     <script src="{{ asset('asset/js/script.js') }}"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
+{{--    <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>--}}
+{{--    <script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>--}}
 </body>
 
 </html>

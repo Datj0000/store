@@ -132,11 +132,11 @@ class ImportDetailController extends Controller
             if (!$check){
                 do {
                     $product_code = rand(106890122,1000000000);
-                    $check = ImportDetail::query()->where('product_code','=', $product_code)->first();
+                    $check2 = ImportDetail::query()->where('product_code','=', $product_code)->first();
                     $generator = new BarcodeGeneratorHTML();
                     $barcodes = $generator->getBarcode($product_code, $generator::TYPE_STANDARD_2_5, 2, 60);
                 }
-                while ($check);
+                while ($check2);
                 $detail = new ImportDetail();
                 $detail->import_id = $id;
                 $detail->product_id = $request->product_id;

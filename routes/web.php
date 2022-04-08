@@ -150,11 +150,14 @@ Route::post('/create-order',[OrderController::class,'create']);
 Route::get('/edit-order/{id}',[OrderController::class, 'edit']);
 Route::post('/update-order/{id}',[OrderController::class,'update']);
 Route::get('/destroy-order/{id}',[OrderController::class,'destroy']);
-Route::get('/add-cart/{code}',[OrderController::class,'add_cart']);
+
+Route::post('/add-cart/{code}',[OrderController::class,'add_cart']);
 Route::get('/load-cart',[OrderController::class,'load_cart']);
+Route::get('/load-edit-cart/{id}',[OrderController::class,'load_edit_cart']);
 Route::post('/update-cart',[OrderController::class,'update_cart']);
-Route::get('/destroy-cart/{id}',[OrderController::class,'destroy_cart']);
+Route::post('/destroy-cart',[OrderController::class,'destroy_cart']);
 Route::post('/feeship',[OrderController::class,'feeship']);
+Route::post('/autocomplete-order',[OrderController::class,'autocomplete']);
 
 //OrderDetail
 Route::get('/fetchdata-orderdetail/{id}',[OrderDetailController::class,'fetchdata']);

@@ -39,6 +39,12 @@ class OrderController extends Controller
     {
         if (Auth::check()) {
             $order = new Order();
+            do {
+                $order_code = rand(106890122,1000000000);
+                $check = Order::query()->where('order_code','=', $order_code)->first();
+            }
+            while ($check);
+            $order->order_code = $order_code;
             $order->customer_id = $request->customer_id;
             $order->order_methodpay = $request->order_methodpay;
             if (Session::get('fee')){
@@ -69,7 +75,12 @@ class OrderController extends Controller
     public function edit(int $id):\Illuminate\Http\JsonResponse
     {
         if (Auth::check()) {
-            $data = Order::query()->whereId($id)->first();
+            Session::forget('edit_fee');
+            Session::forget('edit_coupon');
+            Session::forget('edit_cart');
+            $data = Order::query()->select('customers.customer_name','customers.customer_phone', 'orders.*')
+                ->join('customers', 'customers.id', '=', 'orders.customer_id')
+                ->where('orders.id','=',$id)->first();
             return response()->json($data);
         }
     }
@@ -96,6 +107,7 @@ class OrderController extends Controller
             }
         }
     }
+
     public function add_cart($code)
     {
         if (Auth::check()) {
@@ -125,8 +137,9 @@ class OrderController extends Controller
                     );
                     Session::put('cart', $cart);
                     return 1;
+                } else{
+                    return 0;
                 }
-                return 0;
             } else {
                 $cart[] = array(
                     'session_id' => $session_id,
@@ -142,34 +155,51 @@ class OrderController extends Controller
             }
         }
     }
+
     public function update_cart(Request $request)
     {
         if (Auth::check()) {
-            $cart = Session::get('cart');
+            if($request->type == 0){
+                $cart = Session::get('cart');
+            }else{
+                $cart = Session::get('edit_cart');
+            }
             if ($cart == true) {
                 foreach ($cart as $key => $val) {
                     if ($val['session_id'] == $request->session_id) {
                         $cart[$key]['product_quantity'] = $request->product_quantity;
                     }
                 }
-                Session::put('cart', $cart);
+                if($request->type == 0){
+                    Session::put('cart', $cart);
+                }else{
+                    Session::put('edit_cart', $cart);
+                }
             } else {
                 return 0;
             }
         }
     }
 
-    public function destroy_cart($session_id)
+    public function destroy_cart(Request $request)
     {
         if (Auth::check()) {
-            $cart = Session::get('cart');
+            if($request->type == 0){
+                $cart = Session::get('cart');
+            }else{
+                $cart = Session::get('edit_cart');
+            }
             if ($cart == true) {
                 foreach ($cart as $key => $val) {
-                    if ($val['session_id'] == $session_id) {
+                    if ($val['session_id'] == $request->session_id) {
                         unset($cart[$key]);
                     }
                 }
-                Session::put('cart', $cart);
+                if($request->type == 0){
+                    Session::put('cart', $cart);
+                }else{
+                    Session::put('edit_cart', $cart);
+                }
                 return 1;
             } else {
                 return 0;
@@ -179,7 +209,11 @@ class OrderController extends Controller
     public function feeship(Request $request)
     {
         if (Auth::check()) {
-            Session::put('fee', $request->data);
+            if($request->type == 0){
+                Session::put('fee', $request->data);
+            }else{
+                Session::put('edit_fee', $request->data);
+            }
         }
     }
 
@@ -242,11 +276,11 @@ class OrderController extends Controller
                     $output .= '
                     <td>
                         <div class="wrap-num-product flex-w">
-                            <div data-session_id="' . $cart['session_id'] . '" class="btn-num-product-down hov-btn3 flex-c-m">
+                            <div data-type="0" data-session_id="' . $cart['session_id'] . '" class="btn-num-product-down hov-btn3 flex-c-m">
                                 <i class="las la-minus"></i>
                             </div>
-                            <input data-session_id="' . $cart['session_id'] . '" class="cart_qty txt-center num-product" type="number" value="' . $cart['product_quantity'] . '">
-                            <div data-session_id="' . $cart['session_id'] . '" class="btn-num-product-up hov-btn3 flex-c-m">
+                            <input data-type="0" data-session_id="' . $cart['session_id'] . '" class="cart_qty txt-center num-product" type="number" value="' . $cart['product_quantity'] . '">
+                            <div data-type="0" data-session_id="' . $cart['session_id'] . '" class="btn-num-product-up hov-btn3 flex-c-m">
                                 <i class="las la-plus"></i>
                             </div>
                         </div>
@@ -292,6 +326,153 @@ class OrderController extends Controller
                 }
                 if (Session::get('fee')) {
                     $total_fee = Session::get('fee');
+                    $intomoney += $total_fee;
+                    $output .= '
+                    <div style="width: 10%">Phí lắp đặt:</div>
+                    <div style="width: 90%">
+                        ' . number_format($total_fee, 0, ',', '.') . 'đ' . '
+                    </div>';
+                }
+                $output .= '
+                <div style="width: 10%">Thành tiền:</div>
+                <div style="width: 90%">
+                    ' . number_format($intomoney, 0, ',', '.') . 'đ' . '
+                </div>
+            </div>
+            ';
+            } else {
+                $output = '';
+            }
+            return $output;
+        }
+    }
+    public function load_edit_cart(int $order_id)
+    {
+        if (Auth::check()) {
+            $order_detail = OrderDetail::query()->select('brands.brand_name', 'products.product_name','importdetails.*', 'orderdetails.*')
+                ->join('importdetails', 'importdetails.product_code', '=', 'orderdetails.product_code')
+                ->join('products', 'products.id', '=', 'importdetails.product_id')
+                ->join('brands', 'brands.id', '=', 'products.brand_id')
+                ->where('order_id','=',$order_id)
+                ->get();
+            $session_id = substr(md5(microtime()), rand(0, 26), 5);
+            foreach ($order_detail as $key)
+            $cart[] = array(
+                'session_id' => $session_id,
+                'product_code' => $key->product_code,
+                'product_name' => $key->brand_name .' '. $key->product_name,
+                'product_image' => $key->detail_image,
+                'product_quantity' => $key->order_quantity,
+                'product_iprice' => $key->detail_import_price,
+                'product_price' => $key->detail_sell_price,
+            );
+            Session::put('edit_cart', $cart);
+            if (Session::get('edit_cart')) {
+                $output = '
+            <table class="table table-separate table-head-custom table-checkable display nowrap" cellspacing="0" width="100%" id="table_edit_cart">
+                <thead>
+                    <tr>
+                        <th>STT</th>
+                        <th>Hình ảnh</th>
+                        <th>Tên sản phẩm</th>
+                        <th>Giá bán</th>
+                        <th>Số lượng</th>
+                        <th>Thành tiền</th>
+                        <th></th>
+                    </tr>
+                </thead>';
+                $i = 1;
+                $total = 0;
+                $total_fee = 0;
+                $total_coupon = 0;
+                $iprice = 0;
+                foreach (Session::get('edit_cart') as $key => $cart) {
+                    $subtotal = $cart['product_price'] * $cart['product_quantity'];
+                    $iprice += $cart['product_iprice'];
+                    $total += $subtotal;
+                    $detail = ImportDetail::query()->where('product_code', '=', $cart['product_code'])->first();
+                    $import = Import::query()->whereId($detail->import_id)->first();
+                    $detail_count = ImportDetail::query()->where('import_id', '=', $detail->import_id)->count();
+                    $fee = $import->import_fee_ship / $detail_count;
+                    $total_fee += $fee;
+                    $output .= '
+                <tr>
+                    <td>' . $i++ . '</td>';
+                    if ($cart['product_image']) {
+                        $output .= '
+                        <td>
+                            <div class="cart__shape">
+                                <img class="cart__img" src="' . asset('public/uploads/product/' . $cart['product_image']) . '" alt="IMG">
+                            </div>
+                        </td>';
+                    } else {
+                        $output .= '
+                        <td>
+                            <div class="cart__shape">
+                                <img class="cart__img" src="' . asset('asset/media/users/noimage.png') . '" alt="IMG">
+                            </div>
+                        </td>';
+                    }
+                    $output .= '
+                    <td>' . $cart['product_name'] . '</td>
+                    <td>' . number_format($cart['product_price'], 0, ',', '.') . 'đ</td>';
+                    $check_qty = ImportDetail::query()->where('product_code', $cart['product_code'])->first();
+                    if ($check_qty) {
+                        $output .= '<input class="product_quantity_' . $cart['session_id'] . '" type="hidden" value="' . $check_qty->detail_quantity - $check_qty->detail_soldout. '">';
+                    }
+                    $output .= '
+                    <td>
+                        <div class="wrap-num-product flex-w">
+                            <div data-type="1" data-session_id="' . $cart['session_id'] . '" class="btn-num-product-down hov-btn3 flex-c-m">
+                                <i class="las la-minus"></i>
+                            </div>
+                            <input data-type="1" data-session_id="' . $cart['session_id'] . '" class="cart_qty txt-center num-product" type="number" value="' . $cart['product_quantity'] . '">
+                            <div data-type="1" data-session_id="' . $cart['session_id'] . '" class="btn-num-product-up hov-btn3 flex-c-m">
+                                <i class="las la-plus"></i>
+                            </div>
+                        </div>
+                    </td>
+                    <td>' . number_format($subtotal, 0, ',', '.') . 'đ</td>
+                    <td> <i style="cursor: pointer" data-session_id="' . $cart['session_id'] . '" class="destroy_cart la la-trash"></td>
+                </tr>';
+                }
+                $output .= '
+                    </table>
+                    </div>
+                </div>
+            </div>
+            <div style="margin-top: 20px" class="row form-group">
+                <div style="width: 10%">Tổng:</div>
+                <div style="width: 90%">
+                    ' . number_format($total, 0, ',', '.') . 'đ' . '
+                </div>
+                ';
+                if (Session::get('edit_coupon')) {
+                    foreach (Session::get('edit_coupon') as $key => $cou) {
+                        if ($cou['coupon_condition'] == 0) {
+                            $total_coupon = ($total * $cou['coupon_number']) / 100;
+                            $output .= '
+                            <div style="width: 10%">Giảm giá:</div>
+                            <div style="width: 90%">
+                                ' . $cou['coupon_number'] . '% (' . number_format($total_coupon, 0, ',', '.') . ' đ)' . '
+                            </div>';
+                        } else {
+                            $total_coupon = $cou['coupon_number'];
+                            $output .= '
+                            <div style="width: 10%">Giảm giá:</div>
+                            <div style="width: 90%">
+                                ' . number_format($total_coupon, 0, ',', '.') . 'đ' . '
+                            </div>';
+                        }
+                    }
+                }
+                if ($iprice + $total_fee > $total - $total_coupon) {
+                    $intomoney = $iprice + $total_fee;
+                } else {
+                    $intomoney = $total - $total_coupon;
+                }
+                if (Session::get('edit_fee')) {
+                    $total_fee = Session::get('edit_fee');
                     $intomoney += $total_fee;
                     $output .= '
                     <div style="width: 10%">Phí lắp đặt:</div>

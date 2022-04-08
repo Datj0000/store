@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\Supplier;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Insurance;
@@ -12,7 +13,8 @@ class InsuranceController extends Controller
     public function index(): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\Foundation\Application
     {
         if (Auth::check()) {
-            return view('user.insurance.insurance');
+            $supplier = Supplier::query()->get();
+            return view('user.insurance.insurance')->with('supplier', $supplier);
         }
         return view('auth.login');
     }

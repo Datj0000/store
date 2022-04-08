@@ -94,7 +94,7 @@
             <thead>
             <tr>
                 <th>STT</th>
-                <th>đơn vị</th>
+                <th>Đơn vị</th>
                 <th>Ghi chú</th>
                 <th>Chức năng</th>
             </tr>

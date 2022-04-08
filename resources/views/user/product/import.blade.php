@@ -184,14 +184,6 @@
                                 <label>Sản phẩm:</label>
                                 <select id="product_id" name="product" class="form-control">
                                     <option value="">Vui lòng chọn danh mục và thương hiệu của sản phẩm</option>
-                                    {{-- @if($product->count() > 0)
-                                        <option value disabled selected hidden>Chọn sản phẩm</option>
-                                        @foreach ($product as $key => $item)
-                                            <option value="{{ $item->id }}">{{ $item->product_name }}</option>
-                                        @endforeach
-                                    @else
-                                        <option value="">Chưa có sản phẩm</option>
-                                    @endif --}}
                                 </select>
                             </div>
                             <div class="form-group">
@@ -312,14 +304,7 @@
                             <div class="form-group">
                                 <label>Sản phẩm:</label>
                                 <select id="edit_product_id" name="product" class="form-control">
-                                    @if($product->count() > 0)
-                                        <option value disabled selected hidden>Chọn sản phẩm</option>
-                                        @foreach ($product as $key => $item)
-                                            <option value="{{ $item->id }}">{{ $item->product_name }}</option>
-                                        @endforeach
-                                    @else
-                                        <option value="">Chưa có sản phẩm</option>
-                                    @endif
+                                    <option value="">Vui lòng chọn danh mục và thương hiệu của sản phẩm</option>
                                 </select>
                             </div>
                             <div class="form-group">
@@ -485,10 +470,7 @@
                     }
                 },
                 {
-                    'data': null,
-                    render: function(data, type, row) {
-                        return `NH`+('00000'+`${row.id}`).slice(-5)
-                    }
+                    'data': 'import_code'
                 },
                 {
                     'data': null,

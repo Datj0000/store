@@ -145,7 +145,7 @@
                             <div class="form-group">
                                 <label>Khách hàng:</label>
                                 <input type="hidden" name="customer" id="customer_id">
-                                <input type="text" class="form-control form-control-solid" id="customer_name" placeholder="Họ và tên" autocomplete="off" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==255) return false;"/>
+                                <input type="text" class="form-control form-control-solid" id="customer_name" placeholder="Tìm kiếm theo tên khách hàng hoặc số điện thoại" autocomplete="off" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==255) return false;"/>
                                 <div id="search_customer"></div>
                             </div>
                             <div class="form-group">
@@ -171,13 +171,13 @@
                             @if(Auth::user()->role <= 1)
                                 <div class="form-group">
                                     <label>Mã giảm giá:</label>
-                                    <input name="coupon" type="text" class="form-control form-control-solid" id="order_coupon" autocomplete="off" placeholder="Mã giảm giá" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==255) return false;" />
+                                    <input name="coupon" type="text" class="form-control form-control-solid" id="order_coupon" autocomplete="off" placeholder="Tìm kiếm theo mã giảm giá" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==255) return false;" />
                                     <div id="search_coupon"></div>
                                 </div>
                             @endif
                             <div class="form-group">
-                                <label>Tìm kiếm sản phẩm theo mã vạch hoặc tên sản phẩm:</label>
-                                <input type="text" class="form-control form-control-solid" id="product_name" autocomplete="off" placeholder="Tìm kiếm" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==20) return false;"/>
+                                <label>Sản phẩm:</label>
+                                <input type="text" class="form-control form-control-solid" id="product_name" autocomplete="off" placeholder="Tìm kiếm sản phẩm theo mã vạch hoặc tên sản phẩm" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==20) return false;"/>
                                 <div id="search_product"></div>
                             </div>
                             <div id="load_cart"></div>
@@ -204,9 +204,48 @@
                     <form class="form" id="form_edit_order">
                         <div class="card-body">
                             <input type="hidden" id="edit_order_id">
+                            <div class="form-group">
+                                <label>Khách hàng:</label>
+                                <input type="hidden" name="customer" id="edit_customer_id">
+                                <input type="text" class="form-control form-control-solid" id="edit_customer_name" placeholder="Tìm kiếm theo tên khách hàng hoặc số điện thoại" autocomplete="off" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==255) return false;"/>
+                                <div id="search_customer"></div>
+                            </div>
+                            <div class="form-group">
+                                <label>Hình thức giao hàng:</label>
+                                <select name="method" id="edit_order_method" class="form-control">
+                                    <option value disabled selected hidden>Chọn hình thức giao hàng</option>
+                                    <option value="0">Nhận tại cửa hàng</option>
+                                    <option value="1">Giao đến nhà</option>
+                                </select>
+                            </div>
+                            <div class="form-group feeship hide">
+                                <label>Phí lắp đặt:</label>
+                                <input name="feeship" type="number" class="form-control form-control-solid" id="edit_order_fee_ship" placeholder="Phí lắp đặt" min="0" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==20) return false;"/>
+                            </div>
+                            <div class="form-group">
+                                <label>Hình thức thanh toán:</label>
+                                <select name="methodpay" id="edit_order_methodpay" class="form-control">
+                                    <option value disabled selected hidden>Chọn hình thức thanh toán</option>
+                                    <option value="0">Tiền mặt</option>
+                                    <option value="1">Chuyển khoản</option>
+                                </select>
+                            </div>
+                            @if(Auth::user()->role <= 1)
+                                <div class="form-group">
+                                    <label>Mã giảm giá:</label>
+                                    <input name="coupon" type="text" class="form-control form-control-solid" id="edit_order_coupon" autocomplete="off" placeholder="Tìm kiếm theo mã giảm giá" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==255) return false;" />
+                                    <div id="edit_search_coupon"></div>
+                                </div>
+                            @endif
+                            <div class="form-group">
+                                <label>Sản phẩm:</label>
+                                <input type="text" class="form-control form-control-solid" id="edit_product_name" autocomplete="off" placeholder="Tìm kiếm sản phẩm theo mã vạch hoặc tên sản phẩm" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==20) return false;"/>
+                                <div id="edit_search_product"></div>
+                            </div>
+                            <div id="load_edit_cart"></div>
                         </div>
                         <div class="card-footer">
-                            <button id="update_order" type="button" class="btn btn-primary mr-2">Lưu</button>
+                            <button id="update_order" type="button" class="btn btn-primary mr-2">Cập nhật</button>
                         </div>
                     </form>
                 </div>
@@ -230,7 +269,28 @@
 </div>
 <script>
     load_cart();
-    function use_coupon(coupon){
+    function feeship(type,data){
+        axios({
+            url: "feeship",
+            method: "POST",
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name = "csrf-token" ]').attr('content')
+            },
+            data: {
+                type: type,
+                data: data
+            },
+        })
+        .then(function (response) {
+            if(type == 0){
+                load_cart();
+            } else {
+                var id = $('#edit_order_id').val();
+                load_edit_cart(id);
+            }
+        });
+    }
+    function use_coupon(type,coupon){
         axios({
             url: "use-coupon",
             method: "POST",
@@ -238,81 +298,130 @@
                 'X-CSRF-TOKEN': $('meta[name = "csrf-token" ]').attr('content')
             },
             data:{
+                type: type,
                 coupon: coupon
             }
-        }).then(function (){
-            load_cart();
+        })
+        .then(function (response) {
+            if(type == 0){
+                load_cart();
+            } else {
+                var id = $('#edit_order_id').val();
+                load_edit_cart(id);
+            }
         });
     }
-    function add_cart(code){
-        axios.get('add-cart/' + code)
-            .then(function(response) {
-                if(response.data == 1){
-                    load_cart();
-                }else if(response.data == 0) {
-                    swal.fire({
-                        icon: "error",
-                        title: "Thất bại",
-                        text: "Sản phẩm đã có trong giỏ hàng!",
-                        showConfirmButton: false,
-                        timer: 1500
-                    });
-                }
-            })
-            .catch((error) => {
-                console.log(error);
-            });
+    function add_cart(type, code){
+        axios.post('add-cart/' + code,{
+            type: type
+        })
+        .then(function(response) {
+            if(response.data == 1){
+                load_cart();
+            }else if(response.data == 0) {
+                swal.fire({
+                    icon: "error",
+                    title: "Thất bại",
+                    text: "Sản phẩm đã có trong giỏ hàng!",
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            }
+        });
     }
     function load_cart(){
         axios.get('load-cart')
-            .then(function(response) {
-                $("#load_cart").html(response.data);
-                $('#table_cart').DataTable({
-                    "ordering": false,
-                    "responsive": true,
-                    "searching": false,
-                    "bPaginate": false,
-                    "bLengthChange": false,
-                    "bFilter": true,
-                    "bInfo": false,
-                    "bAutoWidth": false
-                });
-                $('.btn-num-product-down').click(function() {
-                    var session_id = $(this).data('session_id');
-                    var numProduct = Number($(this).next().val());
-                    if (numProduct > 1) $(this).next().val(numProduct - 1);
-                    if (numProduct > 1) {
-                        var product_quantity = numProduct - 1;
-                    } else {
-                        var product_quantity = 1;
-                    }
-                    update_cart(session_id, product_quantity);
-                });
-                $('.btn-num-product-up').click(function() {
-                    var session_id = $(this).data('session_id');
-                    var numProduct = Number($(this).prev().val());
-                    $(this).prev().val(numProduct + 1);
-                    var max_product_quantity = $('.product_quantity_' + session_id).val();
-                    var product_quantity = numProduct + 1;
-                    if (product_quantity > max_product_quantity) {
-                        update_cart(session_id, max_product_quantity);
-                        Swal.fire({
-                            icon: "warning",
-                            title: "Cảnh báo",
-                            text: "Sản phẩm chỉ còn " + max_product_quantity + " sản phẩm!",
-                            showConfirmButton: false,
-                            timer: 1500
-                        });
-                    } else {
-                        update_cart(session_id, product_quantity);
-                    }
-                });
-            })
-            .catch((error) => {
-                console.log(error);
+        .then(function(response) {
+            $("#load_cart").html(response.data);
+            $('#table_cart').DataTable({
+                "ordering": false,
+                "responsive": true,
+                "searching": false,
+                "bPaginate": false,
+                "bLengthChange": false,
+                "bFilter": true,
+                "bInfo": false,
+                "bAutoWidth": false
             });
+            $('.btn-num-product-down').click(function() {
+                var session_id = $(this).data('session_id');
+                var numProduct = Number($(this).next().val());
+                if (numProduct > 1) $(this).next().val(numProduct - 1);
+                if (numProduct > 1) {
+                    var product_quantity = numProduct - 1;
+                } else {
+                    var product_quantity = 1;
+                }
+                update_cart(0,session_id, product_quantity);
+            });
+            $('.btn-num-product-up').click(function() {
+                var session_id = $(this).data('session_id');
+                var numProduct = Number($(this).prev().val());
+                $(this).prev().val(numProduct + 1);
+                var max_product_quantity = $('.product_quantity_' + session_id).val();
+                var product_quantity = numProduct + 1;
+                if (product_quantity > max_product_quantity) {
+                    update_cart(0,session_id, max_product_quantity);
+                    Swal.fire({
+                        icon: "warning",
+                        title: "Cảnh báo",
+                        text: "Sản phẩm chỉ còn " + max_product_quantity + " sản phẩm!",
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                } else {
+                    update_cart(0,session_id, product_quantity);
+                }
+            });
+        });
     }
-    function update_cart(session_id, product_quantity) {
+    function load_edit_cart(id){
+        axios.get('load-edit-cart/'+id)
+        .then(function(response) {
+            $("#load_edit_cart").html(response.data);
+            $('#table_edit_cart').DataTable({
+                "ordering": false,
+                "responsive": true,
+                "searching": false,
+                "bPaginate": false,
+                "bLengthChange": false,
+                "bFilter": true,
+                "bInfo": false,
+                "bAutoWidth": false
+            });
+            $('.btn-num-product-down').click(function() {
+                var session_id = $(this).data('session_id');
+                var numProduct = Number($(this).next().val());
+                if (numProduct > 1) $(this).next().val(numProduct - 1);
+                if (numProduct > 1) {
+                    var product_quantity = numProduct - 1;
+                } else {
+                    var product_quantity = 1;
+                }
+                update_cart(1,session_id, product_quantity);
+            });
+            $('.btn-num-product-up').click(function() {
+                var session_id = $(this).data('session_id');
+                var numProduct = Number($(this).prev().val());
+                $(this).prev().val(numProduct + 1);
+                var max_product_quantity = $('.product_quantity_' + session_id).val();
+                var product_quantity = numProduct + 1;
+                if (product_quantity > max_product_quantity) {
+                    update_cart(1,session_id, max_product_quantity);
+                    Swal.fire({
+                        icon: "warning",
+                        title: "Cảnh báo",
+                        text: "Sản phẩm chỉ còn " + max_product_quantity + " sản phẩm!",
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                } else {
+                    update_cart(1,session_id, product_quantity);
+                }
+            });
+        });
+    }
+    function update_cart(type, session_id, product_quantity) {
         axios({
             url: 'update-cart',
             method: "POST",
@@ -320,13 +429,19 @@
                 'X-CSRF-TOKEN': $('meta[name = "csrf-token" ]').attr('content')
             },
             data: {
+                type: type,
                 session_id: session_id,
                 product_quantity: product_quantity
             },
         })
-            .then(function (response) {
+        .then(function (response) {
+            if(type == 0){
                 load_cart();
-            });
+            } else {
+                var id = $('#edit_order_id').val();
+                load_edit_cart(id);
+            }
+        });
     }
     $(document).ready(function() {
         $('#order_method').change(function() {
@@ -344,29 +459,18 @@
                         'X-CSRF-TOKEN': $('meta[name = "csrf-token" ]').attr('content')
                     },
                     data: {
+                        type: 0,
                         data: 0
                     },
                 })
-                    .then(function (response) {
-                        load_cart();
-                    });
+                .then(function (response) {
+                    load_cart();
+                });
             }
         });
         $('#order_fee_ship').keyup(function() {
             var data = $(this).val();
-            axios({
-                url: "feeship",
-                method: "POST",
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name = "csrf-token" ]').attr('content')
-                },
-                data: {
-                    data: data
-                },
-            })
-            .then(function (response) {
-                load_cart();
-            });
+            feeship(0,data);
         });
         $('#order_coupon').keyup(function() {
             var query = $(this).val();
@@ -378,6 +482,7 @@
                         'X-CSRF-TOKEN': $('meta[name = "csrf-token" ]').attr('content')
                     },
                     data: {
+                        type: 0,
                         query: query
                     },
                 })
@@ -387,7 +492,7 @@
                     $('.li_search_coupon').click(function() {
                         $('#order_coupon').val($(this).text());
                         $('#search_coupon').fadeOut();
-                        use_coupon($(this).text());
+                        use_coupon(0,$(this).text());
                     });
                 });
             } else {
@@ -408,16 +513,25 @@
                         query: query
                     },
                 })
-                    .then(function (response) {
-                        $('#search_customer').fadeIn();
-                        $('#search_customer').html(response.data);
-                        $('.li_search_customer').click(function() {
-                            $('#customer_id').val($(this).data('id'));
-                            $('#customer_name').val($(this).text());
-                            $('#search_customer').fadeOut();
-                            validation.validate();
-                        });
+                .then(function (response) {
+                    $('#search_customer').fadeIn();
+                    $('#search_customer').html(response.data);
+                    $('.li_add_customer').click(function() {
+                        $('#view_order').removeClass("menu-item-active");
+                        $('#view_customer').addClass("menu-item-active");
+                        $('#exampleModalPopovers2').modal('hide');
+                        axios.get("view-customer")
+                            .then(function(response) {
+                                $("#container").html(response.data);
+                            });
                     });
+                    $('.li_search_customer').click(function() {
+                        $('#customer_id').val($(this).data('id'));
+                        $('#customer_name').val($(this).text());
+                        $('#search_customer').fadeOut();
+                        validation.validate();
+                    });
+                });
             } else {
                 $('#search_customer').fadeOut();
             }
@@ -441,11 +555,129 @@
                         $('.li_search_product').click(function() {
                             $('#product_name').val('');
                             $('#search_product').fadeOut();
-                            add_cart($(this).data('code'));
+                            add_cart(0,$(this).data('code'));
                         });
                     });
             } else {
                 $('#search_product').fadeOut();
+            }
+        });
+        $('#edit_order_method').change(function() {
+            var query = $(this).val();
+            if (query == 1) {
+                $('.feeship').removeClass('hide');
+                $('.feeship').addClass('show');
+            } else if(query == 0) {
+                $('.feeship').removeClass('show');
+                $('.feeship').addClass('hide');
+                axios({
+                    url: "feeship",
+                    method: "POST",
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name = "csrf-token" ]').attr('content')
+                    },
+                    data: {
+                        type: 1,
+                        data: 0
+                    },
+                })
+                .then(function (response) {
+                    load_edit_cart();
+                });
+            }
+        });
+        $('#edit_order_fee_ship').keyup(function() {
+            var data = $(this).val();
+            feeship(1,data);
+        });
+        $('#edit_order_coupon').keyup(function() {
+            var query = $(this).val();
+            if (query != '') {
+                axios({
+                    url: "autocomplete-coupon",
+                    method: "POST",
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name = "csrf-token" ]').attr('content')
+                    },
+                    data: {
+                        type: 1,
+                        query: query
+                    },
+                })
+                    .then(function (response) {
+                        $('#search_coupon').fadeIn();
+                        $('#search_coupon').html(response.data);
+                        $('.li_search_coupon').click(function() {
+                            $('#order_coupon').val($(this).text());
+                            $('#search_coupon').fadeOut();
+                            use_coupon($(this).text());
+                        });
+                    });
+            } else {
+                use_coupon(0,$(this).text());
+                $('#search_coupon').fadeOut();
+            }
+        });
+        $('#edit_customer_name').keyup(function() {
+            var query = $(this).val();
+            if (query != '') {
+                axios({
+                    url: "autocomplete-customer",
+                    method: "POST",
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name = "csrf-token" ]').attr('content')
+                    },
+                    data: {
+                        query: query
+                    },
+                })
+                    .then(function (response) {
+                        $('#edit_search_customer').fadeIn();
+                        $('#edit_search_customer').html(response.data);
+                        $('.li_add_customer').click(function() {
+                            $('#view_order').removeClass("menu-item-active");
+                            $('#view_customer').addClass("menu-item-active");
+                            $('#exampleModalPopovers').modal('hide');
+                            axios.get("view-customer")
+                                .then(function(response) {
+                                    $("#container").html(response.data);
+                                });
+                        });
+                        $('.li_search_customer').click(function() {
+                            $('#edit_customer_id').val($(this).data('id'));
+                            $('#edit_customer_name').val($(this).text());
+                            $('#edit_search_customer').fadeOut();
+                            validation.validate();
+                        });
+                    });
+            } else {
+                $('#search_customer').fadeOut();
+            }
+        });
+        $('#edit_product_name').keyup(function() {
+            var query = $(this).val();
+            if (query != '') {
+                axios({
+                    url: "autocomplete-product",
+                    method: "POST",
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name = "csrf-token" ]').attr('content')
+                    },
+                    data: {
+                        query: query
+                    },
+                })
+                .then(function (response) {
+                    $('#edit_search_product').fadeIn();
+                    $('#edit_search_product').html(response.data);
+                    $('.li_search_product').click(function() {
+                        $('#product_name').val('');
+                        $('#edit_search_product').fadeOut();
+                        add_cart(1,$(this).data('code'));
+                    });
+                });
+            } else {
+                $('#edit_search_product').fadeOut();
             }
         });
         var i = 0;
@@ -458,10 +690,7 @@
                     }
                 },
                 {
-                    'data': null,
-                    render: function(data, type, row) {
-                        return `DH`+('00000'+`${row.id}`).slice(-5)
-                    }
+                    'data': 'order_code'
                 },
                 {
                     'data': null,
@@ -636,11 +865,20 @@
                 },
             })
             .then(function (response) {
+                use_coupon(1,response.data.order_coupon);
+                feeship(1,response.data.order_fee_ship);
                 $('#edit_order_id').val(response.data.id);
-                $('#edit_order_name').val(response.data.order_name);
-                $('#edit_order_phone').val(response.data.order_phone);
-                $('#edit_order_address').val(response.data.order_address);
-                $('#edit_order_role').val(response.data.order_role);
+                $('#edit_customer_id').val(response.data.customer_id);
+                $('#edit_customer_name').val(response.data.customer_name +' - '+ response.data.customer_phone);
+                $('#edit_order_methodpay').val(response.data.order_methodpay);
+                if(response.data.order_fee_ship > 0){
+                    $('#edit_order_method').val(1);
+                } else {
+                    $('#edit_order_method').val(0);
+                }
+                $('#edit_order_fee_ship').val(response.data.order_fee_ship);
+                $('#edit_order_coupon').val(response.data.order_coupon);
+                load_edit_cart(response.data.id);
                 validation2.validate();
             });
         });
@@ -736,6 +974,7 @@
                 });
         });
         $(document).on('change', '.cart_qty', function(e) {
+            var type = $(this).data('type');
             var session_id = $(this).data('session_id');
             var max_product_quantity = $('.product_quantity_' + session_id).val();
             var product_quantity = $(this).val();
@@ -752,24 +991,26 @@
                     timer: 1500
                 });
             }
-            update_cart(session_id, product_quantity);
+            update_cart(type,session_id, product_quantity);
         });
         $(document).on('click', '.destroy_cart', function(e) {
             e.preventDefault();
             var session_id = $(this).data('session_id');
+            var type = $(this).data('type');
             axios({
-                url: 'destroy-cart/' + session_id,
-                method: 'GET',
+                url: 'destroy-cart',
+                method: 'POST',
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name = "csrf-token" ]').attr('content')
                 },
+                data: {
+                    type: type,
+                    session_id: session_id
+                }
             })
-                .then(function () {
-                    load_cart()
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
+            .then(function () {
+                load_cart()
+            });
         });
     })
 </script>
