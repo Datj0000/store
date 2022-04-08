@@ -20,6 +20,7 @@ return new class extends Migration
             $table->integer('order_methodpay');
             $table->double('order_coupon')->nullable();
             $table->double('order_fee_ship')->default(0);
+            $table->text('order_note')->nullable();
             $table->timestamps();
         });
     }
