@@ -19,7 +19,7 @@ class BrandController extends Controller
     public function fetchdata():\Illuminate\Http\JsonResponse
     {
         if (Auth::check()) {
-            $data = Brand::query()->get();
+            $data = Brand::all();
             return response()->json([
                 "data" => $data,
             ]);
@@ -29,12 +29,12 @@ class BrandController extends Controller
     public function create(Request $request):int
     {
         if (Auth::check()) {
-            $check = Brand::query()->where('brand_name','=', $request->brand_name)->first();
+            $check = Brand::query()->where('brand_name', $request->brand_name)->first();
             if (!$check){
-                $brand = new Brand();
-                $brand->brand_name = $request->brand_name;
-                $brand->brand_desc = $request->brand_desc;
-                $brand->save();
+                Brand::query()->create([
+                    'brand_name' => $request->input('brand_name'),
+                    'brand_desc' => $request->input('brand_desc'),
+                ]);
                 return 1;
             } else{
                 return 0;
@@ -46,19 +46,19 @@ class BrandController extends Controller
     {
         if (Auth::check()) {
             $data = Brand::query()->whereId($id)->first();
-            return response()->json($data);
+            return response()->json($data->toArray());
         }
     }
 
     public function update(Request $request, int $id):int
     {
         if (Auth::check()) {
-            $check = Brand::query()->where('brand_name','=', $request->brand_name)->where('id','!=', $id)->first();
+            $check = Brand::query()->where('brand_name','=', $request->input('brand_name'))->where('id','!=', $id)->first();
             if (!$check){
-                $brand = Brand::query()->whereId($id)->first();
-                $brand->brand_name = $request->brand_name;
-                $brand->brand_desc = $request->brand_desc;
-                $brand->save();
+                Brand::query()->whereId($id)->update([
+                    'brand_name' => $request->input('brand_name'),
+                    'brand_desc' => $request->input('brand_desc'),
+                ]);
                 return 1;
             } else{
                 return 0;

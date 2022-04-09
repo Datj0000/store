@@ -305,6 +305,7 @@
                         },
                     })
                     .then(function (response) {
+                        console.log(response.data);
                         if (response.data == 1) {
                             Swal.fire("", "Email này đã được sử dụng!","warning");
                         } else {
