@@ -96,17 +96,7 @@ class OrderController extends Controller
                 Session::forget('edit_fee');
             }
             if(Session::get('edit_coupon')){
-                foreach (Session::get('edit_coupon') as $key => $cou) {
-                    $order->update([
-                        'coupon' => $cou['code']
-                    ]);
-                    $coupon = Coupon::query()->where('code','=',$cou['code'])->first();
-                    if($coupon){
-                        $coupon->update([
-                            'time' => $coupon->time - 1,
-                        ]);
-                    }
-                }
+                Session::forget('edit_coupon');
             }
             if(Session::get('edit_cart')){
                 Session::forget('edit_cart');
@@ -133,9 +123,19 @@ class OrderController extends Controller
                 Session::forget('edit_fee');
             }
             if (Session::get('edit_coupon')){
-                $order->update([
-                    'coupon' => Session::get('edit_coupon')
-                ]);
+                foreach (Session::get('edit_coupon') as $key => $cou) {
+                    if($order->coupon != $cou['code']){
+                        $coupon = Coupon::query()->where('code','=',$order->coupon)->first();
+                        if($coupon){
+                            $coupon->update(['time' => $coupon->time + 1,]);
+                        }
+                        $order->update(['coupon' => $cou['code']]);
+                        $coupon2 = Coupon::query()->where('code','=',$cou['code'])->first();
+                        if($coupon2){
+                            $coupon2->update(['time' => $coupon2->time - 1,]);
+                        }
+                    }
+                }
                 Session::forget('edit_coupon');
             }
             if (Session::get('edit_cart')) {
@@ -288,22 +288,20 @@ class OrderController extends Controller
                 </thead>';
                 $i = 1;
                 $total = 0;
-                $total_fee = 0;
                 $total_coupon = 0;
                 $iprice = 0;
+                $count = 0;
                 foreach (Session::get($request->input('cart')) as $key => $cart) {
                     $subtotal = $cart['product_price'] * $cart['product_quantity'];
                     $iprice += $cart['product_iprice'];
                     $total += $subtotal;
                     $detail = ImportDetail::query()->where('product_code','=',$cart['product_code'])->first();
                     $detail_count = ImportDetail::query()->where('import_id','=',$detail->import_id)->get();
-                    $count = 0;
                     foreach($detail_count as $key){
                         $count += $key->quantity;
                     }
                     $import = Import::query()->where('id','=',$detail->import_id)->first();
-                    $fee = $import->fee_ship / $count;
-                    $total_fee += $fee;
+                    $total_fee = $import->fee_ship / $count;
                     $output .= '
                 <tr>
                     <td>' . $i++ . '</td>';
