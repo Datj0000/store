@@ -7,19 +7,18 @@ use App\Models\Supplier;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Insurance;
-use Illuminate\Support\Facades\Redirect;
 
 class InsuranceController extends Controller
 {
-    public function index()
+    public function index(): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\Foundation\Application
     {
         if (Auth::check()) {
-            $supplier = Supplier::all();
+            $supplier = Supplier::query()->get();
             return view('user.insurance.insurance')->with('supplier',$supplier);
         }
         return Redirect::to('/login');
     }
-    public function fetchdata()
+    public function fetchdata():\Illuminate\Http\JsonResponse
     {
         if (Auth::check()) {
             $data = Insurance::query()->select('importdetails.product_id','products.product_name','brands.brand_name','insurances.*')
@@ -33,7 +32,7 @@ class InsuranceController extends Controller
         }
     }
 
-    public function create(Request $request)
+    public function create(Request $request):int
     {
         if (Auth::check()) {
             $check = Insurance::query()->where('order_id','=',$request->order_id)->where('product_code','=',$request->product_code)->first();

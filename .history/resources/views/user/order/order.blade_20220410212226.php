@@ -411,6 +411,9 @@
     }
     function edit_cart(id){
         axios.get('edit-cart/'+id)
+        .then(function (response) {
+            console.log(response.data);
+        });
     }
     function update_cart(type, session_id, product_quantity) {
         axios({
@@ -526,6 +529,7 @@
                     },
                 })
                 .then(function (response) {
+                    console.log(response.data);
                     $('#search_product').fadeIn();
                     $('#search_product').html(response.data);
                     $('.li_search_product').click(function() {
@@ -633,7 +637,7 @@
                     $('#edit_search_product').fadeIn();
                     $('#edit_search_product').html(response.data);
                     $('.li_search_product').click(function() {
-                        $('#edit_product_name').val('');
+                        $('#product_name').val('');
                         $('#edit_search_product').fadeOut();
                         add_cart('edit_cart',$(this).data('code'));
                     });

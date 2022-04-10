@@ -10,7 +10,6 @@ use App\Models\Customer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Redirect;
 
 class OrderController extends Controller
 {
@@ -83,19 +82,13 @@ class OrderController extends Controller
     public function edit(int $id)
     {
         if (Auth::check()) {
-            if(Session::get('edit_fee')){
-                Session::forget('edit_fee');
-            }
-            if(Session::get('edit_coupon')){
-                Session::forget('edit_coupon');
-            }
-            if(Session::get('edit_cart')){
-                Session::forget('edit_cart');
-            }
+            Session::forget('edit_fee');
+            Session::forget('edit_coupon');
+            Session::forget('edit_cart');
             $data = Order::query()->select('customers.name as customer_name','customers.phone as customer_phone','orders.*')
                 ->join('customers','customers.id','=','orders.customer_id')
                 ->where('orders.id','=',$id)->first();
-            return response()->json($data->toArray());
+            return response()->json($data);
         }
     }
 
@@ -139,7 +132,7 @@ class OrderController extends Controller
                         ]);
                     }
                 }
-                Session::forget('edit_cart');
+                // Session::forget('edit_cart');
             }
         }
     }

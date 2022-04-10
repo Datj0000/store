@@ -11,18 +11,18 @@ use App\Models\Supplier;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Redirect;
+//use Dompdf\Dompdf;
 
 class ImportController extends Controller
 {
     public function index()
     {
         if (Auth::check()) {
-            $brand = Brand::all();
-            $category = Category::all();
-            $import = Import::all();
-            $product = Product::all();
-            $supplier = Supplier::all();
+            $brand = Brand::query()->get();
+            $category = Category::query()->get();
+            $import = Import::query()->get();
+            $product = Product::query()->get();
+            $supplier = Supplier::query()->get();
             return view('user.product.import')
                 ->with('brand',$brand)
                 ->with('category',$category)
@@ -30,7 +30,7 @@ class ImportController extends Controller
                 ->with('import',$import)
                 ->with('supplier',$supplier);
         }
-        return Redirect::to('auth.login');
+        return Redirect('auth.login');
     }
 
     public function fetchdata()

@@ -526,6 +526,7 @@
                     },
                 })
                 .then(function (response) {
+                    console.log(response.data);
                     $('#search_product').fadeIn();
                     $('#search_product').html(response.data);
                     $('.li_search_product').click(function() {
@@ -633,7 +634,7 @@
                     $('#edit_search_product').fadeIn();
                     $('#edit_search_product').html(response.data);
                     $('.li_search_product').click(function() {
-                        $('#edit_product_name').val('');
+                        $('#product_name').val('');
                         $('#edit_search_product').fadeOut();
                         add_cart('edit_cart',$(this).data('code'));
                     });
@@ -830,7 +831,6 @@
                 },
             })
             .then(function (response) {
-                edit_cart(response.data.id);
                 if(response.data.coupon != ""){
                     use_coupon('edit_coupon',response.data.coupon);
                 }
@@ -847,6 +847,7 @@
                 $('#edit_order_note').val(response.data.note);
                 $('#edit_order_fee_ship').val(response.data.fee_ship);
                 $('#edit_order_coupon').val(response.data.coupon);
+                edit_cart(response.data.id);
                 load_cart('edit_cart','edit_coupon','edit_fee');
                 validation2.validate();
             });
@@ -930,6 +931,9 @@
                             });
                             i = 0;
                             table.ajax.reload();
+                        })
+                        .catch(function (error) {
+                            console.log(error);
                         });
                     }
                 });

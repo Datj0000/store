@@ -5,21 +5,21 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Product;
-use App\Models\Category;
+use App\Models\Unit;
 
-class CategoryController extends Controller
+class UnitController extends Controller
 {
     public function index()
     {
         if (Auth::check()) {
-            return view('user.product.category');
+            return view('user.product.unit');
         }
-        return Redirect::to('/login');
+        return view('auth.login');
     }
     public function fetchdata()
     {
         if (Auth::check()) {
-            $query = Category::all();
+            $query = Unit::all();
             return response()->json([
                 "data" => $query,
             ]);
@@ -29,9 +29,9 @@ class CategoryController extends Controller
     public function create(Request $request)
     {
         if (Auth::check()) {
-            $check = Category::query()->where('name',$request->name)->first();
+            $check = Unit::query()->where('name',$request->name)->first();
             if (!$check){
-                Category::query()->create([
+                Unit::query()->create([
                     'name' => $request->input('name'),
                     'desc' => $request->input('desc'),
                 ]);
@@ -45,7 +45,7 @@ class CategoryController extends Controller
     public function edit(int $id)
     {
         if (Auth::check()) {
-            $query = Category::query()->where('id','=',$id)->first();
+            $query = Unit::query()->where('id','=',$id)->first();
             if($query){
                 return response()->json($query);
             }
@@ -55,9 +55,9 @@ class CategoryController extends Controller
     public function update(Request $request,int $id)
     {
         if (Auth::check()) {
-            $check = Category::query()->where('name','=',$request->input('name'))->where('id','!=',$id)->first();
+            $check = Unit::query()->where('name','=',$request->input('name'))->where('id','!=',$id)->first();
             if (!$check){
-                Category::query()->where('id','=',$id)->update([
+                Unit::query()->where('id','=',$id)->update([
                     'name' => $request->input('name'),
                     'desc' => $request->input('desc'),
                 ]);
@@ -71,11 +71,11 @@ class CategoryController extends Controller
     public function destroy(int $id)
     {
         if (Auth::check()) {
-            $check = Product::query()->where('category_id','=',$id)->first();
+            $check = Product::query()->where('unit_id','=',$id)->first();
             if($check){
                 return 0;
             } else{
-                $query = Category::query()->where('id','=',$id)->first();
+                $query = Unit::query()->where('id','=',$id)->first();
                 if($query){
                     $query->delete();
                     return 1;

@@ -29,6 +29,7 @@ use App\Http\Controllers\OrderDetailController;
 //Auth
 Route::get('/',[AuthController::class,'show']);
 Route::get('/dashboard',[AuthController::class,'show']);
+Route::get('/login',[AuthController::class,'show']);
 Route::get('/logout',[AuthController::class,'logout']);
 Route::post('/login',[AuthController::class,'login']);
 Route::post('/recover-pass',[AuthController::class,'recover']);
@@ -152,8 +153,8 @@ Route::post('/update-order/{id}',[OrderController::class,'update']);
 Route::get('/destroy-order/{id}',[OrderController::class,'destroy']);
 
 Route::post('/add-cart',[OrderController::class,'add_cart']);
-Route::get('/load-cart',[OrderController::class,'load_cart']);
-Route::get('/load-edit-cart/{id}',[OrderController::class,'load_edit_cart']);
+Route::post('/load-cart',[OrderController::class,'load_cart']);
+Route::get('/edit-cart/{id}',[OrderController::class,'edit_cart']);
 Route::post('/update-cart',[OrderController::class,'update_cart']);
 Route::post('/destroy-cart',[OrderController::class,'destroy_cart']);
 Route::post('/feeship',[OrderController::class,'feeship']);

@@ -7,14 +7,13 @@ use App\Models\Supplier;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Insurance;
-use Illuminate\Support\Facades\Redirect;
 
 class InsuranceController extends Controller
 {
     public function index()
     {
         if (Auth::check()) {
-            $supplier = Supplier::all();
+            $supplier = Supplier::query()->get();
             return view('user.insurance.insurance')->with('supplier',$supplier);
         }
         return Redirect::to('/login');

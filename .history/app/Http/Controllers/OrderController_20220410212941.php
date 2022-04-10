@@ -95,7 +95,7 @@ class OrderController extends Controller
             $data = Order::query()->select('customers.name as customer_name','customers.phone as customer_phone','orders.*')
                 ->join('customers','customers.id','=','orders.customer_id')
                 ->where('orders.id','=',$id)->first();
-            return response()->json($data->toArray());
+            return response()->json($data);
         }
     }
 

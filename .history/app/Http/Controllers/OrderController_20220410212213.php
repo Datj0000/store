@@ -83,19 +83,10 @@ class OrderController extends Controller
     public function edit(int $id)
     {
         if (Auth::check()) {
-            if(Session::get('edit_fee')){
-                Session::forget('edit_fee');
-            }
-            if(Session::get('edit_coupon')){
-                Session::forget('edit_coupon');
-            }
-            if(Session::get('edit_cart')){
-                Session::forget('edit_cart');
-            }
             $data = Order::query()->select('customers.name as customer_name','customers.phone as customer_phone','orders.*')
                 ->join('customers','customers.id','=','orders.customer_id')
                 ->where('orders.id','=',$id)->first();
-            return response()->json($data->toArray());
+            return response()->json($data);
         }
     }
 
@@ -139,7 +130,7 @@ class OrderController extends Controller
                         ]);
                     }
                 }
-                Session::forget('edit_cart');
+                // Session::forget('edit_cart');
             }
         }
     }
@@ -382,6 +373,15 @@ class OrderController extends Controller
     public function edit_cart(int $id)
     {
         if (Auth::check()) {
+            if(Session::get('edit_fee')){
+                Session::forget('edit_fee');
+            }
+            if(Session::get('edit_coupon')){
+                Session::forget('edit_coupon');
+            }
+            if(Session::get('edit_cart')){
+                Session::forget('edit_cart');
+            }
             $detail = OrderDetail::query()->select('brands.name as brand_name','products.name as product_name','importdetails.*','orderdetails.*')
                 ->join('importdetails','importdetails.product_code','=','orderdetails.product_code')
                 ->join('products','products.id','=','importdetails.product_id')

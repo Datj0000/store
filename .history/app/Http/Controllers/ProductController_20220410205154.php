@@ -158,20 +158,7 @@ class ProductController extends Controller
                 ->where('products.name','LIKE','%' .  $request->input('value') . '%')
                 ->orwhere('importdetails.product_code','LIKE','%' .  $request->input('value') . '%')
                 ->get();
-            if ($product->count() > 0) {
-                $output = '<ul class="dropdown-menu2">';
-                foreach ($product as $key => $val){
-                    if($val->quantity - $val->soldout > 0){
-                        if(Auth::user()->role <= 1){
-                            $output .= '<li class="li_search_product" data-code="'.$val->product_code.'">' . $val->product_code . ' - ' . $val->brand_name . '  ' . $val->name . ' - Bảo hành đến: ' . Carbon::parse($val->date_end)->format('d/m/Y') . ' - Giá nhập: ' . number_format($val->import_price,0,',','.') . ' đ' . ' - Giá bán: ' . number_format($val->sell_price,0,',','.') . ' đ' . '</li>';
-                        } else{
-                            $output .= '<li class="li_search_product" data-code="'.$val->product_code.'">' . $val->product_code . ' - ' . $val->brand_name . '  ' . $val->name . ' - Bảo hành đến: ' . Carbon::parse($val->date_end)->format('d/m/Y') . ' - Giá bán: ' . number_format($val->sell_price,0,',','.') . ' đ' . '</li>';
-                        }
-                    }
-                }
-                $output .= '</ul>';
-                return $output;
-            }
+                return $product;
         }
     }
 

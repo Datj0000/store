@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\Request;
 use App\Models\Product;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Supplier;
 
 class SupplierController extends Controller
@@ -15,7 +14,7 @@ class SupplierController extends Controller
         if (Auth::check()) {
             return view('user.product.supplier');
         }
-        return Redirect::to('/login');
+        return view('auth.login');
     }
     public function fetchdata()
     {

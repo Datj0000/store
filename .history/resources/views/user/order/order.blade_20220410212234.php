@@ -633,7 +633,7 @@
                     $('#edit_search_product').fadeIn();
                     $('#edit_search_product').html(response.data);
                     $('.li_search_product').click(function() {
-                        $('#edit_product_name').val('');
+                        $('#product_name').val('');
                         $('#edit_search_product').fadeOut();
                         add_cart('edit_cart',$(this).data('code'));
                     });
