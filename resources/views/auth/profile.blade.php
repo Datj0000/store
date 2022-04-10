@@ -78,8 +78,6 @@
         </div>
     </form>
 </div>
-</div>
-<script src="{{ asset('asset/js/pages/custom/profile/profile.js') }}"></script>
 <script>
     var validation;
     var form = KTUtil.getById('kt_edit_profile_form');

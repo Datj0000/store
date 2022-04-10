@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Coupon;
 use App\Models\Product;
+use App\Models\Order;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -39,6 +40,7 @@ class CouponController extends Controller
                     'code' => $request->input('code'),
                     'condition' => $request->input('condition'),
                     'number' => $request->input('number'),
+                    'time' => $request->input('time'),
                     'date_start' => Carbon::parse($request->input('date_start'))->format('Y-m-d'),
                     'date_end' => Carbon::parse($request->input('date_end'))->format('Y-m-d'),
                     'status' => $request->input('status'),
@@ -73,13 +75,14 @@ class CouponController extends Controller
     public function update(Request $request,int $id)
     {
         if (Auth::check()) {
-            $check = Coupon::query()->where('code','=',$$request->input('code'))->where('id','!=',$id)->first();
+            $check = Coupon::query()->where('code','=',$request->input('code'))->where('id','!=',$id)->first();
             if (!$check){
                 Coupon::query()->where('id','=',$id)->update([
                     'name' => $request->input('name'),
                     'code' => $request->input('code'),
                     'condition' => $request->input('condition'),
                     'number' => $request->input('number'),
+                    'time' => $request->input('time'),
                     'date_start' => Carbon::parse($request->input('date_start'))->format('Y-m-d'),
                     'date_end' => Carbon::parse($request->input('date_end'))->format('Y-m-d'),
                 ]);
@@ -90,7 +93,7 @@ class CouponController extends Controller
         }
     }
 
-    public function destroy($code)
+    public function destroy(int $id)
     {
         if (Auth::check()) {
             $query = Coupon::query()->where('id','=',$id)->first();
@@ -112,6 +115,7 @@ class CouponController extends Controller
             // $coupon = Coupon::query()->where('status','=',0)->where('code',$request->query)->get();
             $coupon = Coupon::query()->where('status','=',0)
                 ->where('code','LIKE','%' . $request->input('value'). '%')
+                ->where('time','>' ,0)
                 ->where('date_start','<=' ,$today)
                 ->where('date_end','>=' ,$today)
                 ->get();
@@ -134,6 +138,7 @@ class CouponController extends Controller
             $today = Carbon::now('Asia/Ho_Chi_Minh')->format('Y-m-d');
             $coupon = Coupon::query()->where('status','=',0)
                 ->where('code','=',$request->input('coupon'))
+                ->where('time','>' ,0)
                 ->where('date_start','<=' ,$today)
                 ->where('date_end','>=' ,$today)
                 ->first();

@@ -64,7 +64,7 @@ class OrderController extends Controller
                     $coupon = Coupon::query()->where('code','=',$cou['code'])->first();
                     if($coupon){
                         $coupon->update([
-                            'time' => $coupon->time + 1,
+                            'time' => $coupon->time - 1,
                         ]);
                     }
                 }
@@ -84,7 +84,7 @@ class OrderController extends Controller
                         ]);
                     }
                 }
-                // Session::forget('cart');
+                Session::forget('cart');
             }
         }
     }
@@ -96,7 +96,17 @@ class OrderController extends Controller
                 Session::forget('edit_fee');
             }
             if(Session::get('edit_coupon')){
-                Session::forget('edit_coupon');
+                foreach (Session::get('edit_coupon') as $key => $cou) {
+                    $order->update([
+                        'coupon' => $cou['code']
+                    ]);
+                    $coupon = Coupon::query()->where('code','=',$cou['code'])->first();
+                    if($coupon){
+                        $coupon->update([
+                            'time' => $coupon->time - 1,
+                        ]);
+                    }
+                }
             }
             if(Session::get('edit_cart')){
                 Session::forget('edit_cart');
@@ -286,9 +296,13 @@ class OrderController extends Controller
                     $iprice += $cart['product_iprice'];
                     $total += $subtotal;
                     $detail = ImportDetail::query()->where('product_code','=',$cart['product_code'])->first();
+                    $detail_count = ImportDetail::query()->where('import_id','=',$detail->import_id)->get();
+                    $count = 0;
+                    foreach($detail_count as $key){
+                        $count += $key->quantity;
+                    }
                     $import = Import::query()->where('id','=',$detail->import_id)->first();
-                    $detail_count = ImportDetail::query()->where('import_id','=',$detail->import_id)->count();
-                    $fee = $import->import_fee_ship / $detail_count;
+                    $fee = $import->fee_ship / $count;
                     $total_fee += $fee;
                     $output .= '
                 <tr>

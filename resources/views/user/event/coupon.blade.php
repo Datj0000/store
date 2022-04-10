@@ -49,7 +49,7 @@
                             </div>
                             <div class="form-group">
                                 <label>Số lượng:</label>
-                                <input name="coupon_quantity" type="number" class="form-control form-control-solid" id="coupon_time " min="0"
+                                <input name="coupon_time" type="number" class="form-control form-control-solid" id="coupon_time " min="0"
                                        placeholder="Số lượng" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==20) return false;"/>
                             </div>
                             <div class="form-group">
@@ -120,7 +120,7 @@
                             </div>
                             <div class="form-group">
                                 <label>Số lượng:</label>
-                                <input name="coupon_quantity" type="number" class="form-control form-control-solid" id="edit_coupon_time"
+                                <input name="coupon_time" type="number" class="form-control form-control-solid" id="edit_coupon_time"
                                        placeholder="Số lượng" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==20) return false;"/>
                             </div>
                             <div class="form-group">
@@ -294,7 +294,7 @@
                             },
                         }
                     },
-                    coupon_quantity: {
+                    coupon_time: {
                         validators: {
                             notEmpty: {
                                 message: 'Vui lòng điền mục này'
@@ -351,7 +351,7 @@
                             },
                         }
                     },
-                    coupon_quantity: {
+                    coupon_time: {
                         validators: {
                             notEmpty: {
                                 message: 'Vui lòng điền mục này'
@@ -509,7 +509,7 @@
             var condition = $('#edit_coupon_condition').val();
             var number = $('#edit_coupon_number').val();
             var date_start = $('#edit_coupon_date_start').val();
-            var date_end = $('#edit_coupon_date_start').val();
+            var date_end = $('#edit_coupon_date_end').val();
             validation2.validate().then(function(status) {
                 if (status != 'Valid') {
                     swal.fire({
@@ -553,6 +553,7 @@
                         },
                     })
                     .then(function (response) {
+                        console.log(response.data);
                         if (response.data == 1) {
                             Swal.fire({
                                 icon: "success",

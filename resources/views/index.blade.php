@@ -21,6 +21,11 @@
     <link rel="shortcut icon" href="{{ url('asset/media/logos/favicon.ico') }}" />
     <script src="//code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="{{ asset('asset/plugins/global/plugins.bundle.js') }}"></script>
+    <script src="{{ asset('asset/js/scripts.bundle.js') }}"></script>
+    <script src="{{ asset('asset/plugins/custom/datatables/datatables.bundle.js') }}"></script>
+    <script src="{{ asset('asset/js/pages/crud/forms/widgets/bootstrap-datepicker.js') }}"></script>
+    <script src="{{ asset('asset/js/pages/crud/file-upload/image-input.js') }}"></script>
     <style>
         select{
             padding: 7px 0;
@@ -91,7 +96,7 @@
                     <div id=kt_aside_menu class="aside-menu my-4" data-menu-vertical=1 data-menu-scroll=1
                         data-menu-dropdown-timeout=500>
                         <ul class=menu-nav>
-                            <li class=" menu-item" aria-haspopup=true>
+                            <li id="" class=" menu-item" aria-haspopup=true>
                                 <a class=menu-link>
                                     <span class="svg-icon menu-icon">
                                         <svg xmlns="http://www.w3.org/2000/svg"
@@ -107,7 +112,7 @@
                                     <span class=menu-text>Tổng quan</span>
                                 </a>
                             </li>
-                            <li class="menu-item" aria-haspopup=true>
+                            <li id="order" class="menu-item" aria-haspopup=true>
                                 <a href="{{url('/order')}}" class=menu-link>
                                     <span class="svg-icon menu-icon">
                                         <svg xmlns="http://www.w3.org/2000/svg"
@@ -151,7 +156,7 @@
 													<span class="menu-text">Sản phẩm</span>
 												</span>
                                         </li>
-                                        <li class="menu-item" aria-haspopup="true">
+                                        <li id="supplier" class="menu-item" aria-haspopup="true">
                                             <a href="{{url('/supplier')}}" class="menu-link">
                                                 <i class="menu-bullet menu-bullet-dot">
                                                     <span></span>
@@ -159,7 +164,7 @@
                                                 <span class="menu-text">Nhà cung cấp</span>
                                             </a>
                                         </li>
-                                        <li class="menu-item" aria-haspopup="true">
+                                        <li id="category" class="menu-item" aria-haspopup="true">
                                             <a href="{{url('/category')}}" class="menu-link">
                                                 <i class="menu-bullet menu-bullet-dot">
                                                     <span></span>
@@ -167,7 +172,7 @@
                                                 <span class="menu-text">Danh mục</span>
                                             </a>
                                         </li>
-                                        <li class="menu-item" aria-haspopup="true">
+                                        <li id="brand" class="menu-item" aria-haspopup="true">
                                             <a href="{{url('/brand')}}" class="menu-link">
                                                 <i class="menu-bullet menu-bullet-dot">
                                                     <span></span>
@@ -175,7 +180,7 @@
                                                 <span class="menu-text">Thương hiệu</span>
                                             </a>
                                         </li>
-                                        <li class="menu-item" aria-haspopup="true">
+                                        <li id="unit" class="menu-item" aria-haspopup="true">
                                             <a href="{{url('/unit')}}" class="menu-link">
                                                 <i class="menu-bullet menu-bullet-dot">
                                                     <span></span>
@@ -183,7 +188,7 @@
                                                 <span class="menu-text">Đơn vị</span>
                                             </a>
                                         </li>
-                                        <li class="menu-item" aria-haspopup="true">
+                                        <li id="product" class="menu-item" aria-haspopup="true">
                                             <a href="{{url('/product')}}" class="menu-link">
                                                 <i class="menu-bullet menu-bullet-dot">
                                                     <span></span>
@@ -191,7 +196,7 @@
                                                 <span class="menu-text">Sản phẩm</span>
                                             </a>
                                         </li>
-                                        <li class="menu-item" aria-haspopup="true">
+                                        <li id="import" class="menu-item" aria-haspopup="true">
                                             <a href="{{url('/import')}}" class="menu-link">
                                                 <i class="menu-bullet menu-bullet-dot">
                                                     <span></span>
@@ -202,7 +207,7 @@
                                     </ul>
                                 </div>
                             </li>
-                            <li class="menu-item" aria-haspopup=true>
+                            <li id="customer" class="menu-item" aria-haspopup=true>
                                 <a href="{{url('/customer')}}" class=menu-link>
                                     <span class="svg-icon menu-icon">
                                         <svg xmlns="http://www.w3.org/2000/svg"
@@ -218,7 +223,7 @@
                                     <span class=menu-text>Khách hàng</span>
                                 </a>
                             </li>
-                            <li class="menu-item" aria-haspopup=true>
+                            <li id="coupon" class="menu-item" aria-haspopup=true>
                                 <a href="{{url('/coupon')}}" class=menu-link>
                                     <span class="svg-icon menu-icon">
                                         <svg xmlns="http://www.w3.org/2000/svg"
@@ -233,7 +238,7 @@
                                     <span class=menu-text>Mã giảm giá</span>
                                 </a>
                             </li>
-                            <li class=" menu-item" aria-haspopup=true>
+                            <li id="insurance" class=" menu-item" aria-haspopup=true>
                                 <a href="{{url('/insurance')}}" class=menu-link>
                                     <span class="svg-icon menu-icon">
                                         <svg xmlns="http://www.w3.org/2000/svg"
@@ -331,7 +336,7 @@
                                 <h4 class=menu-text>Quản lý</h4>
                                 <i class="menu-icon ki ki-bold-more-hor icon-md"></i>
                             </li>
-                            <li class=" menu-item" aria-haspopup=true>
+                            <li id="user" class=" menu-item" aria-haspopup=true>
                                 <a href="{{url('/user')}}" class=menu-link>
                                     <span class="svg-icon menu-icon">
                                         <svg xmlns="http://www.w3.org/2000/svg"
@@ -482,7 +487,7 @@
                                     @php
                                     $email = Auth::user()->email;
                                     if ($email) {
-                                    echo $email;
+                                        echo $email;
                                     }
                                     @endphp
                                 </span>
@@ -560,13 +565,17 @@
     <script>
         var KTAppSettings={breakpoints:{sm:576,md:768,lg:992,xl:1200,xxl:1400},colors:{theme:{base:{white:"#ffffff",primary:"#3699FF",secondary:"#E5EAEE",success:"#1BC5BD",info:"#8950FC",warning:"#FFA800",danger:"#F64E60",light:"#E4E6EF",dark:"#181C32"},light:{white:"#ffffff",primary:"#E1F0FF",secondary:"#EBEDF3",success:"#C9F7F5",info:"#EEE5FF",warning:"#FFF4DE",danger:"#FFE2E5",light:"#F3F6F9",dark:"#D6D6E0"},inverse:{white:"#ffffff",primary:"#ffffff",secondary:"#3F4254",success:"#ffffff",info:"#ffffff",warning:"#ffffff",danger:"#ffffff",light:"#464E5F",dark:"#ffffff"}},gray:{"gray-100":"#F3F6F9","gray-200":"#EBEDF3","gray-300":"#E4E6EF","gray-400":"#D1D3E0","gray-500":"#B5B5C3","gray-600":"#7E8299","gray-700":"#5E6278","gray-800":"#3F4254","gray-900":"#181C32"}},"font-family":"Poppins"};
     </script>
-    <script src="{{ asset('asset/plugins/global/plugins.bundle.js') }}"></script>
-    <script src="{{ asset('asset/js/scripts.bundle.js') }}"></script>
-    <script src="{{ asset('asset/plugins/custom/datatables/datatables.bundle.js') }}"></script>
-    <script src="{{ asset('asset/js/pages/crud/forms/widgets/bootstrap-datepicker.js') }}"></script>
-    <script src="{{ asset('asset/js/pages/crud/file-upload/image-input.js') }}"></script>
-{{--    <script src=//cdn.ckeditor.com/ckeditor5/27.1.0/classic/ckeditor.js></script>--}}
-{{--    <script src="{{ asset('asset/js/script.js') }}"></script> --}}
+    <script>
+        load();
+        function load(){
+            $(document).ready(function() {
+                $(".menu-item").removeClass("menu-item-active");
+                var name = location.pathname;
+                var name = "#" + name.replace('/', '')
+                $(name).addClass("menu-item-active");
+            });
+        }
+    </script>
 {{--    <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>--}}
 {{--    <script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>--}}
 </body>
