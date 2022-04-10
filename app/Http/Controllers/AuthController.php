@@ -21,7 +21,7 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        $credentials = $request->only('email', 'password');
+        $credentials = $request->only('email','password');
         if (Auth::attempt($credentials)) {
             return 1;
         } else{
@@ -43,10 +43,11 @@ class AuthController extends Controller
     {
         if (Auth::check()) {
             $id = Auth::id();
-            $user = User::query()->whereId($id)->first();
-            if ($user->password == bcrypt($request->old_password)) {
-                $user->password = bcrypt($request->password);
-                $user->save();
+            $user = User::query()->where('id','=',$id)->first();
+            if ($user->password == bcrypt($request->input('old_password'))) {
+                $user->update([
+                    'password' => bcrypt($request->input('password')),
+                ]);
                 return 1;
             } else {
                 return 0;
@@ -64,16 +65,16 @@ class AuthController extends Controller
     {
         if (Auth::check()) {
             $id = Auth::id();
-            User::query()->whereId($id)->update([
-                'name' => $request->input('name'),
-                'phone' => $request->input('phone'),
-                'email' => $request->input('email'),
-            ]);
             $get_image = $request->file('image');
-            $check_email = User::query()->where('email','=', $request->email)->where('id', '!=', $id)->first();
+            $check_email = User::query()->where('email','=',$request->input('email'))->where('id','!=',$id)->first();
             if ($check_email) {
                 return 0;
             } else {
+                User::query()->where('id','=',$id)->update([
+                    'name' => $request->input('name'),
+                    'phone' => $request->input('phone'),
+                    'email' => $request->input('email'),
+                ]);
                 if ($get_image) {
                     if ($user->image) {
                         $destinationPath = 'uploads/avatar/' . $user->image;
@@ -82,10 +83,10 @@ class AuthController extends Controller
                         }
                     }
                     $get_name_image = $get_image->getClientOriginalName();
-                    $name_image = current(explode('.', $get_name_image));
-                    $new_image = $name_image . rand(0, 9999) . '.' . $get_image->getClientOriginalExtension();
-                    $get_image->move('uploads/avatar', $new_image);
-                    User::query()->whereId($id)->update([
+                    $name_image = current(explode('.',$get_name_image));
+                    $new_image = $name_image . rand(0,9999) . '.' . $get_image->getClientOriginalExtension();
+                    $get_image->move('uploads/avatar',$new_image);
+                    User::query()->where('id','=',$id)->update([
                         'image' => $new_image,
                     ]);
                 }
@@ -94,10 +95,10 @@ class AuthController extends Controller
         }
     }
     //Resetpass
-    public function recover(Request $request):int
+    public function recover(Request $request)
     {
         if (!Auth::check()) {
-            $user = User::query()->where('email','=', $request->email)->first();
+            $user = User::query()->where('email','=',$request->input('email'))->first();
             if ($user) {
                 return 1;
             } else {
@@ -109,27 +110,28 @@ class AuthController extends Controller
     {
         if (!Auth::check()) {
             $title_mail = "Reset password";
-            // $user = User::query()->where('email','=', $request->email)->first();
-            $user = User::query()->where('email','=', $request->email)->update([
-                'token' => Str::random(),
-            ]);
+            $user = User::query()->where('email','=',$request->input('email'))->first();
             if ($user) {
-                $data = array("name" => $title_mail, "body" => $user->token, 'email' => $user->email); //body of mail.blade.php
-                Mail::send('mail.emailforgotpass', ['data' => $data], function ($message) use ($title_mail, $data) {
+                $user->update([
+                    'token' => Str::random(),
+                ]);
+                $data = array("name" => $title_mail,"body" => $user->token,'email' => $user->email); //body of mail.blade.php
+                Mail::send('mail.emailforgotpass',['data' => $data],function ($message) use ($title_mail,$data) {
                     $message->to($data['email'])->subject($title_mail); //send this mail with subject
-                    $message->from($data['email'], $title_mail); //send from this mail
+                    $message->from($data['email'],$title_mail); //send from this mail
                 });
             }
         }
     }
-    public function reset_pass(Request $request):int
+    public function reset_pass(Request $request)
     {
         if (!Auth::check()) {
-            $user = User::query()->where('email','=', $request->email)->where('token','=', $request->token)->first();
+            $user = User::query()->where('email','=',$request->input('email'))->where('token','=',$request->input('token'))->first();
             if ($user) {
-                $user->password = bcrypt($request->password);
-                $user->token = Str::random();
-                $user->save();
+                $user->update([
+                    'password' => bcrypt($request->input('password')),
+                    'token' => Str::random()
+                ]);
                 return 1;
             } else {
                 return 0;

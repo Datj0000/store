@@ -15,14 +15,14 @@ return new class extends Migration
     {
         Schema::create('coupons', function (Blueprint $table) {
             $table->id();
-            $table->string('coupon_name');
-            $table->string('coupon_code');
-            $table->integer('coupon_condition');
-            $table->integer('coupon_number');
-            $table->integer('coupon_time')->default(0);
-            $table->date('coupon_date_start');
-            $table->date('coupon_date_end');
-            $table->integer('coupon_status');
+            $table->string('name');
+            $table->string('code');
+            $table->integer('condition');
+            $table->integer('number');
+            $table->integer('time')->default(0);
+            $table->date('date_start');
+            $table->date('date_end');
+            $table->integer('status');
             $table->timestamps();
         });
     }

@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Product;
 use App\Models\Unit;
 
 class UnitController extends Controller
@@ -19,9 +19,9 @@ class UnitController extends Controller
     public function fetchdata()
     {
         if (Auth::check()) {
-            $data = Unit::all();
+            $query = Unit::all();
             return response()->json([
-                "data" => $data,
+                "data" => $query,
             ]);
         }
     }
@@ -29,11 +29,11 @@ class UnitController extends Controller
     public function create(Request $request)
     {
         if (Auth::check()) {
-            $check = Unit::query()->where('unit_name', $request->unit_name)->first();
+            $check = Unit::query()->where('name',$request->name)->first();
             if (!$check){
                 Unit::query()->create([
-                    'unit_name' => $request->input('unit_name'),
-                    'unit_desc' => $request->input('unit_desc'),
+                    'name' => $request->input('name'),
+                    'desc' => $request->input('desc'),
                 ]);
                 return 1;
             } else{
@@ -45,19 +45,21 @@ class UnitController extends Controller
     public function edit(int $id)
     {
         if (Auth::check()) {
-            $data = Unit::query()->whereId($id)->first();
-            return response()->json($data->toArray());
+            $query = Unit::query()->where('id','=',$id)->first();
+            if($query){
+                return response()->json($query);
+            }
         }
     }
 
-    public function update(Request $request, int $id)
+    public function update(Request $request,int $id)
     {
         if (Auth::check()) {
-            $check = Unit::query()->where('unit_name','=', $request->input('unit_name'))->where('id','!=', $id)->first();
+            $check = Unit::query()->where('name','=',$request->input('name'))->where('id','!=',$id)->first();
             if (!$check){
-                Unit::query()->whereId($id)->update([
-                    'unit_name' => $request->input('unit_name'),
-                    'unit_desc' => $request->input('unit_desc'),
+                Unit::query()->where('id','=',$id)->update([
+                    'name' => $request->input('name'),
+                    'desc' => $request->input('desc'),
                 ]);
                 return 1;
             } else{
@@ -73,8 +75,11 @@ class UnitController extends Controller
             if($check){
                 return 0;
             } else{
-                Unit::query()->whereId($id)->delete();
-                return 1;
+                $query = Unit::query()->where('id','=',$id)->first();
+                if($query){
+                    $query->delete();
+                    return 1;
+                }
             }
         }
     }

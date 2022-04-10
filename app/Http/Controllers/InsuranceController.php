@@ -14,17 +14,17 @@ class InsuranceController extends Controller
     {
         if (Auth::check()) {
             $supplier = Supplier::query()->get();
-            return view('user.insurance.insurance')->with('supplier', $supplier);
+            return view('user.insurance.insurance')->with('supplier',$supplier);
         }
         return view('auth.login');
     }
     public function fetchdata():\Illuminate\Http\JsonResponse
     {
         if (Auth::check()) {
-            $data = Insurance::query()->select('importdetails.product_id','products.product_name','brands.brand_name', 'insurances.*')
-                ->join('importdetails', 'importdetails.product_code', '=', 'insurances.product_code')
-                ->join('products', 'products.id', '=', 'importdetails.product_id')
-                ->join('brands', 'brands.id', '=', 'products.brand_id')
+            $data = Insurance::query()->select('importdetails.product_id','products.product_name','brands.brand_name','insurances.*')
+                ->join('importdetails','importdetails.product_code','=','insurances.product_code')
+                ->join('products','products.id','=','importdetails.product_id')
+                ->join('brands','brands.id','=','products.brand_id')
                 ->get();
             return response()->json([
                 "data" => $data,
@@ -35,7 +35,7 @@ class InsuranceController extends Controller
     public function create(Request $request):int
     {
         if (Auth::check()) {
-            $check = Insurance::query()->where('order_id','=', $request->order_id)->where('product_code','=', $request->product_code)->first();
+            $check = Insurance::query()->where('order_id','=',$request->order_id)->where('product_code','=',$request->product_code)->first();
             if (!$check){
                 $insurance = new Insurance();
                 $insurance->order_id = $request->order_id;
@@ -52,17 +52,17 @@ class InsuranceController extends Controller
     public function edit(int $id):\Illuminate\Http\JsonResponse
     {
         if (Auth::check()) {
-            $data = Insurance::query()->whereId($id)->first();
+            $data = Insurance::query()->where('id','=',$id)->first();
             return response()->json($data);
         }
     }
 
-    public function update(Request $request, int $id):int
+    public function update(Request $request,int $id):int
     {
         if (Auth::check()) {
-            $check = Insurance::query()->where('order_id','=', $request->order_id)->where('product_code','=', $request->product_code)->where('id','!=', $id)->first();
+            $check = Insurance::query()->where('order_id','=',$request->order_id)->where('product_code','=',$request->product_code)->where('id','!=',$id)->first();
             if (!$check){
-                $insurance = Insurance::query()->whereId($id)->first();
+                $insurance = Insurance::query()->where('id','=',$id)->first();
                 $insurance->order_id = $request->order_id;
                 $insurance->product_code = $request->product_code;
                 $insurance->insurance_price = $request->insurance_price;
@@ -77,7 +77,7 @@ class InsuranceController extends Controller
     public function destroy(int $id):int
     {
         if (Auth::check()) {
-            Insurance::query()->whereId($id)->delete();
+            Insurance::query()->where('id','=',$id)->delete();
             return 1;
         }
     }

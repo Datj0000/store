@@ -11,6 +11,6 @@ class ImportDetail extends Model
     protected $table = 'importdetails';
     protected $primaryKey = 'id';
     protected $fillable = [
-        'import_id','product_id', 'detail_image', 'detail_drive', 'detail_iprice', 'detail_sprice', 'detail_start_at', 'detail_end_at', 'detail_quantity', 'detail_vat'
+        'import_id','product_id','product_code', 'image', 'drive', 'import_price', 'sell_price', 'date_start', 'date_end', 'quantity', 'vat'
     ];
 }

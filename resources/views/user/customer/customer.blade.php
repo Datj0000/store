@@ -2,7 +2,7 @@
     <div class="card-header flex-wrap py-5">
         <div class="card-title">
             <h3 class="card-label">Danh sách khách hàng
-                <span class="d-block text-muted pt-2 font-size-sm">Quả lý danh sách khách hàng</span>
+                <span class="d-block text-muted pt-2 font-size-sm">Quản lý danh sách khách hàng</span>
             </h3>
         </div>
         <div class="card-toolbar">
@@ -15,7 +15,7 @@
     <path d="M8.8012943,7.00241953 C9.83837775,5.20768121 11.7781543,4 14,4 C17.3137085,4 20,6.6862915 20,10 C20,12.2218457 18.7923188,14.1616223 16.9975805,15.1987057 C16.9991904,15.1326658 17,15.0664274 17,15 C17,10.581722 13.418278,7 9,7 C8.93357256,7 8.86733422,7.00080962 8.8012943,7.00241953 Z" fill="#000000" opacity="0.3" />
     </g>
     </svg>
-    </span>Thêm mới</span>
+    </span>Thêm khách hàng</span>
         </div>
     </div>
     {{-- Add --}}
@@ -33,20 +33,20 @@
                         <div class="card-body">
                             <div class="form-group">
                                 <label>Họ và tên:</label>
-                                <input name="name" type="text" class="form-control form-control-solid" id="customer_name" placeholder="Họ và tên" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==255) return false;"/>
+                                <input name="customer_name" type="text" class="form-control form-control-solid" id="customer_name" placeholder="Họ và tên" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==255) return false;"/>
                             </div>
                             <div class="form-group">
                                 <label>Số điện thoại:</label>
-                                <input name="phone" type="text" class="form-control form-control-solid" id="customer_phone" placeholder="Số điện thoại" />
+                                <input name="customer_phone" type="text" class="form-control form-control-solid" id="customer_phone" placeholder="Số điện thoại" />
                             </div>
                             <div class="form-group">
                                 <label>Địa chỉ:</label>
-                                <input name="address" type="text" class="form-control form-control-solid" id="customer_address" placeholder="Địa chỉ" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==255) return false;"/>
+                                <input name="customer_address" type="text" class="form-control form-control-solid" id="customer_address" placeholder="Địa chỉ" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==255) return false;"/>
                             </div>
                             @if(Auth::user()->role <= 1)
                                 <div class="form-group">
                                     <label>Loại khách hàng:</label>
-                                    <select name="role" id="customer_role" class="form-control">
+                                    <select name="customer_role" id="customer_role" class="form-control">
                                         <option value disabled selected hidden>Chọn loại khách hàng</option>
                                         <option value="0">Khách hàng thường</option>
                                         <option value="1">Khách hàng vip</option>
@@ -80,20 +80,20 @@
                             <input type="hidden" id="edit_customer_id">
                             <div class="form-group">
                                 <label>Họ và tên:</label>
-                                <input name="name" type="text" class="form-control form-control-solid" id="edit_customer_name" placeholder="Họ và tên" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==255) return false;" />
+                                <input name="customer_name" type="text" class="form-control form-control-solid" id="edit_customer_name" placeholder="Họ và tên" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==255) return false;" />
                             </div>
                             <div class="form-group">
                                 <label>Số điện thoại:</label>
-                                <input name="phone" type="text" class="form-control form-control-solid" id="edit_customer_phone" placeholder="Số điện thoại" />
+                                <input name="customer_phone" type="text" class="form-control form-control-solid" id="edit_customer_phone" placeholder="Số điện thoại" />
                             </div>
                             <div class="form-group">
                                 <label>Địa chỉ:</label>
-                                <input name="address" type="text" class="form-control form-control-solid" id="edit_customer_address" placeholder="Địa chỉ" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==255) return false;"/>
+                                <input name="customer_address" type="text" class="form-control form-control-solid" id="edit_customer_address" placeholder="Địa chỉ" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==255) return false;"/>
                             </div>
                             @if(Auth::user()->role <= 1)
                                 <div class="form-group">
                                     <label>Loại khách hàng:</label>
-                                    <select name="role" id="edit_customer_role" class="form-control">
+                                    <select name="customer_role" id="edit_customer_role" class="form-control">
                                         <option value disabled selected hidden>Chọn loại khách hàng</option>
                                         <option value="0">Khách hàng thường</option>
                                         <option value="1">Khách hàng vip</option>
@@ -138,13 +138,13 @@
                     }
                 },
                 {
-                    'data': 'customer_name'
+                    'data': 'name'
                 },
                 {
-                    'data': 'customer_phone'
+                    'data': 'phone'
                 },
                 {
-                    'data': 'customer_address'
+                    'data': 'address'
                 },
                 {
                     'data': null,
@@ -152,7 +152,7 @@
                     overflow: 'visible',
                     autoHide: false,
                     render: function(data, type, row) {
-                        if (row.customer_role == 0) {
+                        if (row.role == 0) {
                             return `<span class="label label-lg label-light label-inline">Khách hàng thường</span>`;
                         } else {
                             return `<span class="label label-lg label-light label-inline">Khách hàng vip</span>`;
@@ -194,14 +194,14 @@
         validation = FormValidation.formValidation(
             form, {
                 fields: {
-                    name: {
+                    customer_name: {
                         validators: {
                             notEmpty: {
                                 message: 'Vui lòng không để trống mục này'
                             },
                         }
                     },
-                    phone: {
+                    customer_phone: {
                         validators: {
                             notEmpty: {
                                 message: 'Vui lòng không để trống mục này'
@@ -212,7 +212,7 @@
                             }
                         }
                     },
-                    address: {
+                    customer_address: {
                         validators: {
                             notEmpty: {
                                 message: 'Vui lòng không để trống mục này'
@@ -231,14 +231,14 @@
         validation2 = FormValidation.formValidation(
             form2, {
                 fields: {
-                    name: {
+                    customer_name: {
                         validators: {
                             notEmpty: {
                                 message: 'Vui lòng không để trống mục này'
                             },
                         }
                     },
-                    phone: {
+                    customer_phone: {
                         validators: {
                             notEmpty: {
                                 message: 'Vui lòng không để trống mục này'
@@ -249,7 +249,7 @@
                             }
                         }
                     },
-                    address: {
+                    customer_address: {
                         validators: {
                             notEmpty: {
                                 message: 'Vui lòng không để trống mục này'
@@ -264,10 +264,10 @@
             }
         );
         $('#create_customer').click(function(e) {
-            var customer_name = $('#customer_name').val();
-            var customer_phone = $('#customer_phone').val();
-            var customer_address = $('#customer_address').val();
-            var customer_role = $('#customer_role').val();
+            var name = $('#customer_name').val();
+            var phone = $('#customer_phone').val();
+            var address = $('#customer_address').val();
+            var role = $('#customer_role').val();
             validation.validate().then(function(status) {
                 if (status == 'Valid') {
                     axios({
@@ -277,10 +277,10 @@
                             'X-CSRF-TOKEN': $('meta[name = "csrf-token" ]').attr('content')
                         },
                         data: {
-                            customer_name: customer_name,
-                            customer_phone: customer_phone,
-                            customer_address: customer_address,
-                            customer_role: customer_role
+                            name: name,
+                            phone: phone,
+                            address: address,
+                            role: role
                         },
                     })
                         .then(function (response) {
@@ -325,19 +325,19 @@
             })
             .then(function (response) {
                 $('#edit_customer_id').val(response.data.id);
-                $('#edit_customer_name').val(response.data.customer_name);
-                $('#edit_customer_phone').val(response.data.customer_phone);
-                $('#edit_customer_address').val(response.data.customer_address);
-                $('#edit_customer_role').val(response.data.customer_role);
+                $('#edit_customer_name').val(response.data.name);
+                $('#edit_customer_phone').val(response.data.phone);
+                $('#edit_customer_address').val(response.data.address);
+                $('#edit_customer_role').val(response.data.role);
                 validation2.validate();
             });
         });
         $('#update_customer').click(function(e) {
             var id = $('#edit_customer_id').val();
-            var customer_name = $('#edit_customer_name').val();
-            var customer_phone = $('#edit_customer_phone').val();
-            var customer_address = $('#edit_customer_address').val();
-            var customer_role = $('#edit_customer_role').val();
+            var name = $('#edit_customer_name').val();
+            var phone = $('#edit_customer_phone').val();
+            var address = $('#edit_customer_address').val();
+            var role = $('#edit_customer_role').val();
             validation2.validate().then(function(status) {
                 if (status == 'Valid') {
                     axios({
@@ -347,10 +347,10 @@
                             'X-CSRF-TOKEN': $('meta[name = "csrf-token" ]').attr('content')
                         },
                         data: {
-                            customer_name: customer_name,
-                            customer_phone: customer_phone,
-                            customer_address: customer_address,
-                            customer_role: customer_role
+                            name: name,
+                            phone: phone,
+                            address: address,
+                            role: role
                         },
                     })
                     .then(function (response) {
@@ -394,28 +394,28 @@
                 confirmButtonText: "Đồng ý!",
                 cancelButtonText: "Không"
             })
-                .then(function(result) {
-                    if (result.value) {
-                        axios({
-                            url: 'destroy-customer/' + id,
-                            method: 'GET',
-                            headers: {
-                                'X-CSRF-TOKEN': $('meta[name = "csrf-token" ]').attr('content')
-                            },
-                        })
-                        .then(function () {
-                            Swal.fire({
-                                icon: "success",
-                                title: "Thành công",
-                                text: "Xoá khách hàng thành công!",
-                                showConfirmButton: false,
-                                timer: 1500
-                            });
-                            i = 0;
-                            table.ajax.reload();
+            .then(function(result) {
+                if (result.value) {
+                    axios({
+                        url: 'destroy-customer/' + id,
+                        method: 'GET',
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name = "csrf-token" ]').attr('content')
+                        },
+                    })
+                    .then(function () {
+                        Swal.fire({
+                            icon: "success",
+                            title: "Thành công",
+                            text: "Xoá khách hàng thành công!",
+                            showConfirmButton: false,
+                            timer: 1500
                         });
-                    }
-                });
+                        i = 0;
+                        table.ajax.reload();
+                    });
+                }
+            });
         });
     })
 </script>

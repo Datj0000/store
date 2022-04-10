@@ -9,30 +9,30 @@ use App\Models\Supplier;
 
 class SupplierController extends Controller
 {
-    public function index(): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\Foundation\Application
+    public function index()
     {
         if (Auth::check()) {
             return view('user.product.supplier');
         }
         return view('auth.login');
     }
-    public function fetchdata():\Illuminate\Http\JsonResponse
+    public function fetchdata()
     {
         if (Auth::check()) {
-            $data = Supplier::query()->get();
+            $data = Supplier::all();
             return response()->json([
-                "data" => $data,
+                "data" => $data->toArray(),
             ]);
         }
     }
 
-    public function create(Request $request):int
+    public function create(Request $request)
     {
         if (Auth::check()) {
-            $check_name = Supplier::query()->where('supplier_name','=', $request->supplier_name)->first();
-            $check_phone = Supplier::query()->where('supplier_phone','=', $request->supplier_phone)->first();
-            $check_email = Supplier::query()->where('supplier_email','=', $request->supplier_email)->first();
-            $check_mst = Supplier::query()->where('supplier_mst','=', $request->supplier_mst)->first();
+            $check_name = Supplier::query()->where('name','=',$request->input('name'))->first();
+            $check_phone = Supplier::query()->where('phone','=',$request->input('phone'))->first();
+            $check_email = Supplier::query()->where('email','=',$request->input('email'))->first();
+            $check_mst = Supplier::query()->where('mst','=',$request->input('mst'))->first();
             if ($check_name){
                 return 0;
             } else if ($check_phone){
@@ -42,34 +42,36 @@ class SupplierController extends Controller
             } else if ($check_mst){
                 return 3;
             } else{
-                $supplier = new Supplier();
-                $supplier->supplier_name = $request->supplier_name;
-                $supplier->supplier_phone = $request->supplier_phone;
-                $supplier->supplier_email = $request->supplier_email;
-                $supplier->supplier_mst = $request->supplier_mst;
-                $supplier->supplier_address = $request->supplier_address;
-                $supplier->supplier_information = $request->supplier_information;
-                $supplier->save();
+                Supplier::query()->create([
+                    'name' => $request->input('name'),
+                    'phone' => $request->input('phone'),
+                    'email' => $request->input('email'),
+                    'mst' => $request->input('mst'),
+                    'address' => $request->input('address'),
+                    'information' => $request->input('information'),
+                ]);
                 return 4;
             }
         }
     }
 
-    public function edit(int $id):\Illuminate\Http\JsonResponse
+    public function edit(int $id)
     {
         if (Auth::check()) {
-            $data = Supplier::query()->whereId($id)->first();
-            return response()->json($data);
+            $query = Supplier::query()->where('id','=',$id)->first();
+            if($query){
+                return response()->json($query->toArray());
+            }
         }
     }
 
-    public function update(Request $request, int $id):int
+    public function update(Request $request,int $id):int
     {
         if (Auth::check()) {
-            $check_name = Supplier::query()->where('supplier_name','=', $request->supplier_name)->where('id','!=', $id)->first();
-            $check_phone = Supplier::query()->where('supplier_phone','=', $request->supplier_phone)->where('id','!=', $id)->first();
-            $check_email = Supplier::query()->where('supplier_email','=', $request->supplier_email)->where('id','!=', $id)->first();
-            $check_mst = Supplier::query()->where('supplier_mst','=', $request->supplier_mst)->where('id','!=', $id)->first();
+            $check_name = Supplier::query()->where('name','=',$request->input('name'))->where('id','!=',$id)->first();
+            $check_phone = Supplier::query()->where('phone','=',$request->input('phone'))->where('id','!=',$id)->first();
+            $check_email = Supplier::query()->where('email','=',$request->input('email'))->where('id','!=',$id)->first();
+            $check_mst = Supplier::query()->where('mst','=',$request->input('mst'))->where('id','!=',$id)->first();
             if ($check_name){
                 return 0;
             } else if ($check_phone){
@@ -79,28 +81,31 @@ class SupplierController extends Controller
             } else if ($check_mst){
                 return 3;
             } else{
-                $supplier = Supplier::query()->whereId($id)->first();
-                $supplier->supplier_name = $request->supplier_name;
-                $supplier->supplier_phone = $request->supplier_phone;
-                $supplier->supplier_email = $request->supplier_email;
-                $supplier->supplier_mst = $request->supplier_mst;
-                $supplier->supplier_address = $request->supplier_address;
-                $supplier->supplier_information = $request->supplier_information;
-                $supplier->save();
+                Supplier::query()->where('id','=',$id)->update([
+                    'name' => $request->input('name'),
+                    'phone' => $request->input('phone'),
+                    'email' => $request->input('email'),
+                    'mst' => $request->input('mst'),
+                    'address' => $request->input('address'),
+                    'information' => $request->input('information'),
+                ]);
                 return 4;
             }
         }
     }
 
-    public function destroy(int $id):int
+    public function destroy(int $id)
     {
         if (Auth::check()) {
             $check = Product::query()->where('supplier_id','=',$id)->first();
             if($check){
                 return 0;
             } else {
-                Supplier::query()->whereId($id)->delete();
-                return 1;
+                $query = Supplier::query()->where('id','=',$id)->first();
+                if($query){
+                    $query->delete();
+                    return 1;
+                }
             }
         }
     }

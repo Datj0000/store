@@ -11,6 +11,6 @@ class Product extends Model
     protected $table = 'products';
     protected $primaryKey = 'id';
     protected $fillable = [
-        'product_image', 'product_name', 'category_id', 'brand_id', 'unit_id', 'product_soldout'
+        'image', 'name', 'category_id', 'brand_id', 'unit_id'
     ];
 }

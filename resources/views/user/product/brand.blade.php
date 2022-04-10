@@ -18,7 +18,7 @@
                                 fill="#000000" opacity="0.3" />
                         </g>
                     </svg>
-                </span>Thêm mới</span>
+                </span>Thêm thương hiệu</span>
         </div>
     </div>
     {{-- Add --}}
@@ -37,12 +37,12 @@
                         <div class=" card-body">
                             <div class="form-group">
                                 <label>Tên thương hiệu:</label>
-                                <input name="name" type="Text" class="form-control form-control-solid"
-                                       id="brand_name" placeholder="Tên thương hiệu" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==255) return false;"/>
+                                <input name="brand_name" type="Text" class="form-control form-control-solid"
+                                       id="brand_name" placeholder="Tên thương hiệu" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==20) return false;"/>
                             </div>
                             <div class="form-group">
                                 <label>Ghi chú:</label>
-                                <textarea name="description" rows="5" class="form-control form-control-solid" id="brand_desc"
+                                <textarea rows="5" class="form-control form-control-solid" id="brand_desc"
                                           placeholder="Ghi chú"></textarea>
                             </div>
                         </div>
@@ -72,12 +72,12 @@
                             <input type="hidden" id="edit_brand_id">
                             <div class="form-group">
                                 <label>Tên thương hiệu:</label>
-                                <input name="name" type="Text" class="form-control form-control-solid"
-                                       id="edit_brand_name" placeholder="Tên thương hiệu" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==255) return false;"/>
+                                <input name="brand_name" type="Text" class="form-control form-control-solid"
+                                       id="edit_brand_name" placeholder="Tên thương hiệu" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==20) return false;"/>
                             </div>
                             <div class="form-group">
                                 <label>Ghi chú:</label>
-                                <textarea name="description" rows="5" class="form-control form-control-solid" id="edit_brand_desc"
+                                <textarea rows="5" class="form-control form-control-solid" id="edit_brand_desc"
                                           placeholder="Ghi chú"></textarea>
                             </div>
                         </div>
@@ -111,14 +111,14 @@
                 {
                     'data': null,
                     render: function() {
-                        return i = i + 1
+                        return i += 1
                     }
                 },
                 {
-                    'data': 'brand_name'
+                    'data': 'name'
                 },
                 {
-                    'data': 'brand_desc'
+                    'data': 'desc'
                 },
                 {
                     'data': null,
@@ -154,7 +154,7 @@
         var validation = FormValidation.formValidation(
             form, {
                 fields: {
-                    name: {
+                    brand_name: {
                         validators: {
                             notEmpty: {
                                 message: 'Vui lòng điền mục này'
@@ -172,7 +172,7 @@
         var validation2 = FormValidation.formValidation(
             form2, {
                 fields: {
-                    name: {
+                    brand_name: {
                         validators: {
                             notEmpty: {
                                 message: 'Vui lòng điền mục này'
@@ -188,8 +188,8 @@
         );
         $('#create_brand').click(function(e) {
             e.preventDefault();
-            var brand_name = $('#brand_name').val();
-            var brand_desc = $('#brand_desc').val();
+            var name = $('#brand_name').val();
+            var desc = $('#brand_desc').val();
             validation.validate().then(function(status) {
                 if (status == 'Valid') {
                     axios({
@@ -199,25 +199,25 @@
                             'X-CSRF-TOKEN': $('meta[name = "csrf-token" ]').attr('content')
                         },
                         data: {
-                            brand_name: brand_name,
-                            brand_desc: brand_desc,
+                            name: name,
+                            desc: desc,
                         },
                     })
-                        .then(function (response) {
-                            if (response.data == 1) {
-                                Swal.fire({
-                                    icon: "success",
-                                    title: "Thành công",
-                                    text: "Thêm thương hiệu thành công!",
-                                    showConfirmButton: false,
-                                    timer: 1500
-                                });
-                                i = 0;
-                                table.ajax.reload();
-                            } else if (response.data == 0) {
-                                Swal.fire("Thất bại", "Thương hiệu đã nhập rồi!", "error");
-                            }
-                        });
+                    .then(function (response) {
+                        if (response.data == 1) {
+                            Swal.fire({
+                                icon: "success",
+                                title: "Thành công",
+                                text: "Thêm thương hiệu thành công!",
+                                showConfirmButton: false,
+                                timer: 1500
+                            });
+                            i = 0;
+                            table.ajax.reload();
+                        } else if (response.data == 0) {
+                            Swal.fire("Thất bại", "Thương hiệu đã nhập rồi!", "error");
+                        }
+                    });
                 } else {
                     swal.fire({
                         text: "Xin lỗi, có vẻ như đã phát hiện thấy một số lỗi, vui lòng thử lại .",
@@ -243,21 +243,18 @@
                     'X-CSRF-TOKEN': $('meta[name = "csrf-token" ]').attr('content')
                 },
             })
-                .then(function (response) {
-                    $('#edit_brand_id').val(response.data.brand_id);
-                    $('#edit_brand_name').val(response.data.brand_name);
-                    $('#edit_brand_desc').val(response.data.brand_desc);
-                    validation2.validate();
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
+            .then(function (response) {
+                $('#edit_brand_id').val(response.data.id);
+                $('#edit_brand_name').val(response.data.name);
+                $('#edit_brand_desc').val(response.data.desc);
+                validation2.validate();
+            });
         });
         $('#update_brand').click(function(e) {
             e.preventDefault();
             var id = $('#edit_brand_id').val();
-            var brand_name = $('#edit_brand_name').val();
-            var brand_desc = $('#edit_brand_desc').val();
+            var name = $('#edit_brand_name').val();
+            var desc = $('#edit_brand_desc').val();
             validation2.validate().then(function(status) {
                 if (status == 'Valid') {
                     axios({
@@ -267,25 +264,25 @@
                             'X-CSRF-TOKEN': $('meta[name = "csrf-token" ]').attr('content')
                         },
                         data: {
-                            brand_name: brand_name,
-                            brand_desc: brand_desc,
+                            name: name,
+                            desc: desc,
                         },
                     })
-                        .then(function (response) {
-                            if (response.data == 1) {
-                                Swal.fire({
-                                    icon: "success",
-                                    title: "Thành công",
-                                    text: "Sửa thương hiệu thành công!",
-                                    showConfirmButton: false,
-                                    timer: 1500
-                                });
-                                i = 0;
-                                table.ajax.reload();
-                            } else if (response.data == 0) {
-                                Swal.fire("Thất bại", "Thương hiệu đã trùng tên!", "error");
-                            }
-                        });
+                    .then(function (response) {
+                        if (response.data == 1) {
+                            Swal.fire({
+                                icon: "success",
+                                title: "Thành công",
+                                text: "Sửa thương hiệu thành công!",
+                                showConfirmButton: false,
+                                timer: 1500
+                            });
+                            i = 0;
+                            table.ajax.reload();
+                        } else if (response.data == 0) {
+                            Swal.fire("Thất bại", "Thương hiệu đã trùng tên!", "error");
+                        }
+                    });
                 } else {
                     swal.fire({
                         text: "Xin lỗi, có vẻ như đã phát hiện thấy một số lỗi, vui lòng thử lại .",
@@ -312,38 +309,38 @@
                 confirmButtonText: "Đồng ý!",
                 cancelButtonText: "Không"
             })
-                .then(function(result) {
-                    if (result.value) {
-                        axios({
-                            url: 'destroy-brand/' + id,
-                            method: 'GET',
-                            headers: {
-                                'X-CSRF-TOKEN': $('meta[name = "csrf-token" ]').attr('content')
-                            },
-                        })
-                            .then(function (response) {
-                                if (response.data == 1) {
-                                    Swal.fire({
-                                        icon: "success",
-                                        title: "Thành công",
-                                        text: "Xoá thương hiệu thành công!",
-                                        showConfirmButton: false,
-                                        timer: 1500
-                                    });
-                                    i = 0;
-                                    table.ajax.reload();
-                                } else if (response.data == 0) {
-                                    Swal.fire({
-                                        icon: "error",
-                                        title: "Thất bại",
-                                        text: "Đang có sản phẩm thuộc thương hiệu này!",
-                                        showConfirmButton: false,
-                                        timer: 1500
-                                    });
-                                }
+            .then(function(result) {
+                if (result.value) {
+                    axios({
+                        url: 'destroy-brand/' + id,
+                        method: 'GET',
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name = "csrf-token" ]').attr('content')
+                        },
+                    })
+                    .then(function (response) {
+                        if (response.data == 1) {
+                            Swal.fire({
+                                icon: "success",
+                                title: "Thành công",
+                                text: "Xoá thương hiệu thành công!",
+                                showConfirmButton: false,
+                                timer: 1500
                             });
-                    }
-                });
+                            i = 0;
+                            table.ajax.reload();
+                        } else if (response.data == 0) {
+                            Swal.fire({
+                                icon: "error",
+                                title: "Thất bại",
+                                text: "Đang có sản phẩm dùng thương hiệu này!",
+                                showConfirmButton: false,
+                                timer: 1500
+                            });
+                        }
+                    });
+                }
+            });
         });
     })
 </script>

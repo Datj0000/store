@@ -13,21 +13,21 @@ use Illuminate\Support\Facades\Session;
 
 class OrderController extends Controller
 {
-    public function index():\Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\Foundation\Application
+    public function index()
     {
         if (Auth::check()) {
             $customer = Customer::query()->get();
             return view('user.order.order')
-                ->with('customer', $customer);
+                ->with('customer',$customer);
         }
         return view('auth.login');
     }
 
-    public function fetchdata():\Illuminate\Http\JsonResponse
+    public function fetchdata()
     {
         if (Auth::check()) {
-            $data = Order::query()->select('customers.customer_name', 'orders.*')
-                ->join('customers', 'customers.id', '=', 'orders.customer_id')
+            $data = Order::query()->select('customers.customer_name','orders.*')
+                ->join('customers','customers.id','=','orders.customer_id')
                 ->get();
             return response()->json([
                 "data" => $data,
@@ -40,30 +40,30 @@ class OrderController extends Controller
         if (Auth::check()) {
             $order = new Order();
             do {
-                $order_code = rand(106890122,1000000000);
-                $check = Order::query()->where('order_code','=', $order_code)->first();
+                $code = rand(106890122,1000000000);
+                $check = Order::query()->where('code','=',$code)->first();
             }
             while ($check);
-            $order->order_code = $order_code;
+            $order->code = $code;
             $order->customer_id = $request->customer_id;
-            $order->order_methodpay = $request->order_methodpay;
+            $order->methodpay = $request->methodpay;
             if (Session::get('fee')){
-                $order->order_fee_ship = Session::get('fee');
+                $order->fee_ship = Session::get('fee');
                 Session::forget('fee');
             }
             if (Session::get('coupon')){
-                $order->order_coupon = Session::get('coupon');
+                $order->coupon = Session::get('coupon');
                 Session::forget('coupon');
             }
             $order->save();
             if (Session::get('cart')) {
                 foreach (Session::get('cart') as $key => $cart) {
-                    $order_details = new OrderDetail();
-                    $order_details->order_id = $order->id;
-                    $order_details->product_code = $cart['product_code'];
-                    $order_details->order_quantity = $cart['product_quantity'];
-                    $order_details->save();
-                    $import = ImportDetail::query()->where('product_code', $order_details->product_code)->first();
+                    $details = new OrderDetail();
+                    $details->id = $order->id;
+                    $details->product_code = $cart['product_code'];
+                    $details->quantity = $cart['product_quantity'];
+                    $details->save();
+                    $import = ImportDetail::query()->where('product_code',$details->product_code)->first();
                     $import->detail_soldout = $cart['product_quantity'];
                     $import->save();
                 }
@@ -72,14 +72,14 @@ class OrderController extends Controller
         }
     }
 
-    public function edit(int $id):\Illuminate\Http\JsonResponse
+    public function edit(int $id)
     {
         if (Auth::check()) {
             Session::forget('edit_fee');
             Session::forget('edit_coupon');
             Session::forget('edit_cart');
-            $data = Order::query()->select('customers.customer_name','customers.customer_phone', 'orders.*')
-                ->join('customers', 'customers.id', '=', 'orders.customer_id')
+            $data = Order::query()->select('customers.customer_name','customers.customer_phone','orders.*')
+                ->join('customers','customers.id','=','orders.customer_id')
                 ->where('orders.id','=',$id)->first();
             return response()->json($data);
         }
@@ -88,9 +88,9 @@ class OrderController extends Controller
     public function update(Request $request,int $id)
     {
         if (Auth::check()) {
-            $order = Order::query()->whereId($id)->first();
+            $order = Order::query()->where('id','=',$id)->first();
             $order->supplier_id = $request->supplier_id;
-            $order->order_fee_ship = $request->order_fee_ship;
+            $order->fee_ship = $request->fee_ship;
             $order->save();
         }
     }
@@ -98,11 +98,11 @@ class OrderController extends Controller
     public function destroy(int $id)
     {
         if (Auth::check()) {
-            $check = OrderDetail::query()->where('order_id','=',$id)->first();
+            $check = OrderDetail::query()->where('id','=',$id)->first();
             if($check){
                 return 0;
             } else{
-                Order::query()->whereId($id)->delete();
+                Order::query()->where('id','=',$id)->delete();
                 return 1;
             }
         }
@@ -111,12 +111,12 @@ class OrderController extends Controller
     public function add_cart($code)
     {
         if (Auth::check()) {
-            $detail = ImportDetail::query()->select('brands.brand_name', 'products.product_name', 'products.brand_id', 'importdetails.*')
-                ->join('products', 'products.id', '=', 'importdetails.product_id')
-                ->join('brands', 'brands.id', '=', 'products.brand_id')
-                ->where('product_code','=', $code)
+            $detail = ImportDetail::query()->select('brands.brand_name','products.product_name','products.brand_id','importdetails.*')
+                ->join('products','products.id','=','importdetails.product_id')
+                ->join('brands','brands.id','=','products.brand_id')
+                ->where('product_code','=',$code)
                 ->first();
-            $session_id = substr(md5(microtime()), rand(0, 26), 5);
+            $session_id = substr(md5(microtime()),rand(0,26),5);
             $cart = Session::get('cart');
             if ($cart == true) {
                 $check = 0;
@@ -135,7 +135,7 @@ class OrderController extends Controller
                         'product_iprice' => $detail->detail_import_price,
                         'product_price' => $detail->detail_sell_price,
                     );
-                    Session::put('cart', $cart);
+                    Session::put('cart',$cart);
                     return 1;
                 } else{
                     return 0;
@@ -150,7 +150,7 @@ class OrderController extends Controller
                     'product_iprice' => $detail->detail_import_price,
                     'product_price' => $detail->detail_sell_price,
                 );
-                Session::put('cart', $cart);
+                Session::put('cart',$cart);
                 return 1;
             }
         }
@@ -171,9 +171,9 @@ class OrderController extends Controller
                     }
                 }
                 if($request->type == 0){
-                    Session::put('cart', $cart);
+                    Session::put('cart',$cart);
                 }else{
-                    Session::put('edit_cart', $cart);
+                    Session::put('edit_cart',$cart);
                 }
             } else {
                 return 0;
@@ -196,9 +196,9 @@ class OrderController extends Controller
                     }
                 }
                 if($request->type == 0){
-                    Session::put('cart', $cart);
+                    Session::put('cart',$cart);
                 }else{
-                    Session::put('edit_cart', $cart);
+                    Session::put('edit_cart',$cart);
                 }
                 return 1;
             } else {
@@ -210,9 +210,9 @@ class OrderController extends Controller
     {
         if (Auth::check()) {
             if($request->type == 0){
-                Session::put('fee', $request->data);
+                Session::put('fee',$request->data);
             }else{
-                Session::put('edit_fee', $request->data);
+                Session::put('edit_fee',$request->data);
             }
         }
     }
@@ -243,9 +243,9 @@ class OrderController extends Controller
                     $subtotal = $cart['product_price'] * $cart['product_quantity'];
                     $iprice += $cart['product_iprice'];
                     $total += $subtotal;
-                    $detail = ImportDetail::query()->where('product_code', '=', $cart['product_code'])->first();
+                    $detail = ImportDetail::query()->where('product_code','=',$cart['product_code'])->first();
                     $import = Import::query()->whereId($detail->import_id)->first();
-                    $detail_count = ImportDetail::query()->where('import_id', '=', $detail->import_id)->count();
+                    $detail_count = ImportDetail::query()->where('import_id','=',$detail->import_id)->count();
                     $fee = $import->import_fee_ship / $detail_count;
                     $total_fee += $fee;
                     $output .= '
@@ -268,8 +268,8 @@ class OrderController extends Controller
                     }
                     $output .= '
                     <td>' . $cart['product_name'] . '</td>
-                    <td>' . number_format($cart['product_price'], 0, ',', '.') . 'đ</td>';
-                    $check_qty = ImportDetail::query()->where('product_code', $cart['product_code'])->first();
+                    <td>' . number_format($cart['product_price'],0,',','.') . 'đ</td>';
+                    $check_qty = ImportDetail::query()->where('product_code',$cart['product_code'])->first();
                     if ($check_qty) {
                         $output .= '<input class="product_quantity_' . $cart['session_id'] . '" type="hidden" value="' . $check_qty->detail_quantity - $check_qty->detail_soldout. '">';
                     }
@@ -285,7 +285,7 @@ class OrderController extends Controller
                             </div>
                         </div>
                     </td>
-                    <td>' . number_format($subtotal, 0, ',', '.') . 'đ</td>
+                    <td>' . number_format($subtotal,0,',','.') . 'đ</td>
                     <td> <i style="cursor: pointer" data-session_id="' . $cart['session_id'] . '" class="destroy_cart la la-trash"></td>
                 </tr>';
                 }
@@ -297,7 +297,7 @@ class OrderController extends Controller
             <div style="margin-top: 20px" class="row form-group">
                 <div style="width: 10%">Tổng:</div>
                 <div style="width: 90%">
-                    ' . number_format($total, 0, ',', '.') . 'đ' . '
+                    ' . number_format($total,0,',','.') . 'đ' . '
                 </div>
                 ';
                 if (Session::get('coupon')) {
@@ -307,14 +307,14 @@ class OrderController extends Controller
                             $output .= '
                             <div style="width: 10%">Giảm giá:</div>
                             <div style="width: 90%">
-                                ' . $cou['coupon_number'] . '% (' . number_format($total_coupon, 0, ',', '.') . ' đ)' . '
+                                ' . $cou['coupon_number'] . '% (' . number_format($total_coupon,0,',','.') . ' đ)' . '
                             </div>';
                         } else {
                             $total_coupon = $cou['coupon_number'];
                             $output .= '
                             <div style="width: 10%">Giảm giá:</div>
                             <div style="width: 90%">
-                                ' . number_format($total_coupon, 0, ',', '.') . 'đ' . '
+                                ' . number_format($total_coupon,0,',','.') . 'đ' . '
                             </div>';
                         }
                     }
@@ -330,13 +330,13 @@ class OrderController extends Controller
                     $output .= '
                     <div style="width: 10%">Phí lắp đặt:</div>
                     <div style="width: 90%">
-                        ' . number_format($total_fee, 0, ',', '.') . 'đ' . '
+                        ' . number_format($total_fee,0,',','.') . 'đ' . '
                     </div>';
                 }
                 $output .= '
                 <div style="width: 10%">Thành tiền:</div>
                 <div style="width: 90%">
-                    ' . number_format($intomoney, 0, ',', '.') . 'đ' . '
+                    ' . number_format($intomoney,0,',','.') . 'đ' . '
                 </div>
             </div>
             ';
@@ -346,27 +346,27 @@ class OrderController extends Controller
             return $output;
         }
     }
-    public function load_edit_cart(int $order_id)
+    public function load_edit_cart(int $id)
     {
         if (Auth::check()) {
-            $order_detail = OrderDetail::query()->select('brands.brand_name', 'products.product_name','importdetails.*', 'orderdetails.*')
-                ->join('importdetails', 'importdetails.product_code', '=', 'orderdetails.product_code')
-                ->join('products', 'products.id', '=', 'importdetails.product_id')
-                ->join('brands', 'brands.id', '=', 'products.brand_id')
-                ->where('order_id','=',$order_id)
+            $detail = OrderDetail::query()->select('brands.brand_name','products.product_name','importdetails.*','orderdetails.*')
+                ->join('importdetails','importdetails.product_code','=','orderdetails.product_code')
+                ->join('products','products.id','=','importdetails.product_id')
+                ->join('brands','brands.id','=','products.brand_id')
+                ->where('id','=',$id)
                 ->get();
-            $session_id = substr(md5(microtime()), rand(0, 26), 5);
-            foreach ($order_detail as $key)
+            $session_id = substr(md5(microtime()),rand(0,26),5);
+            foreach ($detail as $key)
             $cart[] = array(
                 'session_id' => $session_id,
                 'product_code' => $key->product_code,
                 'product_name' => $key->brand_name .' '. $key->product_name,
                 'product_image' => $key->detail_image,
-                'product_quantity' => $key->order_quantity,
+                'product_quantity' => $key->quantity,
                 'product_iprice' => $key->detail_import_price,
                 'product_price' => $key->detail_sell_price,
             );
-            Session::put('edit_cart', $cart);
+            Session::put('edit_cart',$cart);
             if (Session::get('edit_cart')) {
                 $output = '
             <table class="table table-separate table-head-custom table-checkable display nowrap" cellspacing="0" width="100%" id="table_edit_cart">
@@ -390,9 +390,9 @@ class OrderController extends Controller
                     $subtotal = $cart['product_price'] * $cart['product_quantity'];
                     $iprice += $cart['product_iprice'];
                     $total += $subtotal;
-                    $detail = ImportDetail::query()->where('product_code', '=', $cart['product_code'])->first();
+                    $detail = ImportDetail::query()->where('product_code','=',$cart['product_code'])->first();
                     $import = Import::query()->whereId($detail->import_id)->first();
-                    $detail_count = ImportDetail::query()->where('import_id', '=', $detail->import_id)->count();
+                    $detail_count = ImportDetail::query()->where('import_id','=',$detail->import_id)->count();
                     $fee = $import->import_fee_ship / $detail_count;
                     $total_fee += $fee;
                     $output .= '
@@ -415,8 +415,8 @@ class OrderController extends Controller
                     }
                     $output .= '
                     <td>' . $cart['product_name'] . '</td>
-                    <td>' . number_format($cart['product_price'], 0, ',', '.') . 'đ</td>';
-                    $check_qty = ImportDetail::query()->where('product_code', $cart['product_code'])->first();
+                    <td>' . number_format($cart['product_price'],0,',','.') . 'đ</td>';
+                    $check_qty = ImportDetail::query()->where('product_code',$cart['product_code'])->first();
                     if ($check_qty) {
                         $output .= '<input class="product_quantity_' . $cart['session_id'] . '" type="hidden" value="' . $check_qty->detail_quantity - $check_qty->detail_soldout. '">';
                     }
@@ -432,7 +432,7 @@ class OrderController extends Controller
                             </div>
                         </div>
                     </td>
-                    <td>' . number_format($subtotal, 0, ',', '.') . 'đ</td>
+                    <td>' . number_format($subtotal,0,',','.') . 'đ</td>
                     <td> <i style="cursor: pointer" data-session_id="' . $cart['session_id'] . '" class="destroy_cart la la-trash"></td>
                 </tr>';
                 }
@@ -444,7 +444,7 @@ class OrderController extends Controller
             <div style="margin-top: 20px" class="row form-group">
                 <div style="width: 10%">Tổng:</div>
                 <div style="width: 90%">
-                    ' . number_format($total, 0, ',', '.') . 'đ' . '
+                    ' . number_format($total,0,',','.') . 'đ' . '
                 </div>
                 ';
                 if (Session::get('edit_coupon')) {
@@ -454,14 +454,14 @@ class OrderController extends Controller
                             $output .= '
                             <div style="width: 10%">Giảm giá:</div>
                             <div style="width: 90%">
-                                ' . $cou['coupon_number'] . '% (' . number_format($total_coupon, 0, ',', '.') . ' đ)' . '
+                                ' . $cou['coupon_number'] . '% (' . number_format($total_coupon,0,',','.') . ' đ)' . '
                             </div>';
                         } else {
                             $total_coupon = $cou['coupon_number'];
                             $output .= '
                             <div style="width: 10%">Giảm giá:</div>
                             <div style="width: 90%">
-                                ' . number_format($total_coupon, 0, ',', '.') . 'đ' . '
+                                ' . number_format($total_coupon,0,',','.') . 'đ' . '
                             </div>';
                         }
                     }
@@ -477,13 +477,13 @@ class OrderController extends Controller
                     $output .= '
                     <div style="width: 10%">Phí lắp đặt:</div>
                     <div style="width: 90%">
-                        ' . number_format($total_fee, 0, ',', '.') . 'đ' . '
+                        ' . number_format($total_fee,0,',','.') . 'đ' . '
                     </div>';
                 }
                 $output .= '
                 <div style="width: 10%">Thành tiền:</div>
                 <div style="width: 90%">
-                    ' . number_format($intomoney, 0, ',', '.') . 'đ' . '
+                    ' . number_format($intomoney,0,',','.') . 'đ' . '
                 </div>
             </div>
             ';

@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\DB;
 
 class ImportController extends Controller
 {
-    public function index(): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\Foundation\Application
+    public function index()
     {
         if (Auth::check()) {
             $brand = Brand::query()->get();
@@ -24,23 +24,23 @@ class ImportController extends Controller
             $product = Product::query()->get();
             $supplier = Supplier::query()->get();
             return view('user.product.import')
-                ->with('brand', $brand)
-                ->with('category', $category)
-                ->with('product', $product)
-                ->with('import', $import)
-                ->with('supplier', $supplier);
+                ->with('brand',$brand)
+                ->with('category',$category)
+                ->with('product',$product)
+                ->with('import',$import)
+                ->with('supplier',$supplier);
         }
         return view('auth.login');
     }
 
-    public function fetchdata():\Illuminate\Http\JsonResponse
+    public function fetchdata()
     {
         if (Auth::check()) {
-            $data = Import::query()->select('suppliers.supplier_name', DB::raw('SUM(importdetails.detail_import_price) As total'), 'imports.*')
-                ->leftJoin('importdetails', 'importdetails.import_id', '=', 'imports.id')
-                ->join('suppliers', 'suppliers.id', '=', 'imports.supplier_id')
-                ->groupBy('suppliers.supplier_name','imports.import_code','imports.id','imports.import_fee_ship','imports.supplier_id', 'imports.created_at', 'imports.updated_at')
-                ->orderBy('id', 'Desc')->get();
+            $data = Import::query()->select('suppliers.name as supplier_name',DB::raw('SUM(importdetails.import_price) As total'),'imports.*')
+                ->leftJoin('importdetails','importdetails.id','=','imports.id')
+                ->join('suppliers','suppliers.id','=','imports.supplier_id')
+                ->groupBy('suppliers.name','imports.code','imports.id','imports.fee_ship','imports.supplier_id','imports.created_at','imports.updated_at')
+                ->orderBy('id','Desc')->get();
             return response()->json([
                 "data" => $data,
             ]);
@@ -50,33 +50,36 @@ class ImportController extends Controller
     public function create(Request $request)
     {
         if (Auth::check()) {
-            $import = new Import();
             do {
-                $import_code = rand(106890122,1000000000);
-                $check = Import::query()->where('import_code','=', $import_code)->first();
+                $code = rand(106890122,1000000000);
+                $check = Import::query()->where('code','=',$code)->first();
             } while ($check);
-            $import->supplier_id = $request->supplier_id;
-            $import->import_fee_ship = $request->import_fee_ship;
-            $import->save();
+            $import = Import::query()->create([
+                'code' => rand(106890122,1000000000),
+                'supplier_id' => $request->input('supplier_id'),
+                'fee_ship' => $request->input('fee_ship'),
+            ]);
             return $import->id;
         }
     }
 
-    public function edit(int $id):\Illuminate\Http\JsonResponse
+    public function edit(int $id)
     {
         if (Auth::check()) {
-            $data = Import::query()->whereId($id)->first();
-            return response()->json($data);
+            $query = Import::query()->where('id','=',$id)->first();
+            if($query){
+                return response()->json($query->toArray());
+            }
         }
     }
 
     public function update(Request $request,int $id)
     {
         if (Auth::check()) {
-            $import = Import::query()->whereId($id)->first();
-            $import->supplier_id = $request->supplier_id;
-            $import->import_fee_ship = $request->import_fee_ship;
-            $import->save();
+            Import::query()->where('id','=',$id)->update([
+                'supplier_id' => $request->input('supplier_id'),
+                'fee_ship' => $request->input('fee_ship'),
+            ]);
         }
     }
 
@@ -87,8 +90,11 @@ class ImportController extends Controller
             if($check){
                 return 0;
             } else{
-                Import::query()->whereId($id)->delete();
-                return 1;
+                $query = Import::query()->where('id','=',$id)->first();
+                if($query){
+                    $query->delete();
+                    return 1;
+                }
             }
         }
     }
@@ -96,12 +102,12 @@ class ImportController extends Controller
     public function print(int $id)
     {
         if (Auth::check()) {
-            $import = Import::query()->whereId($id)->first();
-            $supplier = Supplier::query()->whereId($import->supplier_id)->first();
-            $detail = ImportDetail::query()->select('products.product_name', 'importdetails.*')
-                ->join('products', 'products.id', '=', 'importdetails.product_id')
-                ->where('import_id', $id)->get();
-            $pdf = \PDF::loadView('pdf.import', [
+            $import = Import::query()->where('id','=',$id)->first();
+            $supplier = Supplier::query()->where('id','=',$import->supplier_id)->first();
+            $detail = ImportDetail::query()->select('products.product_name','importdetails.*')
+                ->join('products','products.id','=','importdetails.product_id')
+                ->where('id','=',$id)->get();
+            $pdf = \PDF::loadView('pdf.import',[
                 'import' => $import,
                 'supplier' => $supplier,
                 'details' => $detail

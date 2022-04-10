@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->integer('order_id');
             $table->bigInteger('product_code');
-            $table->integer('order_quantity');
+            $table->integer('quantity');
             $table->timestamps();
         });
     }

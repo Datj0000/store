@@ -18,7 +18,7 @@
                                 fill="#000000" opacity="0.3" />
                         </g>
                     </svg>
-                </span>Thêm mới</span>
+                </span>Thêm đơn vị</span>
         </div>
     </div>
     {{-- Add --}}
@@ -37,12 +37,12 @@
                         <div class=" card-body">
                             <div class="form-group">
                                 <label>Tên đơn vị:</label>
-                                <input name="name" type="Text" class="form-control form-control-solid"
+                                <input name="unit_name" type="Text" class="form-control form-control-solid"
                                        id="unit_name" placeholder="Tên đơn vị" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==20) return false;"/>
                             </div>
                             <div class="form-group">
                                 <label>Ghi chú:</label>
-                                <textarea name="description" rows="5" class="form-control form-control-solid" id="unit_desc"
+                                <textarea rows="5" class="form-control form-control-solid" id="unit_desc"
                                           placeholder="Ghi chú"></textarea>
                             </div>
                         </div>
@@ -72,12 +72,12 @@
                             <input type="hidden" id="edit_unit_id">
                             <div class="form-group">
                                 <label>Tên đơn vị:</label>
-                                <input name="name" type="Text" class="form-control form-control-solid"
+                                <input name="unit_name" type="Text" class="form-control form-control-solid"
                                        id="edit_unit_name" placeholder="Tên đơn vị" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==20) return false;"/>
                             </div>
                             <div class="form-group">
                                 <label>Ghi chú:</label>
-                                <textarea name="description" rows="5" class="form-control form-control-solid" id="edit_unit_desc"
+                                <textarea rows="5" class="form-control form-control-solid" id="edit_unit_desc"
                                           placeholder="Ghi chú"></textarea>
                             </div>
                         </div>
@@ -115,10 +115,10 @@
                     }
                 },
                 {
-                    'data': 'unit_name'
+                    'data': 'name'
                 },
                 {
-                    'data': 'unit_desc'
+                    'data': 'desc'
                 },
                 {
                     'data': null,
@@ -154,7 +154,7 @@
         var validation = FormValidation.formValidation(
             form, {
                 fields: {
-                    name: {
+                    unit_name: {
                         validators: {
                             notEmpty: {
                                 message: 'Vui lòng điền mục này'
@@ -172,7 +172,7 @@
         var validation2 = FormValidation.formValidation(
             form2, {
                 fields: {
-                    name: {
+                    unit_name: {
                         validators: {
                             notEmpty: {
                                 message: 'Vui lòng điền mục này'
@@ -188,8 +188,8 @@
         );
         $('#create_unit').click(function(e) {
             e.preventDefault();
-            var unit_name = $('#unit_name').val();
-            var unit_desc = $('#unit_desc').val();
+            var name = $('#unit_name').val();
+            var desc = $('#unit_desc').val();
             validation.validate().then(function(status) {
                 if (status == 'Valid') {
                     axios({
@@ -199,8 +199,8 @@
                             'X-CSRF-TOKEN': $('meta[name = "csrf-token" ]').attr('content')
                         },
                         data: {
-                            unit_name: unit_name,
-                            unit_desc: unit_desc,
+                            name: name,
+                            desc: desc,
                         },
                     })
                     .then(function (response) {
@@ -245,16 +245,16 @@
             })
             .then(function (response) {
                 $('#edit_unit_id').val(response.data.id);
-                $('#edit_unit_name').val(response.data.unit_name);
-                $('#edit_unit_desc').val(response.data.unit_desc);
+                $('#edit_unit_name').val(response.data.name);
+                $('#edit_unit_desc').val(response.data.desc);
                 validation2.validate();
             });
         });
         $('#update_unit').click(function(e) {
             e.preventDefault();
             var id = $('#edit_unit_id').val();
-            var unit_name = $('#edit_unit_name').val();
-            var unit_desc = $('#edit_unit_desc').val();
+            var name = $('#edit_unit_name').val();
+            var desc = $('#edit_unit_desc').val();
             validation2.validate().then(function(status) {
                 if (status == 'Valid') {
                     axios({
@@ -264,8 +264,8 @@
                             'X-CSRF-TOKEN': $('meta[name = "csrf-token" ]').attr('content')
                         },
                         data: {
-                            unit_name: unit_name,
-                            unit_desc: unit_desc,
+                            name: name,
+                            desc: desc,
                         },
                     })
                     .then(function (response) {

@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
-    public function index(): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\Foundation\Application
+    public function index()
     {
         if (Auth::check()) {
             return view('user.admin.admin');
@@ -16,53 +16,38 @@ class UserController extends Controller
         return view('auth.login');
     }
 
-    public function fetchdata():\Illuminate\Http\JsonResponse
+    public function fetchdata()
     {
         if (Auth::check()) {
-            $data = User::query()->where('role','!=','0')->get();
-            return response()->json([
-                "data" => $data,
-            ]);
+            $query = User::query()->where('role','!=',0)->get();
+            if($query){
+                return response()->json([
+                    "data" => $query->toArray(),
+                ]);
+            }
         }
     }
 
-    public function create(Request $request):int
+    public function create(Request $request)
     {
         if (Auth::check()) {
-            // $check = User::query()->where('email','=', $request->email)->first();
-            $check = User::query()->firstOrCreate(
-                [
-                    'email' => $request->input('email')
-                ],
-                [
-                    'email' => $request->input('email'),
+            $check = User::query()->where('email','=',$request->input('email'))->first();
+            if (!$check){
+                User::query()->create([
                     'name' => $request->input('name'),
                     'phone' => $request->input('phone'),
+                    'email' => $request->input('email'),
                     'role' => $request->input('role'),
                     'password' => bcrypt($request->input('password')),
                 ]);
-            if($check){
-                return $check;
+                return 0;
             } else{
-                return $check;
+                return 1;
             }
-            // return $check;
-            // if (!$check){
-            //     $user = new User();
-            //     $user->name = $request->name;
-            //     $user->phone = $request->phone;
-            //     $user->email = $request->email;
-            //     $user->role = $request->role;
-            //     $user->password = bcrypt($request->password);
-            //     $user->save();
-            //     return 0;
-            // } else{
-            //     return 1;
-            // }
         }
     }
 
-    public function edit(int $id):\Illuminate\Http\JsonResponse
+    public function edit(int $id)
     {
         $query = User::query()->where('id','=',$id)->first();
         if ($query) {
@@ -70,9 +55,10 @@ class UserController extends Controller
         }
     }
 
-    public function update(Request $request, int $id)
+    public function update(Request $request,int $id)
     {
-        User::query()->where('id','=',$id)->update(['role' => $request->input('role')]);
+        $query = User::query()->where('id','=',$id)->first();
+        $query?->update(['role' => $request->input('role')]);
     }
     public function destroy(int $id)
     {

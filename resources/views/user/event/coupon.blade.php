@@ -18,7 +18,7 @@
                                 fill="#000000" opacity="0.3" />
                         </g>
                     </svg>
-                </span>Thêm mới</span>
+                </span>Thêm mã giảm giá</span>
         </div>
     </div>
     {{-- Add --}}
@@ -37,22 +37,22 @@
                         <div class=" card-body">
                             <div class="form-group">
                                 <label>Tên mã giảm giá:</label>
-                                <input name="name" type="text" class="form-control form-control-solid" id="coupon_name"
+                                <input name="coupon_name" type="text" class="form-control form-control-solid" id="coupon_name"
                                        placeholder="Tên mã giảm giá" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==255) return false;"/>
                             </div>
                             <div class="form-group">
                                 <label>Mã giảm giá:</label>
-                                <input name="code" type="text" class="form-control form-control-solid" id="coupon_code"
+                                <input name="coupon_code" type="text" class="form-control form-control-solid" id="coupon_code"
                                        placeholder="Mã giảm giá" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==20) return false;"/>
                             </div>
                             <div class="form-group">
                                 <label>Số lượng:</label>
-                                <input name="quantity" type="number" class="form-control form-control-solid" id="coupon_time " min="0"
+                                <input name="coupon_quantity" type="number" class="form-control form-control-solid" id="coupon_time " min="0"
                                        placeholder="Số lượng" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==20) return false;"/>
                             </div>
                             <div class="form-group">
                                 <label>Loại giảm giá:</label>
-                                <select name="type" class="form-control" id="coupon_condition">
+                                <select name="coupon_type" class="form-control" id="coupon_condition">
                                     <option value disabled selected hidden>Chọn loại giảm giá</option>
                                     <option value="0">Giảm theo phần trăm</option>
                                     <option value="1">Giảm theo tiền</option>
@@ -60,12 +60,12 @@
                             </div>
                             <div class="form-group">
                                 <label>Nhập số % hoặc tiền giảm:</label>
-                                <input name="number" type="text" class="form-control form-control-solid" id="coupon_number" min="0"
+                                <input name="coupon_number" type="text" class="form-control form-control-solid" id="coupon_number" min="0"
                                        placeholder="Nhập số % hoặc tiền giảm" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==20) return false;"/>
                             </div>
                             <div class="form-group">
                                 <label>Trạng thái:</label>
-                                <select name="status" class="form-control" id="coupon_status">
+                                <select name="coupon_status" class="form-control" id="coupon_status">
                                     <option value disabled selected hidden>Chọn trạng thái</option>
                                     <option value="0">Kích hoạt</option>
                                     <option value="1">Tắt</option>
@@ -75,10 +75,10 @@
                                 <div class="input-daterange input-group" id="kt_datepicker_5">
                                     <label class="col-form-label text-right">Thời gian từ</label>
                                     <input style="border-radius: 7px; margin: 0 10px" autocomplete="off" id="coupon_date_start" type="text"
-                                           class="form-control" name="start" />
+                                           class="form-control" name="coupon_start" />
                                     <label class="col-form-label text-right">Đến</label>
                                     <input style="border-radius: 7px; margin: 0 0 0 10px" autocomplete="off" id="coupon_date_end" type="text"
-                                           class="form-control" name="end" />
+                                           class="form-control" name="coupon_end" />
                                 </div>
                             </div>
                         </div>
@@ -108,22 +108,22 @@
                             <input type="hidden" id="edit_coupon_id">
                             <div class="form-group">
                                 <label>Tên mã giảm giá:</label>
-                                <input name="name" type="Text" class="form-control form-control-solid"
+                                <input name="coupon_name" type="Text" class="form-control form-control-solid"
                                        id="edit_coupon_name" placeholder="Tên mã giảm giá" onKeyPress="if(this.value.length==255) return false;"/>
                             </div>
                             <div class="form-group">
                                 <label>Mã giảm giá:</label>
-                                <input name="code" type="text" class="form-control form-control-solid" id="edit_coupon_code"
+                                <input name="coupon_code" type="text" class="form-control form-control-solid" id="edit_coupon_code"
                                        placeholder="Mã giảm giá" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==20) return false;"/>
                             </div>
                             <div class="form-group">
                                 <label>Số lượng:</label>
-                                <input name="quantity" type="number" class="form-control form-control-solid" id="edit_coupon_time"
+                                <input name="coupon_quantity" type="number" class="form-control form-control-solid" id="edit_coupon_time"
                                        placeholder="Số lượng" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==20) return false;"/>
                             </div>
                             <div class="form-group">
                                 <label>Loại giảm giá:</label>
-                                <select name="type" id="edit_coupon_condition" class="form-control">
+                                <select name="coupon_type" id="edit_coupon_condition" class="form-control">
                                     <option value disabled selected hidden>Chọn loại giảm giá</option>
                                     <option value="0">Giảm theo phần trăm</option>
                                     <option value="1">Giảm theo tiền</option>
@@ -131,17 +131,17 @@
                             </div>
                             <div class="form-group">
                                 <label>Nhập số % hoặc tiền giảm:</label>
-                                <input name="number" type="text" class="form-control form-control-solid" id="edit_coupon_number"
+                                <input name="coupon_number" type="text" class="form-control form-control-solid" id="edit_coupon_number"
                                        placeholder="Nhập số % hoặc tiền giảm" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==20) return false;"/>
                             </div>
                             <div class="form-group">
                                 <div class="input-daterange input-group" id="kt_datepicker_6">
                                     <label class="col-form-label text-right">Thời gian từ</label>
                                     <input style="border-radius: 7px; margin: 0 10px" autocomplete="off" id="edit_coupon_date_start" type="text"
-                                           class="form-control" name="start" />
+                                           class="form-control" name="coupon_start" />
                                     <label class="col-form-label text-right">Đến</label>
                                     <input style="border-radius: 7px; margin: 0 0 0 10px" autocomplete="off" id="edit_coupon_date_end" type="text"
-                                           class="form-control" name="end" />
+                                           class="form-control" name="coupon_end" />
                                 </div>
                             </div>
                         </div>
@@ -160,7 +160,7 @@
                 <th>STT</th>
                 <th>Tên mã</th>
                 <th>Mã giảm giá</th>
-                <th>Số lần giảm</th>
+                <th>Số lần sử dụng</th>
                 <th>Mức giảm</th>
                 <th>Ngày bắt đầu</th>
                 <th>Ngày kết thúc</th>
@@ -189,34 +189,34 @@
                     }
                 },
                 {
-                    'data': 'coupon_name'
+                    'data': 'name'
                 },
                 {
-                    'data': 'coupon_code'
+                    'data': 'code'
                 },
                 {
-                    'data': 'coupon_time'
+                    'data': 'time'
                 },
                 {
                     'data': null,
                     render: function(data, type, row) {
-                        if (row.coupon_condition == 0) {
-                            return `${row.coupon_number} %`;
+                        if (row.condition == 0) {
+                            return `${row.number} %`;
                         } else {
-                            return formatter.format(row.coupon_number);
+                            return formatter.format(row.number);
                         }
                     }
                 },
                 {
                     'data': null,
                     render: function(data, type, row) {
-                        return moment(row.coupon_date_start).format('DD-MM-YYYY');
+                        return moment(row.date_start).format('DD-MM-YYYY');
                     }
                 },
                 {
                     'data': null,
                     render: function(data, type, row) {
-                        return moment(row.coupon_date_end).format('DD-MM-YYYY');
+                        return moment(row.date_end).format('DD-MM-YYYY');
                     }
                 },
                 {
@@ -234,7 +234,7 @@
                             `;
                         } else {
                             return `\
-                            <span data-id='${row.id}' data-coupon_status="0" class="status_coupon btn btn-sm btn-clean btn-icon" title="Đang tắt">\
+                            <span data-id='${row.code}' data-coupon_status="0" class="status_coupon btn btn-sm btn-clean btn-icon" title="Đang tắt">\
 								<i class="la la-eye-slash"></i>\
 							</span>\
                             `;
@@ -275,14 +275,14 @@
         var validation = FormValidation.formValidation(
             form, {
                 fields: {
-                    name: {
+                    coupon_name: {
                         validators: {
                             notEmpty: {
                                 message: 'Vui lòng điền mục này'
                             },
                         }
                     },
-                    code: {
+                    coupon_code: {
                         validators: {
                             notEmpty: {
                                 message: 'Vui lòng điền mục này'
@@ -293,28 +293,28 @@
                             },
                         }
                     },
-                    quantity: {
+                    coupon_quantity: {
                         validators: {
                             notEmpty: {
                                 message: 'Vui lòng điền mục này'
                             },
                         }
                     },
-                    type: {
+                    coupon_type: {
                         validators: {
                             notEmpty: {
                                 message: 'Vui lòng chọn mục này'
                             },
                         }
                     },
-                    number: {
+                    coupon_number: {
                         validators: {
                             notEmpty: {
                                 message: 'Vui lòng điền mục này'
                             },
                         }
                     },
-                    status: {
+                    coupon_status: {
                         validators: {
                             notEmpty: {
                                 message: 'Vui lòng chọn mục này'
@@ -332,14 +332,14 @@
         var validation2 = FormValidation.formValidation(
             form2, {
                 fields: {
-                    name: {
+                    coupon_name: {
                         validators: {
                             notEmpty: {
                                 message: 'Vui lòng điền mục này'
                             },
                         }
                     },
-                    code: {
+                    coupon_code: {
                         validators: {
                             notEmpty: {
                                 message: 'Vui lòng điền mục này'
@@ -350,21 +350,21 @@
                             },
                         }
                     },
-                    quantity: {
+                    coupon_quantity: {
                         validators: {
                             notEmpty: {
                                 message: 'Vui lòng điền mục này'
                             },
                         }
                     },
-                    type: {
+                    coupon_type: {
                         validators: {
                             notEmpty: {
                                 message: 'Vui lòng chọn mục này'
                             },
                         }
                     },
-                    number: {
+                    coupon_number: {
                         validators: {
                             notEmpty: {
                                 message: 'Vui lòng điền mục này'
@@ -380,16 +380,16 @@
         );
         $('#create_coupon').click(function(e) {
             e.preventDefault();
-            var coupon_name = $('#coupon_name').val();
-            var coupon_code = $('#coupon_code').val();
-            var coupon_time = $('#coupon_time').val();
-            var coupon_condition = $('#coupon_condition').val();
-            var coupon_number = $('#coupon_number').val();
-            var coupon_status = $('#coupon_status').val();
-            var coupon_date_start = $('#coupon_date_start').val();
-            var coupon_date_end = $('#coupon_date_end').val();
-            validation.validate().then(function(status) {
-                if (status != 'Valid') {
+            var name = $('#coupon_name').val();
+            var code = $('#coupon_code').val();
+            var time = $('#coupon_time').val();
+            var condition = $('#coupon_condition').val();
+            var number = $('#coupon_number').val();
+            var status = $('#coupon_status').val();
+            var date_start = $('#coupon_date_start').val();
+            var date_end = $('#coupon_date_end').val();
+            validation.validate().then(function(check) {
+                if (check != 'Valid') {
                     swal.fire({
                         text: "Xin lỗi, có vẻ như đã phát hiện thấy một số lỗi, vui lòng thử lại .",
                         icon: "error",
@@ -421,14 +421,14 @@
                             'X-CSRF-TOKEN': $('meta[name = "csrf-token" ]').attr('content')
                         },
                         data: {
-                            coupon_name: coupon_name,
-                            coupon_code: coupon_code,
-                            coupon_time: coupon_time,
-                            coupon_condition: coupon_condition,
-                            coupon_number: coupon_number,
-                            coupon_date_start: coupon_date_start,
-                            coupon_date_end: coupon_date_end,
-                            coupon_status: coupon_status,
+                            name: name,
+                            code: code,
+                            time: time,
+                            condition: condition,
+                            number: number,
+                            date_start: date_start,
+                            date_end: date_end,
+                            status: status,
                         },
                     })
                     .then(function (response) {
@@ -489,13 +489,13 @@
             })
                 .then(function (response) {
                     $('#edit_coupon_id').val(response.data.id);
-                    $('#edit_coupon_name').val(response.data.coupon_name);
-                    $('#edit_coupon_code').val(response.data.coupon_code);
-                    $('#edit_coupon_time').val(response.data.coupon_time);
-                    $('#edit_coupon_condition').val(response.data.coupon_condition);
-                    $('#edit_coupon_number').val(response.data.coupon_number);
-                    $('#edit_coupon_date_start').val(moment(response.data.coupon_date_start).format('DD/MM/YYYY'));
-                    $('#edit_coupon_date_end').val(moment(response.data.coupon_date_end).format('DD/MM/YYYY'));
+                    $('#edit_coupon_name').val(response.data.ame);
+                    $('#edit_coupon_code').val(response.data.code);
+                    $('#edit_coupon_time').val(response.data.time);
+                    $('#edit_coupon_condition').val(response.data.condition);
+                    $('#edit_coupon_number').val(response.data.number);
+                    $('#edit_coupon_date_start').val(moment(response.data.date_start).format('DD/MM/YYYY'));
+                    $('#edit_coupon_date_end').val(moment(response.data.date_end).format('DD/MM/YYYY'));
                     validation2.validate();
                 })
                 .catch(function (error) {
@@ -505,13 +505,13 @@
         $('#update_coupon').click(function(e) {
             e.preventDefault();
             var id = $('#edit_coupon_id').val();
-            var coupon_name = $('#edit_coupon_name').val();
-            var coupon_code = $('#edit_coupon_code').val();
-            var coupon_time = $('#edit_coupon_time').val();
-            var coupon_condition = $('#edit_coupon_condition').val();
-            var coupon_number = $('#edit_coupon_number').val();
-            var coupon_date_start = $('#edit_coupon_date_start').val();
-            var coupon_date_end = $('#edit_coupon_date_start').val();
+            var name = $('#edit_coupon_name').val();
+            var code = $('#edit_coupon_code').val();
+            var time = $('#edit_coupon_time').val();
+            var condition = $('#edit_coupon_condition').val();
+            var number = $('#edit_coupon_number').val();
+            var date_start = $('#edit_coupon_date_start').val();
+            var date_end = $('#edit_coupon_date_start').val();
             validation2.validate().then(function(status) {
                 if (status != 'Valid') {
                     swal.fire({
@@ -545,13 +545,13 @@
                             'X-CSRF-TOKEN': $('meta[name = "csrf-token" ]').attr('content')
                         },
                         data: {
-                            coupon_name: coupon_name,
-                            coupon_code: coupon_code,
-                            coupon_time: coupon_time,
-                            coupon_condition: coupon_condition,
-                            coupon_number: coupon_number,
-                            coupon_date_start: coupon_date_start,
-                            coupon_date_end: coupon_date_end,
+                            name: name,
+                            code: code,
+                            time: time,
+                            condition: condition,
+                            number: number,
+                            date_start: date_start,
+                            date_end: date_end,
                         },
                     })
                         .then(function (response) {

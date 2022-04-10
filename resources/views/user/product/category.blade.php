@@ -18,7 +18,7 @@
                                 fill="#000000" opacity="0.3" />
                         </g>
                     </svg>
-                </span>Thêm mới</span>
+                </span>Thêm danh mục</span>
         </div>
     </div>
     {{-- Add --}}
@@ -37,12 +37,12 @@
                         <div class=" card-body">
                             <div class="form-group">
                                 <label>Tên danh mục:</label>
-                                <input name="name" type="Text" class="form-control form-control-solid"
-                                       id="category_name" placeholder="Tên danh mục" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==255) return false;"/>
+                                <input name="category_name" type="Text" class="form-control form-control-solid"
+                                       id="category_name" placeholder="Tên danh mục" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==20) return false;"/>
                             </div>
                             <div class="form-group">
                                 <label>Ghi chú:</label>
-                                <textarea name="description" rows="5" class="form-control form-control-solid" id="category_desc"
+                                <textarea rows="5" class="form-control form-control-solid" id="category_desc"
                                           placeholder="Ghi chú"></textarea>
                             </div>
                         </div>
@@ -72,12 +72,12 @@
                             <input type="hidden" id="edit_category_id">
                             <div class="form-group">
                                 <label>Tên danh mục:</label>
-                                <input name="name" type="Text" class="form-control form-control-solid"
-                                       id="edit_category_name" placeholder="Tên danh mục" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==255) return false;"/>
+                                <input name="category_name" type="Text" class="form-control form-control-solid"
+                                       id="edit_category_name" placeholder="Tên danh mục" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==20) return false;"/>
                             </div>
                             <div class="form-group">
                                 <label>Ghi chú:</label>
-                                <textarea name="description" rows="5" class="form-control form-control-solid" id="edit_category_desc"
+                                <textarea rows="5" class="form-control form-control-solid" id="edit_category_desc"
                                           placeholder="Ghi chú"></textarea>
                             </div>
                         </div>
@@ -115,10 +115,10 @@
                     }
                 },
                 {
-                    'data': 'category_name'
+                    'data': 'name'
                 },
                 {
-                    'data': 'category_desc'
+                    'data': 'desc'
                 },
                 {
                     'data': null,
@@ -154,7 +154,7 @@
         var validation = FormValidation.formValidation(
             form, {
                 fields: {
-                    name: {
+                    category_name: {
                         validators: {
                             notEmpty: {
                                 message: 'Vui lòng điền mục này'
@@ -172,7 +172,7 @@
         var validation2 = FormValidation.formValidation(
             form2, {
                 fields: {
-                    name: {
+                    category_name: {
                         validators: {
                             notEmpty: {
                                 message: 'Vui lòng điền mục này'
@@ -188,8 +188,8 @@
         );
         $('#create_category').click(function(e) {
             e.preventDefault();
-            var category_name = $('#category_name').val();
-            var category_desc = $('#category_desc').val();
+            var name = $('#category_name').val();
+            var desc = $('#category_desc').val();
             validation.validate().then(function(status) {
                 if (status == 'Valid') {
                     axios({
@@ -199,25 +199,25 @@
                             'X-CSRF-TOKEN': $('meta[name = "csrf-token" ]').attr('content')
                         },
                         data: {
-                            category_name: category_name,
-                            category_desc: category_desc,
+                            name: name,
+                            desc: desc,
                         },
                     })
-                        .then(function (response) {
-                            if (response.data == 1) {
-                                Swal.fire({
-                                    icon: "success",
-                                    title: "Thành công",
-                                    text: "Thêm danh mục thành công!",
-                                    showConfirmButton: false,
-                                    timer: 1500
-                                });
-                                i = 0;
-                                table.ajax.reload();
-                            } else if (response.data == 0) {
-                                Swal.fire("Thất bại", "Danh mục đã nhập rồi!", "error");
-                            }
-                        });
+                    .then(function (response) {
+                        if (response.data == 1) {
+                            Swal.fire({
+                                icon: "success",
+                                title: "Thành công",
+                                text: "Thêm danh mục thành công!",
+                                showConfirmButton: false,
+                                timer: 1500
+                            });
+                            i = 0;
+                            table.ajax.reload();
+                        } else if (response.data == 0) {
+                            Swal.fire("Thất bại", "Danh mục đã nhập rồi!", "error");
+                        }
+                    });
                 } else {
                     swal.fire({
                         text: "Xin lỗi, có vẻ như đã phát hiện thấy một số lỗi, vui lòng thử lại .",
@@ -243,18 +243,18 @@
                     'X-CSRF-TOKEN': $('meta[name = "csrf-token" ]').attr('content')
                 },
             })
-                .then(function (response) {
-                    $('#edit_category_id').val(response.data.category_id);
-                    $('#edit_category_name').val(response.data.category_name);
-                    $('#edit_category_desc').val(response.data.category_desc);
-                    validation2.validate();
-                });
+            .then(function (response) {
+                $('#edit_category_id').val(response.data.id);
+                $('#edit_category_name').val(response.data.name);
+                $('#edit_category_desc').val(response.data.desc);
+                validation2.validate();
+            });
         });
         $('#update_category').click(function(e) {
             e.preventDefault();
             var id = $('#edit_category_id').val();
-            var category_name = $('#edit_category_name').val();
-            var category_desc = $('#edit_category_desc').val();
+            var name = $('#edit_category_name').val();
+            var desc = $('#edit_category_desc').val();
             validation2.validate().then(function(status) {
                 if (status == 'Valid') {
                     axios({
@@ -264,25 +264,25 @@
                             'X-CSRF-TOKEN': $('meta[name = "csrf-token" ]').attr('content')
                         },
                         data: {
-                            category_name: category_name,
-                            category_desc: category_desc,
+                            name: name,
+                            desc: desc,
                         },
                     })
-                        .then(function (response) {
-                            if (response.data == 1) {
-                                Swal.fire({
-                                    icon: "success",
-                                    title: "Thành công",
-                                    text: "Sửa danh mục thành công!",
-                                    showConfirmButton: false,
-                                    timer: 1500
-                                });
-                                i = 0;
-                                table.ajax.reload();
-                            } else if (response.data == 0) {
-                                Swal.fire("Thất bại", "Danh mục đã trùng tên!", "error");
-                            }
-                        });
+                    .then(function (response) {
+                        if (response.data == 1) {
+                            Swal.fire({
+                                icon: "success",
+                                title: "Thành công",
+                                text: "Sửa danh mục thành công!",
+                                showConfirmButton: false,
+                                timer: 1500
+                            });
+                            i = 0;
+                            table.ajax.reload();
+                        } else if (response.data == 0) {
+                            Swal.fire("Thất bại", "Danh mục đã trùng tên!", "error");
+                        }
+                    });
                 } else {
                     swal.fire({
                         text: "Xin lỗi, có vẻ như đã phát hiện thấy một số lỗi, vui lòng thử lại .",
@@ -309,38 +309,38 @@
                 confirmButtonText: "Đồng ý!",
                 cancelButtonText: "Không"
             })
-                .then(function(result) {
-                    if (result.value) {
-                        axios({
-                            url: 'destroy-category/' + id,
-                            method: 'GET',
-                            headers: {
-                                'X-CSRF-TOKEN': $('meta[name = "csrf-token" ]').attr('content')
-                            },
-                        })
-                        .then(function (response) {
-                            if (response.data == 1) {
-                                Swal.fire({
-                                    icon: "success",
-                                    title: "Thành công",
-                                    text: "Xoá danh mục thành công!",
-                                    showConfirmButton: false,
-                                    timer: 1500
-                                });
-                                i = 0;
-                                table.ajax.reload();
-                            } else if (response.data == 0) {
-                                Swal.fire({
-                                    icon: "error",
-                                    title: "Thất bại",
-                                    text: "Đang có sản phẩm thuộc danh mục này!",
-                                    showConfirmButton: false,
-                                    timer: 1500
-                                });
-                            }
-                        });
-                    }
-                });
+            .then(function(result) {
+                if (result.value) {
+                    axios({
+                        url: 'destroy-category/' + id,
+                        method: 'GET',
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name = "csrf-token" ]').attr('content')
+                        },
+                    })
+                    .then(function (response) {
+                        if (response.data == 1) {
+                            Swal.fire({
+                                icon: "success",
+                                title: "Thành công",
+                                text: "Xoá danh mục thành công!",
+                                showConfirmButton: false,
+                                timer: 1500
+                            });
+                            i = 0;
+                            table.ajax.reload();
+                        } else if (response.data == 0) {
+                            Swal.fire({
+                                icon: "error",
+                                title: "Thất bại",
+                                text: "Đang có sản phẩm dùng danh mục này!",
+                                showConfirmButton: false,
+                                timer: 1500
+                            });
+                        }
+                    });
+                }
+            });
         });
     })
 </script>

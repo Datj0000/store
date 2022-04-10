@@ -18,7 +18,7 @@
                                 fill="#000000" opacity="0.3" />
                         </g>
                     </svg>
-                </span>Thêm mới</span>
+                </span>Thêm nhà cung cấp</span>
         </div>
     </div>
     {{-- Add --}}
@@ -37,32 +37,32 @@
                         <div class=" card-body">
                             <div class="form-group">
                                 <label>Tên nhà cung cấp:</label>
-                                <input name="name" type="text" class="form-control form-control-solid"
+                                <input name="supplier_name" type="text" class="form-control form-control-solid"
                                        id="supplier_name" placeholder="Tên nhà cung cấp" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==255) return false;"/>
                             </div>
                             <div class="form-group">
                                 <label>Số điện thoại:</label>
-                                <input name="phone" type="text" class="form-control form-control-solid"
+                                <input name="supplier_phone" type="text" class="form-control form-control-solid"
                                        id="supplier_phone" placeholder="Số điện thoại" />
                             </div>
                             <div class="form-group">
                                 <label>Email:</label>
-                                <input name="email" type="text" class="form-control form-control-solid"
+                                <input name="supplier_email" type="text" class="form-control form-control-solid"
                                        id="supplier_email" placeholder="Email" />
                             </div>
                             <div class="form-group">
                                 <label>Mã số thuế:</label>
-                                <input name="mst" type="text" class="form-control form-control-solid"
+                                <input name="supplier_mst" type="text" class="form-control form-control-solid"
                                        id="supplier_mst" placeholder="Mã số thuế" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==13) return false;"/>
                             </div>
                             <div class="form-group">
                                 <label>Địa chỉ:</label>
-                                <input name="address" type="text" class="form-control form-control-solid"
+                                <input name="supplier_address" type="text" class="form-control form-control-solid"
                                        id="supplier_address" placeholder="Địa chỉ" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==255) return false;"/>
                             </div>
                             <div class="form-group">
                                 <label>Thông tin thanh toán:</label>
-                                <input name="information" type="text" class="form-control form-control-solid"
+                                <input name="supplier_information" type="text" class="form-control form-control-solid"
                                        id="supplier_information" placeholder="Thông tin thanh toán" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==255) return false;"/>
                             </div>
                         </div>
@@ -92,32 +92,32 @@
                             <input type="hidden" id="edit_supplier_id">
                             <div class="form-group">
                                 <label>Tên nhà cung cấp:</label>
-                                <input name="name" type="text" class="form-control form-control-solid"
+                                <input name="supplier_name" type="text" class="form-control form-control-solid"
                                        id="edit_supplier_name" placeholder="Tên nhà cung cấp" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==255) return false;"/>
                             </div>
                             <div class="form-group">
                                 <label>Số điện thoại:</label>
-                                <input name="phone" type="text" class="form-control form-control-solid"
+                                <input name="supplier_phone" type="text" class="form-control form-control-solid"
                                        id="edit_supplier_phone" placeholder="Số điện thoại" />
                             </div>
                             <div class="form-group">
                                 <label>Email:</label>
-                                <input name="email" type="text" class="form-control form-control-solid"
+                                <input name="supplier_email" type="text" class="form-control form-control-solid"
                                        id="edit_supplier_email" placeholder="Email" />
                             </div>
                             <div class="form-group">
                                 <label>Mã số thuế:</label>
-                                <input name="mst" type="text" class="form-control form-control-solid"
+                                <input name="supplier_mst" type="text" class="form-control form-control-solid"
                                        id="edit_supplier_mst" placeholder="Mã số thuế" maxlength="13"/>
                             </div>
                             <div class="form-group">
                                 <label>Địa chỉ:</label>
-                                <input name="address" type="text" class="form-control form-control-solid"
+                                <input name="supplier_address" type="text" class="form-control form-control-solid"
                                        id="edit_supplier_address" placeholder="Địa chỉ" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==255) return false;"/>
                             </div>
                             <div class="form-group">
                                 <label>Thông tin thanh toán:</label>
-                                <input name="information" type="text" class="form-control form-control-solid"
+                                <input name="supplier_information" type="text" class="form-control form-control-solid"
                                        id="edit_supplier_information" placeholder="Thông tin thanh toán" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==255) return false;"/>
                             </div>
                         </div>
@@ -160,25 +160,25 @@
                     }
                 },
                 {
-                    'data': 'supplier_name'
+                    'data': 'name'
                 },
                 {
-                    'data': 'supplier_email'
+                    'data': 'email'
                 },
                 {
-                    'data': 'supplier_phone'
+                    'data': 'phone'
                 },
                 {
-                    'data': 'supplier_mst'
+                    'data': 'mst'
                 },
                 {
-                    'data': 'supplier_debt'
+                    'data': 'debt'
                 },
                 {
-                    'data': 'supplier_address'
+                    'data': 'address'
                 },
                 {
-                    'data': 'supplier_information'
+                    'data': 'information'
                 },
                 {
                     'data': null,
@@ -214,14 +214,14 @@
         var validation = FormValidation.formValidation(
             form, {
                 fields: {
-                    name: {
+                    supplier_name: {
                         validators: {
                             notEmpty: {
                                 message: 'Vui lòng điền mục này'
                             },
                         }
                     },
-                    phone: {
+                    supplier_phone: {
                         validators: {
                             notEmpty: {
                                 message: 'Vui lòng điền thông tin'
@@ -232,14 +232,14 @@
                             },
                         }
                     },
-                    email: {
+                    supplier_email: {
                         validators: {
                             emailAddress: {
                                 message: 'Vui lòng kiểm tra email'
                             }
                         }
                     },
-                    mst: {
+                    supplier_mst: {
                         validators: {
                             stringLength: {
                                 min: 10,
@@ -247,14 +247,14 @@
                             },
                         }
                     },
-                    address: {
+                    supplier_address: {
                         validators: {
                             notEmpty: {
                                 message: 'Vui lòng điền thông tin'
                             },
                         }
                     },
-                    information: {
+                    supplier_information: {
                         validators: {
                             notEmpty: {
                                 message: 'Vui lòng điền thông tin'
@@ -272,14 +272,14 @@
         var validation2 = FormValidation.formValidation(
             form2, {
                 fields: {
-                    name: {
+                    supplier_name: {
                         validators: {
                             notEmpty: {
                                 message: 'Vui lòng điền mục này'
                             },
                         }
                     },
-                    phone: {
+                    supplier_phone: {
                         validators: {
                             notEmpty: {
                                 message: 'Vui lòng điền thông tin'
@@ -290,14 +290,14 @@
                             },
                         }
                     },
-                    email: {
+                    supplier_email: {
                         validators: {
                             emailAddress: {
                                 message: 'Vui lòng kiểm tra email'
                             }
                         }
                     },
-                    mst: {
+                    supplier_mst: {
                         validators: {
                             stringLength: {
                                 min: 10,
@@ -305,14 +305,14 @@
                             },
                         }
                     },
-                    address: {
+                    supplier_address: {
                         validators: {
                             notEmpty: {
                                 message: 'Vui lòng điền thông tin'
                             },
                         }
                     },
-                    information: {
+                    supplier_information: {
                         validators: {
                             notEmpty: {
                                 message: 'Vui lòng điền thông tin'
@@ -328,12 +328,12 @@
         );
         $('#create_supplier').click(function(e) {
             e.preventDefault();
-            var supplier_name = $('#supplier_name').val();
-            var supplier_phone = $('#supplier_phone').val();
-            var supplier_email = $('#supplier_email').val();
-            var supplier_mst = $('#supplier_mst').val();
-            var supplier_address = $('#supplier_address').val();
-            var supplier_information = $('#supplier_information').val();
+            var name = $('#supplier_name').val();
+            var phone = $('#supplier_phone').val();
+            var email = $('#supplier_email').val();
+            var mst = $('#supplier_mst').val();
+            var address = $('#supplier_address').val();
+            var information = $('#supplier_information').val();
             validation.validate().then(function(status) {
                 if (status == 'Valid') {
                     axios({
@@ -343,65 +343,65 @@
                             'X-CSRF-TOKEN': $('meta[name = "csrf-token" ]').attr('content')
                         },
                         data: {
-                            supplier_name: supplier_name,
-                            supplier_phone: supplier_phone,
-                            supplier_email: supplier_email,
-                            supplier_mst: supplier_mst,
-                            supplier_address: supplier_address,
-                            supplier_information: supplier_information,
+                            name: name,
+                            phone: phone,
+                            email: email,
+                            mst: mst,
+                            address: address,
+                            information: information,
                         },
                     })
-                        .then(function (response) {
-                            switch (response.data){
-                                case 0:
-                                    Swal.fire({
-                                        icon: "warning",
-                                        title: "Thất bại",
-                                        text: "Đã tồn tại tên nhà cung cấp này rồi!",
-                                        showConfirmButton: false,
-                                        timer: 1500
-                                    });
-                                    break;
-                                case 1:
-                                    Swal.fire({
-                                        icon: "warning",
-                                        title: "Thất bại",
-                                        text: "Đã tồn tại số điện thoại của nhà cung cấp này rồi!",
-                                        showConfirmButton: false,
-                                        timer: 1500
-                                    });
-                                    break;
-                                case 2:
-                                    Swal.fire({
-                                        icon: "warning",
-                                        title: "Thất bại",
-                                        text: "Đã tồn tại email của nhà cung cấp này rồi!",
-                                        showConfirmButton: false,
-                                        timer: 1500
-                                    });
-                                    break;
-                                case 3:
-                                    Swal.fire({
-                                        icon: "warning",
-                                        title: "Thất bại",
-                                        text: "Đã tồn tại mã số thuế của nhà cung cấp này rồi!",
-                                        showConfirmButton: false,
-                                        timer: 1500
-                                    });
-                                    break;
-                                case 4:
-                                    Swal.fire({
-                                        icon: "success",
-                                        title: "Thành công",
-                                        text: "Sửa nhà cung cấp thành công!",
-                                        showConfirmButton: false,
-                                        timer: 1500
-                                    });
-                                    i = 0;
-                                    table.ajax.reload();
-                                    break;
-                            }
-                        });
+                    .then(function (response) {
+                        switch (response.data){
+                            case 0:
+                                Swal.fire({
+                                    icon: "warning",
+                                    title: "Thất bại",
+                                    text: "Đã tồn tại tên nhà cung cấp này rồi!",
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                });
+                                break;
+                            case 1:
+                                Swal.fire({
+                                    icon: "warning",
+                                    title: "Thất bại",
+                                    text: "Đã tồn tại số điện thoại của nhà cung cấp này rồi!",
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                });
+                                break;
+                            case 2:
+                                Swal.fire({
+                                    icon: "warning",
+                                    title: "Thất bại",
+                                    text: "Đã tồn tại email của nhà cung cấp này rồi!",
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                });
+                                break;
+                            case 3:
+                                Swal.fire({
+                                    icon: "warning",
+                                    title: "Thất bại",
+                                    text: "Đã tồn tại mã số thuế của nhà cung cấp này rồi!",
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                });
+                                break;
+                            case 4:
+                                Swal.fire({
+                                    icon: "success",
+                                    title: "Thành công",
+                                    text: "Sửa nhà cung cấp thành công!",
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                });
+                                i = 0;
+                                table.ajax.reload();
+                                break;
+                        }
+                    });
                 } else {
                     swal.fire({
                         text: "Xin lỗi, có vẻ như đã phát hiện thấy một số lỗi, vui lòng thử lại .",
@@ -429,24 +429,24 @@
             })
                 .then(function (response) {
                     $('#edit_supplier_id').val(response.data.id);
-                    $('#edit_supplier_name').val(response.data.supplier_name);
-                    $('#edit_supplier_email').val(response.data.supplier_email);
-                    $('#edit_supplier_phone').val(response.data.supplier_phone);
-                    $('#edit_supplier_mst').val(response.data.supplier_mst);
-                    $('#edit_supplier_address').val(response.data.supplier_address);
-                    $('#edit_supplier_information').val(response.data.supplier_information);
+                    $('#edit_supplier_name').val(response.data.name);
+                    $('#edit_supplier_email').val(response.data.email);
+                    $('#edit_supplier_phone').val(response.data.phone);
+                    $('#edit_supplier_mst').val(response.data.mst);
+                    $('#edit_supplier_address').val(response.data.address);
+                    $('#edit_supplier_information').val(response.data.information);
                     validation2.validate();
                 });
         });
         $('#update_supplier').click(function(e) {
             e.preventDefault();
             var id = $('#edit_supplier_id').val();
-            var supplier_name = $('#edit_supplier_name').val();
-            var supplier_phone = $('#edit_supplier_phone').val();
-            var supplier_email = $('#edit_supplier_email').val();
-            var supplier_mst = $('#edit_supplier_mst').val();
-            var supplier_address = $('#edit_supplier_address').val();
-            var supplier_information = $('#edit_supplier_information').val();
+            var name = $('#edit_supplier_name').val();
+            var phone = $('#edit_supplier_phone').val();
+            var email = $('#edit_supplier_email').val();
+            var mst = $('#edit_supplier_mst').val();
+            var address = $('#edit_supplier_address').val();
+            var information = $('#edit_supplier_information').val();
             validation2.validate().then(function(status) {
                 if (status == 'Valid') {
                     axios({
@@ -456,65 +456,65 @@
                             'X-CSRF-TOKEN': $('meta[name = "csrf-token" ]').attr('content')
                         },
                         data: {
-                            supplier_name: supplier_name,
-                            supplier_phone: supplier_phone,
-                            supplier_email: supplier_email,
-                            supplier_mst: supplier_mst,
-                            supplier_address: supplier_address,
-                            supplier_information: supplier_information,
+                            name: name,
+                            phone: phone,
+                            email: email,
+                            mst: mst,
+                            address: address,
+                            information: information,
                         },
                     })
-                        .then(function (response) {
-                            switch (response.data){
-                                case 0:
-                                    Swal.fire({
-                                        icon: "warning",
-                                        title: "Thất bại",
-                                        text: "Đã tồn tại tên nhà cung cấp này rồi!",
-                                        showConfirmButton: false,
-                                        timer: 1500
-                                    });
-                                    break;
-                                case 1:
-                                    Swal.fire({
-                                        icon: "warning",
-                                        title: "Thất bại",
-                                        text: "Đã tồn tại số điện thoại của nhà cung cấp này rồi!",
-                                        showConfirmButton: false,
-                                        timer: 1500
-                                    });
-                                    break;
-                                case 2:
-                                    Swal.fire({
-                                        icon: "warning",
-                                        title: "Thất bại",
-                                        text: "Đã tồn tại email của nhà cung cấp này rồi!",
-                                        showConfirmButton: false,
-                                        timer: 1500
-                                    });
-                                    break;
-                                case 3:
-                                    Swal.fire({
-                                        icon: "warning",
-                                        title: "Thất bại",
-                                        text: "Đã tồn tại mã số thuế của nhà cung cấp này rồi!",
-                                        showConfirmButton: false,
-                                        timer: 1500
-                                    });
-                                    break;
-                                case 4:
-                                    Swal.fire({
-                                        icon: "success",
-                                        title: "Thành công",
-                                        text: "Sửa nhà cung cấp thành công!",
-                                        showConfirmButton: false,
-                                        timer: 1500
-                                    });
-                                    i = 0;
-                                    table.ajax.reload();
-                                    break;
-                            }
-                        });
+                    .then(function (response) {
+                        switch (response.data){
+                            case 0:
+                                Swal.fire({
+                                    icon: "warning",
+                                    title: "Thất bại",
+                                    text: "Đã tồn tại tên nhà cung cấp này rồi!",
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                });
+                                break;
+                            case 1:
+                                Swal.fire({
+                                    icon: "warning",
+                                    title: "Thất bại",
+                                    text: "Đã tồn tại số điện thoại của nhà cung cấp này rồi!",
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                });
+                                break;
+                            case 2:
+                                Swal.fire({
+                                    icon: "warning",
+                                    title: "Thất bại",
+                                    text: "Đã tồn tại email của nhà cung cấp này rồi!",
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                });
+                                break;
+                            case 3:
+                                Swal.fire({
+                                    icon: "warning",
+                                    title: "Thất bại",
+                                    text: "Đã tồn tại mã số thuế của nhà cung cấp này rồi!",
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                });
+                                break;
+                            case 4:
+                                Swal.fire({
+                                    icon: "success",
+                                    title: "Thành công",
+                                    text: "Sửa nhà cung cấp thành công!",
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                });
+                                i = 0;
+                                table.ajax.reload();
+                                break;
+                        }
+                    });
                 } else {
                     swal.fire({
                         text: "Xin lỗi, có vẻ như đã phát hiện thấy một số lỗi, vui lòng thử lại .",

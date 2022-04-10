@@ -2,38 +2,38 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Product;
 use App\Models\Brand;
 
 class BrandController extends Controller
 {
-    public function index(): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\Foundation\Application
+    public function index()
     {
         if (Auth::check()) {
             return view('user.product.brand');
         }
         return view('auth.login');
     }
-    public function fetchdata():\Illuminate\Http\JsonResponse
+    public function fetchdata()
     {
         if (Auth::check()) {
-            $data = Brand::all();
+            $query = Brand::all();
             return response()->json([
-                "data" => $data,
+                "data" => $query,
             ]);
         }
     }
 
-    public function create(Request $request):int
+    public function create(Request $request)
     {
         if (Auth::check()) {
-            $check = Brand::query()->where('brand_name', $request->brand_name)->first();
+            $check = Brand::query()->where('name',$request->name)->first();
             if (!$check){
                 Brand::query()->create([
-                    'brand_name' => $request->input('brand_name'),
-                    'brand_desc' => $request->input('brand_desc'),
+                    'name' => $request->input('name'),
+                    'desc' => $request->input('desc'),
                 ]);
                 return 1;
             } else{
@@ -42,22 +42,24 @@ class BrandController extends Controller
         }
     }
 
-    public function edit(int $id):\Illuminate\Http\JsonResponse
+    public function edit(int $id)
     {
         if (Auth::check()) {
-            $data = Brand::query()->whereId($id)->first();
-            return response()->json($data->toArray());
+            $query = Brand::query()->where('id','=',$id)->first();
+            if($query){
+                return response()->json($query);
+            }
         }
     }
 
-    public function update(Request $request, int $id):int
+    public function update(Request $request,int $id)
     {
         if (Auth::check()) {
-            $check = Brand::query()->where('brand_name','=', $request->input('brand_name'))->where('id','!=', $id)->first();
+            $check = Brand::query()->where('name','=',$request->input('name'))->where('id','!=',$id)->first();
             if (!$check){
-                Brand::query()->whereId($id)->update([
-                    'brand_name' => $request->input('brand_name'),
-                    'brand_desc' => $request->input('brand_desc'),
+                Brand::query()->where('id','=',$id)->update([
+                    'name' => $request->input('name'),
+                    'desc' => $request->input('desc'),
                 ]);
                 return 1;
             } else{
@@ -66,15 +68,18 @@ class BrandController extends Controller
         }
     }
 
-    public function destroy(int $id):int
+    public function destroy(int $id)
     {
         if (Auth::check()) {
             $check = Product::query()->where('brand_id','=',$id)->first();
             if($check){
                 return 0;
             } else{
-                Brand::query()->whereId($id)->delete();
-                return 1;
+                $query = Brand::query()->where('id','=',$id)->first();
+                if($query){
+                    $query->delete();
+                    return 1;
+                }
             }
         }
     }

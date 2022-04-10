@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->integer('insurance_id');
             $table->bigInteger('product_code');
-            $table->integer('insurance_quantity');
+            $table->integer('quantity');
             $table->timestamps();
         });
     }

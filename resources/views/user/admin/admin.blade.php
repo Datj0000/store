@@ -2,20 +2,20 @@
     <div class="card-header flex-wrap py-5">
         <div class="card-title">
             <h3 class="card-label">Danh sách nhân viên
-                <span class="d-block text-muted pt-2 font-size-sm">Quả lý danh sách nhân viên</span>
+                <span class="d-block text-muted pt-2 font-size-sm">Quản lý danh sách nhân viên</span>
             </h3>
         </div>
         <div class="card-toolbar">
-    <span class="btn btn-primary font-weight-bolder" data-toggle="modal" data-target="#exampleModalPopovers2">
-    <span class="svg-icon svg-icon-md">
-    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
-    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-    <rect x="0" y="0" width="24" height="24" />
-    <circle fill="#000000" cx="9" cy="15" r="6" />
-    <path d="M8.8012943,7.00241953 C9.83837775,5.20768121 11.7781543,4 14,4 C17.3137085,4 20,6.6862915 20,10 C20,12.2218457 18.7923188,14.1616223 16.9975805,15.1987057 C16.9991904,15.1326658 17,15.0664274 17,15 C17,10.581722 13.418278,7 9,7 C8.93357256,7 8.86733422,7.00080962 8.8012943,7.00241953 Z" fill="#000000" opacity="0.3" />
-    </g>
-    </svg>
-    </span>Thêm mới</span>
+            <span class="btn btn-primary font-weight-bolder" data-toggle="modal" data-target="#exampleModalPopovers2">
+                <span class="svg-icon svg-icon-md">
+                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                        <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                            <rect x="0" y="0" width="24" height="24" />
+                            <circle fill="#000000" cx="9" cy="15" r="6" />
+                            <path d="M8.8012943,7.00241953 C9.83837775,5.20768121 11.7781543,4 14,4 C17.3137085,4 20,6.6862915 20,10 C20,12.2218457 18.7923188,14.1616223 16.9975805,15.1987057 C16.9991904,15.1326658 17,15.0664274 17,15 C17,10.581722 13.418278,7 9,7 C8.93357256,7 8.86733422,7.00080962 8.8012943,7.00241953 Z" fill="#000000" opacity="0.3" />
+                        </g>
+                    </svg>
+                </span>Thêm nhân viên</span>
         </div>
     </div>
     {{-- Add --}}
@@ -33,23 +33,23 @@
                         <div class="card-body">
                             <div class="form-group">
                                 <label>Họ và tên:</label>
-                                <input name="name" type="text" class="form-control form-control-solid" id="name" placeholder="Họ và tên" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==255) return false;"/>
+                                <input name="user_name" type="text" class="form-control form-control-solid" id="user_name" placeholder="Họ và tên" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==255) return false;"/>
                             </div>
                             <div class="form-group">
                                 <label>Email:</label>
-                                <input autocomplete="off" name="email" type="email" class="form-control form-control-solid" id="email" placeholder="Email" />
+                                <input name="user_email" type="email" class="form-control form-control-solid" id="user_email" placeholder="Email" />
                             </div>
                             <div class="form-group">
                                 <label>Số điện thoại:</label>
-                                <input name="phone" type="text" class="form-control form-control-solid" id="phone" placeholder="Số điện thoại" />
+                                <input name="user_phone" type="text" class="form-control form-control-solid" id="user_phone" placeholder="Số điện thoại" />
                             </div>
                             <div class="form-group">
                                 <label>Mật khẩu:</label>
-                                <input name="password" type="text" class="form-control form-control-solid" id="password" placeholder="Mật khẩu" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==255) return false;"/>
+                                <input name="user_password" type="text" class="form-control form-control-solid" id="user_password" placeholder="Mật khẩu" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==255) return false;"/>
                             </div>
                             <div class="form-group">
                                 <label>Phân quyền:</label>
-                                <select name="role" id="role" class="form-control">
+                                <select name="user_role" id="user_role" class="form-control">
                                     <option value disabled selected hidden>Chọn quyền</option>
                                     <option value="3">Cộng tác viên</option>
                                     <option value="2">Nhân viên</option>
@@ -78,14 +78,14 @@
                 <div class="modal-body">
                     <form class="form">
                         <div class="card-body">
-                            <input type="hidden" id="edit_id">
+                            <input type="hidden" id="edit_user_id">
                             <div class="form-group">
                                 <label>Họ và tên:</label>
-                                <input readonly type="text" class="form-control form-control-solid" id="edit_name"/>
+                                <input readonly type="text" class="form-control form-control-solid" id="edit_user_name"/>
                             </div>
                             <div class="form-group">
                                 <label>Phân quyền:</label>
-                                <select name="role" id="edit_role" class="form-control">
+                                <select name="user_role" id="edit_user_role" class="form-control">
                                     <option value disabled selected hidden>Chọn quyền</option>
                                     <option value="3">Cộng tác viên</option>
                                     <option value="2">Nhân viên</option>
@@ -230,14 +230,14 @@
         validation = FormValidation.formValidation(
             form, {
                 fields: {
-                    name: {
+                    user_name: {
                         validators: {
                             notEmpty: {
                                 message: 'Vui lòng không để trống mục này'
                             },
                         }
                     },
-                    phone: {
+                    user_phone: {
                         validators: {
                             notEmpty: {
                                 message: 'Vui lòng không để trống mục này'
@@ -248,7 +248,7 @@
                             }
                         }
                     },
-                    email: {
+                    user_email: {
                         validators: {
                             notEmpty: {
                                 message: 'Vui lòng không để trống mục này'
@@ -258,7 +258,7 @@
                             }
                         }
                     },
-                    password: {
+                    user_password: {
                         validators: {
                             notEmpty: {
                                 message: 'Vui lòng không để trống mục này'
@@ -268,7 +268,7 @@
                             },
                         }
                     },
-                    role: {
+                    user_role: {
                         validators: {
                             notEmpty: {
                                 message: 'Vui lòng chọn quyền'
@@ -283,11 +283,11 @@
             }
         );
         $('#create_user').click(function(e) {
-            var email = $('#email').val();
-            var name = $('#name').val();
-            var phone = $('#phone').val();
-            var password = $('#password').val();
-            var role = $('#role').val();
+            var email = $('#user_email').val();
+            var name = $('#user_name').val();
+            var phone = $('#user_phone').val();
+            var password = $('#user_password').val();
+            var role = $('#user_role').val();
             validation.validate().then(function(status) {
                 if (status == 'Valid') {
                     axios({
@@ -307,7 +307,13 @@
                     .then(function (response) {
                         console.log(response.data);
                         if (response.data == 1) {
-                            Swal.fire("", "Email này đã được sử dụng!","warning");
+                            Swal.fire({
+                                icon: "warning",
+                                title: "Thất bại",
+                                text: "Email này đã được sử dụng!",
+                                showConfirmButton: false,
+                                timer: 1500
+                            });
                         } else {
                             Swal.fire({
                                 icon: "success",
@@ -346,14 +352,14 @@
                 },
             })
             .then(function (response) {
-                $('#edit_id').val(response.data.id);
-                $('#edit_name').val(response.data.name);
-                $('#edit_role').val(response.data.role);
+                $('#edit_user_id').val(response.data.id);
+                $('#edit_user_name').val(response.data.name);
+                $('#edit_user_role').val(response.data.role);
             });
         });
         $('#update_user').click(function(e) {
-            var id = $('#edit_id').val();
-            var role = $('#edit_role').val();
+            var id = $('#edit_user_id').val();
+            var role = $('#edit_user_role').val();
             axios({
                 url: 'update-user/' + id,
                 method: 'POST',

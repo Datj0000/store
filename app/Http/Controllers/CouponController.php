@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Session;
 
 class CouponController extends Controller
 {
-    public function index(): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\Foundation\Application
+    public function index()
     {
         if (Auth::check()) {
             return view('user.event.coupon');
@@ -21,27 +21,27 @@ class CouponController extends Controller
     public function fetchdata():\Illuminate\Http\JsonResponse
     {
         if (Auth::check()) {
-            $data = Coupon::query()->get();
+            $data = Coupon::all();
             return response()->json([
-                "data" => $data,
+                "data" => $data->toArray(),
             ]);
         }
     }
 
-    public function create(Request $request):int
+    public function create(Request $request)
     {
         if (Auth::check()) {
-            $check = Coupon::query()->where('coupon_code','=', $request->coupon_code)->first();
+            $check = Coupon::query()->where('code','=',$request->input('code'))->first();
             if (!$check){
-                $coupon = new Coupon();
-                $coupon->coupon_name = $request->coupon_name;
-                $coupon->coupon_code = $request->coupon_code;
-                $coupon->coupon_condition = $request->coupon_condition;
-                $coupon->coupon_number = $request->coupon_number;
-                $coupon->coupon_date_start = Carbon::parse($request->coupon_date_start)->format('Y-m-d');
-                $coupon->coupon_date_end = Carbon::parse($request->coupon_date_end)->format('Y-m-d');
-                $coupon->coupon_status = $request->coupon_status;
-                $coupon->save();
+                Coupon::query()->create([
+                    'name' => $request->input('name'),
+                    'code' => $request->input('code'),
+                    'condition' => $request->input('condition'),
+                    'number' => $request->input('number'),
+                    'date_start' => Carbon::parse($request->input('date_start'))->format('Y-m-d'),
+                    'date_end' => Carbon::parse($request->input('date_end'))->format('Y-m-d'),
+                    'status' => $request->input('status'),
+                ]);
                 return 1;
             } else{
                 return 0;
@@ -49,34 +49,39 @@ class CouponController extends Controller
         }
     }
 
-    public function edit(int $id):\Illuminate\Http\JsonResponse
+    public function edit(int $id)
     {
         if (Auth::check()) {
-            $data = Coupon::query()->whereId($id)->first();
-            return response()->json($data);
+            $query = Coupon::query()->where('id','=',$id)->first();
+            if($query){
+                return response()->json($query->toArray());
+            }
         }
     }
     public function status(Request $request,int $id)
     {
         if (Auth::check()) {
-            $coupon = Coupon::query()->whereId($id)->first();
-            $coupon->coupon_status = $request->coupon_status;
-            $coupon->save();
+            $query = Coupon::query()->where('id','=',$id)->first();
+            if($query){
+                $query->update([
+                    'status' => $request->input('status'),
+                ]);
+            }
         }
     }
-    public function update(Request $request, int $id):int
+    public function update(Request $request,int $id)
     {
         if (Auth::check()) {
-            $check = Coupon::query()->where('coupon_code','=', $request->coupon_code)->where('id','!=', $id)->first();
+            $check = Coupon::query()->where('code','=',$request->code)->where('id','!=',$id)->first();
             if (!$check){
-                $coupon = Coupon::query()->whereId($id)->first();
-                $coupon->coupon_name = $request->coupon_name;
-                $coupon->coupon_code = $request->coupon_code;
-                $coupon->coupon_condition = $request->coupon_condition;
-                $coupon->coupon_number = $request->coupon_number;
-                $coupon->coupon_date_start = Carbon::parse($request->coupon_date_start)->format('Y-m-d');
-                $coupon->coupon_date_end = Carbon::parse($request->coupon_date_end)->format('Y-m-d');
-                $coupon->save();
+                Coupon::query()->where('id','=',$id)->update([
+                    'name' => $request->input('name'),
+                    'code' => $request->input('code'),
+                    'condition' => $request->input('condition'),
+                    'number' => $request->input('number'),
+                    'date_start' => Carbon::parse($request->input('date_start'))->format('Y-m-d'),
+                    'date_end' => Carbon::parse($request->input('date_end'))->format('Y-m-d'),
+                ]);
                 return 1;
             } else{
                 return 0;
@@ -84,30 +89,37 @@ class CouponController extends Controller
         }
     }
 
-    public function destroy(int $id):int
+    public function destroy($code)
     {
         if (Auth::check()) {
-            Coupon::query()->whereId($id)->delete();
-            return 1;
+            $query = Coupon::query()->where('id','=',$id)->first();
+            if($query){
+                $check = Order::query()->where('coupon','=',$query->code)->first();
+                if($check){
+                    return 0;
+                } else{
+                    $query->delete();
+                    return 1;
+                }
+            }
         }
     }
     public function autocomplete(Request $request)
     {
         if (Auth::check()) {
-            $data = $request->all();
             $today = Carbon::now('Asia/Ho_Chi_Minh')->format('Y-m-d');
-            // $coupon = Coupon::query()->where('coupon_status','=', 0)->where('coupon_code', $request->query)->get();
-            $coupon = Coupon::query()->where('coupon_status','=', 0)
-                ->where('coupon_code', 'LIKE', '%' . $data['query']. '%')
-                ->where('coupon_date_start', '<=' ,$today)
-                ->where('coupon_date_end', '>=' ,$today)
+            // $coupon = Coupon::query()->where('status','=',0)->where('code',$request->query)->get();
+            $coupon = Coupon::query()->where('status','=',0)
+                ->where('code','LIKE','%' . $request->input('value'). '%')
+                ->where('date_start','<=' ,$today)
+                ->where('date_end','>=' ,$today)
                 ->get();
             if ($coupon->count() > 0) {
                 $output = '
                 <ul class="dropdown-menu2">';
                 foreach ($coupon as $key => $val) {
                     $output .= '
-                        <li class="li_search_coupon">' . $val->coupon_code . '</li>
+                        <li class="li_search_coupon">' . $val->code . '</li>
                    ';
                 }
                 $output .= '</ul>';
@@ -119,32 +131,32 @@ class CouponController extends Controller
     {
         if (Auth::check()) {
             $today = Carbon::now('Asia/Ho_Chi_Minh')->format('Y-m-d');
-            $coupon = Coupon::query()->where('coupon_status','=', 0)
-                ->where('coupon_code', '=', $request->coupon)
-                ->where('coupon_date_start', '<=' ,$today)
-                ->where('coupon_date_end', '>=' ,$today)
+            $coupon = Coupon::query()->where('status','=',0)
+                ->where('code','=',$request->coupon)
+                ->where('date_start','<=' ,$today)
+                ->where('date_end','>=' ,$today)
                 ->first();
             if($coupon){
-                if($request->type == 0){
-                    $coupon_session = Session::get('coupon');
+                if($request->input('type') == 0){
+                    $session = Session::get('coupon');
                 }else{
-                    $coupon_session = Session::get('edit_coupon');
+                    $session = Session::get('edit_coupon');
                 }
-                if ($coupon_session == true) {
-                    Session::put('coupon', null);
+                if ($session == true) {
+                    Session::put('coupon',null);
                 }
                 $cou[] = array(
-                    'coupon_code' => $coupon->coupon_code,
-                    'coupon_condition' => $coupon->coupon_condition,
-                    'coupon_number' => $coupon->coupon_number,
+                    'code' => $coupon->code,
+                    'condition' => $coupon->condition,
+                    'number' => $coupon->number,
                 );
-                if($request->type == 0){
-                    Session::put('coupon', $cou);
+                if($request->input('type') == 0){
+                    Session::put('coupon',$cou);
                 }else{
-                    Session::put('edit_coupon', $cou);
+                    Session::put('edit_coupon',$cou);
                 }
             } else{
-                if($request->type == 0){
+                if($request->input('type') == 0){
                     Session::forget('coupon');
                 }else{
                     Session::forget('edit_coupon');

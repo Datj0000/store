@@ -445,11 +445,11 @@
     }
     $(document).ready(function() {
         $('#order_method').change(function() {
-            var query = $(this).val();
-            if (query == 1) {
+            var value = $(this).val();
+            if (value == 1) {
                 $('.feeship').removeClass('hide');
                 $('.feeship').addClass('show');
-            } else if(query == 0) {
+            } else if(value == 0) {
                 $('.feeship').removeClass('show');
                 $('.feeship').addClass('hide');
                 axios({
@@ -473,8 +473,8 @@
             feeship(0,data);
         });
         $('#order_coupon').keyup(function() {
-            var query = $(this).val();
-            if (query != '') {
+            var value = $(this).val();
+            if (value != '') {
                 axios({
                     url: "autocomplete-coupon",
                     method: "POST",
@@ -483,7 +483,7 @@
                     },
                     data: {
                         type: 0,
-                        query: query
+                        value: value
                     },
                 })
                 .then(function (response) {
@@ -501,8 +501,8 @@
             }
         });
         $('#customer_name').keyup(function() {
-            var query = $(this).val();
-            if (query != '') {
+            var value = $(this).val();
+            if (value != '') {
                 axios({
                     url: "autocomplete-customer",
                     method: "POST",
@@ -510,7 +510,7 @@
                         'X-CSRF-TOKEN': $('meta[name = "csrf-token" ]').attr('content')
                     },
                     data: {
-                        query: query
+                        value: value
                     },
                 })
                 .then(function (response) {
@@ -537,8 +537,8 @@
             }
         });
         $('#product_name').keyup(function() {
-            var query = $(this).val();
-            if (query != '') {
+            var value = $(this).val();
+            if (value != '') {
                 axios({
                     url: "autocomplete-product",
                     method: "POST",
@@ -546,7 +546,7 @@
                         'X-CSRF-TOKEN': $('meta[name = "csrf-token" ]').attr('content')
                     },
                     data: {
-                        query: query
+                        value: value
                     },
                 })
                     .then(function (response) {
@@ -563,11 +563,11 @@
             }
         });
         $('#edit_order_method').change(function() {
-            var query = $(this).val();
-            if (query == 1) {
+            var value = $(this).val();
+            if (value == 1) {
                 $('.feeship').removeClass('hide');
                 $('.feeship').addClass('show');
-            } else if(query == 0) {
+            } else if(value == 0) {
                 $('.feeship').removeClass('show');
                 $('.feeship').addClass('hide');
                 axios({
@@ -591,8 +591,8 @@
             feeship(1,data);
         });
         $('#edit_order_coupon').keyup(function() {
-            var query = $(this).val();
-            if (query != '') {
+            var value = $(this).val();
+            if (value != '') {
                 axios({
                     url: "autocomplete-coupon",
                     method: "POST",
@@ -601,7 +601,7 @@
                     },
                     data: {
                         type: 1,
-                        query: query
+                        value: value
                     },
                 })
                     .then(function (response) {
@@ -619,8 +619,8 @@
             }
         });
         $('#edit_customer_name').keyup(function() {
-            var query = $(this).val();
-            if (query != '') {
+            var value = $(this).val();
+            if (value != '') {
                 axios({
                     url: "autocomplete-customer",
                     method: "POST",
@@ -628,7 +628,7 @@
                         'X-CSRF-TOKEN': $('meta[name = "csrf-token" ]').attr('content')
                     },
                     data: {
-                        query: query
+                        value: value
                     },
                 })
                     .then(function (response) {
@@ -655,8 +655,8 @@
             }
         });
         $('#edit_product_name').keyup(function() {
-            var query = $(this).val();
-            if (query != '') {
+            var value = $(this).val();
+            if (value != '') {
                 axios({
                     url: "autocomplete-product",
                     method: "POST",
@@ -664,7 +664,7 @@
                         'X-CSRF-TOKEN': $('meta[name = "csrf-token" ]').attr('content')
                     },
                     data: {
-                        query: query
+                        value: value
                     },
                 })
                 .then(function (response) {

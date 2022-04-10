@@ -53,7 +53,7 @@
                                     @if($supplier->count() > 0)
                                         <option value disabled selected hidden>Chọn nhà cung cấp</option>
                                         @foreach ($supplier as $key => $item)
-                                            <option value="{{ $item->id }}">{{ $item->supplier_name }}</option>
+                                            <option value="{{ $item->id }}">{{ $item->name }}</option>
                                         @endforeach
                                     @else
                                         <option value="">Chưa có nhà cung cấp</option>
@@ -96,7 +96,7 @@
                                     @if($supplier->count() > 0)
                                         <option value disabled selected hidden>Chọn nhà cung cấp</option>
                                         @foreach ($supplier as $key => $item)
-                                            <option value="{{ $item->id }}">{{ $item->supplier_name }}</option>
+                                            <option value="{{ $item->id }}">{{ $item->name }}</option>
                                         @endforeach
                                     @else
                                         <option value="">Chưa có nhà cung cấp</option>
@@ -160,7 +160,7 @@
                                     @if($brand->count() > 0)
                                         <option value="" disabled selected hidden>Chọn thương hiệu sản phẩm</option>
                                         @foreach ($brand as $key => $item)
-                                            <option value="{{ $item->id }}">{{ $item->brand_name }}</option>
+                                            <option value="{{ $item->id }}">{{ $item->name }}</option>
                                         @endforeach
                                     @else
                                         <option value="">Chưa có thương hiệu sản phẩm</option>
@@ -173,7 +173,7 @@
                                     @if($category->count() > 0)
                                         <option value="" disabled selected hidden>Chọn danh mục sản phẩm</option>
                                         @foreach ($category as $key => $item)
-                                            <option value="{{ $item->id }}">{{ $item->category_name }}</option>
+                                            <option value="{{ $item->id }}">{{ $item->name }}</option>
                                         @endforeach
                                     @else
                                         <option value="">Chưa có danh mục sản phẩm</option>
@@ -281,7 +281,7 @@
                                     @if($brand->count() > 0)
                                         <option value disabled selected hidden>Chọn thương hiệu sản phẩm</option>
                                         @foreach ($brand as $key => $item)
-                                            <option value="{{ $item->id }}">{{ $item->brand_name }}</option>
+                                            <option value="{{ $item->id }}">{{ $item->name }}</option>
                                         @endforeach
                                     @else
                                         <option value="">Chưa có thương hiệu sản phẩm</option>
@@ -294,7 +294,7 @@
                                     @if($category->count() > 0)
                                         <option value disabled selected hidden>Chọn danh mục sản phẩm</option>
                                         @foreach ($category as $key => $item)
-                                            <option value="{{ $item->id }}">{{ $item->category_name }}</option>
+                                            <option value="{{ $item->id }}">{{ $item->name }}</option>
                                         @endforeach
                                     @else
                                         <option value="">Chưa có danh mục sản phẩm</option>
@@ -470,7 +470,7 @@
                     }
                 },
                 {
-                    'data': 'import_code'
+                    'data': 'code'
                 },
                 {
                     'data': null,
@@ -490,13 +490,13 @@
                 {
                     'data': null,
                     render: function(data, type, row) {
-                        return formatter.format(row.import_fee_ship);
+                        return formatter.format(row.fee_ship);
                     }
                 },
                 {
                     'data': null,
                     render: function(data, type, row) {
-                        return formatter.format(row.total + row.import_fee_ship);
+                        return formatter.format(row.total + row.fee_ship);
                     }
                 },
                 {
@@ -714,7 +714,7 @@
         $('#create_import').click(function(e) {
             e.preventDefault();
             var supplier_id = $('#supplier_id').val();
-            var import_fee_ship = $('#import_fee_ship').val();
+            var fee_ship = $('#import_fee_ship').val();
             validation.validate().then(function(status) {
                 if (status == 'Valid') {
                     axios({
@@ -725,7 +725,7 @@
                         },
                         data: {
                             supplier_id: supplier_id,
-                            import_fee_ship: import_fee_ship,
+                            fee_ship: fee_ship,
                         },
                     })
                         .then(function (response) {
@@ -769,7 +769,7 @@
                 .then(function (response) {
                     $('#edit_import_id').val(response.data.id);
                     $('#edit_supplier_id').val(response.data.supplier_id);
-                    $('#edit_import_fee_ship').val(response.data.import_fee_ship);
+                    $('#edit_import_fee_ship').val(response.data.fee_ship);
                     validation2.validate();
                 });
         });
@@ -777,7 +777,7 @@
             e.preventDefault();
             var id = $('#edit_import_id').val();
             var supplier_id = $('#edit_supplier_id').val();
-            var import_fee_ship = $('#edit_import_fee_ship').val();
+            var fee_ship = $('#edit_import_fee_ship').val();
             validation2.validate().then(function(status) {
                 if (status == 'Valid') {
                     axios({
@@ -788,7 +788,7 @@
                         },
                         data: {
                             supplier_id: supplier_id,
-                            import_fee_ship: import_fee_ship,
+                            fee_ship: fee_ship,
                         },
                     })
                         .then(function (response) {
@@ -837,27 +837,27 @@
                                 'X-CSRF-TOKEN': $('meta[name = "csrf-token" ]').attr('content')
                             },
                         })
-                            .then(function (response) {
-                                if (response.data == 1) {
-                                    Swal.fire({
-                                        icon: "success",
-                                        title: "Thành công",
-                                        text: "Xoá nhập hàng thành công!",
-                                        showConfirmButton: false,
-                                        timer: 1500
-                                    });
-                                    i = 0;
-                                    table.ajax.reload();
-                                } else if (response.data == 0) {
-                                    Swal.fire({
-                                        icon: "error",
-                                        title: "Thất bại",
-                                        text: "Đang tồn tại sản phẩm trong đơn nhập hàng này!",
-                                        showConfirmButton: false,
-                                        timer: 1500
-                                    });
-                                }
-                            });
+                        .then(function (response) {
+                            if (response.data == 1) {
+                                Swal.fire({
+                                    icon: "success",
+                                    title: "Thành công",
+                                    text: "Xoá nhập hàng thành công!",
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                });
+                                i = 0;
+                                table.ajax.reload();
+                            } else if (response.data == 0) {
+                                Swal.fire({
+                                    icon: "error",
+                                    title: "Thất bại",
+                                    text: "Đang tồn tại sản phẩm trong đơn nhập hàng này!",
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                });
+                            }
+                        });
                     }
                 });
         });
@@ -869,27 +869,27 @@
         $('#create_importdetail').click(function(e) {
             e.preventDefault();
             var id = $('#import_id').val();
-            var detail_image = $('#importdetail_image').get(0).files[0];
+            var image = $('#importdetail_image').get(0).files[0];
             var product_id = $('#product_id').val();
-            var detail_import_price = $('#importdetail_import_price').val();
-            var detail_sell_price = $('#importdetail_sell_price').val();
-            var detail_date_start = $('#importdetail_date_start').val();
-            var detail_date_end = $('#importdetail_date_end').val();
-            var detail_quantity = $('#importdetail_quantity').val();
-            var detail_drive = $('#importdetail_drive').val();
-            var detail_vat = $('#importdetail_vat').val();
+            var import_price = $('#importdetail_import_price').val();
+            var sell_price = $('#importdetail_sell_price').val();
+            var date_start = $('#importdetail_date_start').val();
+            var date_end = $('#importdetail_date_end').val();
+            var quantity = $('#importdetail_quantity').val();
+            var drive = $('#importdetail_drive').val();
+            var vat = $('#importdetail_vat').val();
             validation3.validate().then(function(status) {
                 if (status == 'Valid') {
                     var form_data = new FormData();
                     form_data.append("product_id", product_id);
-                    form_data.append("detail_image", detail_image);
-                    form_data.append("detail_import_price", detail_import_price);
-                    form_data.append("detail_sell_price", detail_sell_price);
-                    form_data.append("detail_date_start", detail_date_start);
-                    form_data.append("detail_date_end", detail_date_end);
-                    form_data.append("detail_quantity", detail_quantity);
-                    form_data.append("detail_drive", detail_drive);
-                    form_data.append("detail_vat", detail_vat);
+                    form_data.append("image", image);
+                    form_data.append("import_price", import_price);
+                    form_data.append("sell_price", sell_price);
+                    form_data.append("date_start", date_start);
+                    form_data.append("date_end", date_end);
+                    form_data.append("quantity", quantity);
+                    form_data.append("drive", drive);
+                    form_data.append("vat", vat);
                     axios({
                         url: 'create-importdetail/' + id,
                         method: 'POST',
@@ -902,29 +902,29 @@
                         },
                         withCredentials: true,
                     })
-                        .then(function (response) {
-                            console.log(response.data);
-                            if (response.data == 1) {
-                                Swal.fire({
-                                    icon: "success",
-                                    title: "Thành công",
-                                    text: "Thêm sản phẩm thành công!",
-                                    showConfirmButton: false,
-                                    timer: 1500
-                                });
-                                i = 0;
-                                table.ajax.reload();
-                                load_importdetail(import_id)
-                            } else if (response.data == 0) {
-                                Swal.fire({
-                                    icon: "error",
-                                    title: "Thất bại",
-                                    text: "Sản phẩm này đã tồn tại!",
-                                    showConfirmButton: false,
-                                    timer: 1500
-                                });
-                            }
-                        });
+                    .then(function (response) {
+                        console.log(response.data);
+                        if (response.data == 1) {
+                            Swal.fire({
+                                icon: "success",
+                                title: "Thành công",
+                                text: "Thêm sản phẩm thành công!",
+                                showConfirmButton: false,
+                                timer: 1500
+                            });
+                            i = 0;
+                            table.ajax.reload();
+                            load_importdetail(import_id)
+                        } else if (response.data == 0) {
+                            Swal.fire({
+                                icon: "error",
+                                title: "Thất bại",
+                                text: "Sản phẩm này đã tồn tại!",
+                                showConfirmButton: false,
+                                timer: 1500
+                            });
+                        }
+                    });
                 } else {
                     swal.fire({
                         text: "Xin lỗi, có vẻ như đã phát hiện thấy một số lỗi, vui lòng thử lại .",
@@ -952,47 +952,63 @@
                     'X-CSRF-TOKEN': $('meta[name = "csrf-token" ]').attr('content')
                 },
             })
-                .then(function (response) {
-                    $('#edit_importdetail_id').val(response.data.id);
-                    $('.view_image').css("background-image", "url(uploads/import/" +response.data.detail_image + ")");
+            .then(function (response) {
+                $('#edit_category_id').val(response.data.category_id);
+                $('#edit_brand_id').val(response.data.brand_id);
+                $('#edit_importdetail_id').val(response.data.id);
+                $('.view_image').css("background-image", "url(uploads/import/" +response.data.image + ")");
+                $('#edit_importdetail_import_id').val(response.data.import_id);
+                $('#edit_importdetail_import_price').val(response.data.import_price);
+                $('#edit_importdetail_sell_price').val(response.data.sell_price);
+                $('#edit_importdetail_date_start').val(response.data.date_start);
+                $('#edit_importdetail_date_end').val(response.data.date_end);
+                $('#edit_importdetail_quantity').val(response.data.quantity);
+                $('#edit_importdetail_drive').val(response.data.drive);
+                $('#edit_importdetail_vat').val(response.data.vat);
+                axios({
+                    url: "load-product",
+                    method: "POST",
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name = "csrf-token" ]').attr('content')
+                    },
+                    data: {
+                        brand_id: response.data.brand_id,
+                        category_id: response.data.category_id
+                    },
+                })
+                .then(function (data) {
+                    $('#edit_product_id').html(data.data);
                     $('#edit_product_id').val(response.data.product_id);
-                    $('#edit_importdetail_import_id').val(response.data.import_id);
-                    $('#edit_importdetail_import_price').val(response.data.detail_import_price);
-                    $('#edit_importdetail_sell_price').val(response.data.detail_sell_price);
-                    $('#edit_importdetail_date_start').val(response.data.detail_date_start);
-                    $('#edit_importdetail_date_end').val(response.data.detail_date_end);
-                    $('#edit_importdetail_quantity').val(response.data.detail_quantity);
-                    $('#edit_importdetail_drive').val(response.data.detail_drive);
-                    $('#edit_importdetail_vat').val(response.data.detail_vat);
                     validation4.validate();
                 });
+            });
         });
         $('#update_importdetail').click(function(e) {
             e.preventDefault();
             var id = $('#edit_importdetail_id').val();
             var import_id = $('#edit_importdetail_import_id').val();
             var product_id = $('#edit_product_id').val();
-            var detail_image = $('#edit_importdetail_image').get(0).files[0];
-            var detail_import_price = $('#edit_importdetail_import_price').val();
-            var detail_sell_price = $('#edit_importdetail_sell_price').val();
-            var detail_date_start = $('#edit_importdetail_date_start').val();
-            var detail_date_end = $('#edit_importdetail_date_end').val();
-            var detail_quantity = $('#edit_importdetail_quantity').val();
-            var detail_drive = $('#edit_importdetail_drive').val();
-            var detail_vat = $('#edit_importdetail_vat').val();
+            var image = $('#edit_importdetail_image').get(0).files[0];
+            var import_price = $('#edit_importdetail_import_price').val();
+            var sell_price = $('#edit_importdetail_sell_price').val();
+            var date_start = $('#edit_importdetail_date_start').val();
+            var date_end = $('#edit_importdetail_date_end').val();
+            var quantity = $('#edit_importdetail_quantity').val();
+            var drive = $('#edit_importdetail_drive').val();
+            var vat = $('#edit_importdetail_vat').val();
             validation4.validate().then(function(status) {
                 if (status == 'Valid') {
                     var form_data = new FormData();
                     form_data.append("import_id", import_id);
                     form_data.append("product_id", product_id);
-                    form_data.append("detail_image", detail_image);
-                    form_data.append("detail_import_price", detail_import_price);
-                    form_data.append("detail_sell_price", detail_sell_price);
-                    form_data.append("detail_date_start", detail_date_start);
-                    form_data.append("detail_date_end", detail_date_end);
-                    form_data.append("detail_quantity", detail_quantity);
-                    form_data.append("detail_drive", detail_drive);
-                    form_data.append("detail_vat", detail_vat);
+                    form_data.append("image", image);
+                    form_data.append("import_price", import_price);
+                    form_data.append("sell_price", sell_price);
+                    form_data.append("date_start", date_start);
+                    form_data.append("date_end", date_end);
+                    form_data.append("quantity", quantity);
+                    form_data.append("drive", drive);
+                    form_data.append("vat", vat);
                     axios({
                         url: 'update-importdetail/'+id,
                         method: 'POST',
@@ -1005,28 +1021,28 @@
                         },
                         withCredentials: true,
                     })
-                        .then(function (response) {
-                            if (response.data == 1) {
-                                    Swal.fire({
-                                        icon: "success",
-                                        title: "Thành công",
-                                        text: "Sửa sản phẩm thành công!",
-                                        showConfirmButton: false,
-                                        timer: 1500
-                                    });
-                                    i = 0;
-                                    table.ajax.reload();
-                                    load_importdetail(import_id)
-                                } else if (response.data == 0) {
-                                    Swal.fire({
-                                        icon: "error",
-                                        title: "Thất bại",
-                                        text: "Sản phẩm này đã tồn tại!",
-                                        showConfirmButton: false,
-                                        timer: 1500
-                                    });
-                                }
-                        });
+                    .then(function (response) {
+                        if (response.data == 1) {
+                            Swal.fire({
+                                icon: "success",
+                                title: "Thành công",
+                                text: "Sửa sản phẩm thành công!",
+                                showConfirmButton: false,
+                                timer: 1500
+                            });
+                            i = 0;
+                            table.ajax.reload();
+                            load_importdetail(import_id)
+                        } else if (response.data == 0) {
+                            Swal.fire({
+                                icon: "error",
+                                title: "Thất bại",
+                                text: "Sản phẩm này đã tồn tại!",
+                                showConfirmButton: false,
+                                timer: 1500
+                            });
+                        }
+                    });
                 } else {
                     swal.fire({
                         text: "Xin lỗi, có vẻ như đã phát hiện thấy một số lỗi, vui lòng thử lại .",
@@ -1063,28 +1079,28 @@
                                 'X-CSRF-TOKEN': $('meta[name = "csrf-token" ]').attr('content')
                             },
                         })
-                            .then(function (response) {
-                                if (response.data == 1) {
-                                    Swal.fire({
-                                        icon: "success",
-                                        title: "Thành công",
-                                        text: "Xoá nhập hàng thành công!",
-                                        showConfirmButton: false,
-                                        timer: 1500
-                                    });
-                                    i = 0;
-                                    table.ajax.reload();
-                                    load_importdetail(import_id)
-                                } else if (response.data == 0) {
-                                    Swal.fire({
-                                        icon: "error",
-                                        title: "Thất bại",
-                                        text: "Đang có sản phẩm thuộc nhập hàng này!",
-                                        showConfirmButton: false,
-                                        timer: 1500
-                                    });
-                                }
-                            });
+                        .then(function (response) {
+                            if (response.data == 1) {
+                                Swal.fire({
+                                    icon: "success",
+                                    title: "Thành công",
+                                    text: "Xoá nhập hàng thành công!",
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                });
+                                i = 0;
+                                table.ajax.reload();
+                                load_importdetail(import_id)
+                            } else if (response.data == 0) {
+                                Swal.fire({
+                                    icon: "error",
+                                    title: "Thất bại",
+                                    text: "Đang có sản phẩm thuộc nhập hàng này!",
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                });
+                            }
+                        });
                     }
                 });
         });

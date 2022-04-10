@@ -71,16 +71,16 @@
                             </div>
                             <div class="form-group">
                                 <label>Tên sản phẩm:</label>
-                                <input name="name" type="Text" class="form-control form-control-solid"
+                                <input name="product_name" type="Text" class="form-control form-control-solid"
                                        id="product_name" placeholder="Tên sản phẩm" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==255) return false;"/>
                             </div>
                             <div class="form-group">
                                 <label>Thương hiệu:</label>
-                                <select id="brand_id" name="brand" class="form-control">
+                                <select id="brand_id" name="product_brand" class="form-control">
                                     @if($brand->count() > 0)
                                         <option value disabled selected hidden>Chọn thương hiệu</option>
                                         @foreach ($brand as $key => $item)
-                                            <option value="{{ $item->id }}">{{ $item->brand_name }}</option>
+                                            <option value="{{ $item->id }}">{{ $item->name }}</option>
                                         @endforeach
                                     @else
                                         <option value="">Chưa có thương hiệu</option>
@@ -89,11 +89,11 @@
                             </div>
                             <div class="form-group">
                                 <label>Danh mục:</label>
-                                <select id="category_id" name="category" class="form-control">
+                                <select id="category_id" name="product_category" class="form-control">
                                     @if($cate->count() > 0)
                                         <option value disabled selected hidden>Chọn danh mục</option>
                                         @foreach ($cate as $key => $item)
-                                            <option value="{{ $item->id }}">{{ $item->category_name }}</option>
+                                            <option value="{{ $item->id }}">{{ $item->name }}</option>
                                         @endforeach
                                     @else
                                         <option value="">Chưa có danh mục</option>
@@ -102,11 +102,11 @@
                             </div>
                             <div class="form-group">
                                 <label>Đơn vị:</label>
-                                <select id="unit_id" name="unit" class="form-control">
+                                <select id="unit_id" name="product_unit" class="form-control">
                                     @if($unit->count() > 0)
                                         <option value disabled selected hidden>Chọn đơn vị</option>
                                         @foreach ($unit as $key => $item)
-                                            <option value="{{ $item->id }}">{{ $item->unit_name }}</option>
+                                            <option value="{{ $item->id }}">{{ $item->name }}</option>
                                         @endforeach
                                     @else
                                         <option value="">Chưa có đơn vị</option>
@@ -162,16 +162,16 @@
                             </div>
                             <div class="form-group">
                                 <label>Tên sản phẩm:</label>
-                                <input name="name" type="Text" class="form-control form-control-solid"
+                                <input name="product_name" type="Text" class="form-control form-control-solid"
                                        id="edit_product_name" placeholder="Tên sản phẩm" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==255) return false;"/>
                             </div>
                             <div class="form-group">
                                 <label>Thương hiệu:</label>
-                                <select id="edit_brand_id" name="brand" class="form-control">
+                                <select id="edit_brand_id" name="product_brand" class="form-control">
                                     @if($brand->count() > 0)
                                         <option value disabled selected hidden>Chọn thương hiệu</option>
                                         @foreach ($brand as $key => $item)
-                                            <option value="{{ $item->id }}">{{ $item->brand_name }}</option>
+                                            <option value="{{ $item->id }}">{{ $item->name }}</option>
                                         @endforeach
                                     @else
                                         <option value="">Chưa có thương hiệu</option>
@@ -180,11 +180,11 @@
                             </div>
                             <div class="form-group">
                                 <label>Danh mục:</label>
-                                <select id="edit_category_id" name="category" class="form-control">
+                                <select id="edit_category_id" name="product_category" class="form-control">
                                     @if($cate->count() > 0)
                                         <option value disabled selected hidden>Chọn danh mục</option>
                                         @foreach ($cate as $key => $item)
-                                            <option value="{{ $item->id }}">{{ $item->category_name }}</option>
+                                            <option value="{{ $item->id }}">{{ $item->name }}</option>
                                         @endforeach
                                     @else
                                         <option value="">Chưa có danh mục</option>
@@ -193,12 +193,12 @@
                             </div>
                             <div class="form-group">
                                 <label>Đơn vị:</label>
-                                <select id="edit_unit_id" name="unit" class="form-control">
+                                <select id="edit_unit_id" name="product_unit" class="form-control">
                                     <option value disabled selected hidden>Chọn đơn vị</option>
                                     @if($unit->count() > 0)
                                         <option value disabled selected hidden>Chọn đơn vị</option>
                                         @foreach ($unit as $key => $item)
-                                            <option value="{{ $item->id }}">{{ $item->unit_name }}</option>
+                                            <option value="{{ $item->id }}">{{ $item->name }}</option>
                                         @endforeach
                                     @else
                                         <option value="">Chưa có đơn vị</option>
@@ -288,10 +288,10 @@
                     overflow: 'visible',
                     autoHide: false,
                     render: function(data, type, row) {
-                        if(row.product_image){
+                        if(row.image){
                             return `\
                             <div class="product__shape">
-                                <img class="product__img" src="{{url('uploads/product/${row.product_image}')}}">
+                                <img class="product__img" src="{{url('uploads/product/${row.image}')}}">
                             </div>
                             `
                         }else {
@@ -304,7 +304,7 @@
                     }
                 },
                 {
-                    'data': 'product_name'
+                    'data': 'name'
                 },
                 {
                     'data': 'brand_name'
@@ -358,28 +358,28 @@
         var validation = FormValidation.formValidation(
             form, {
                 fields: {
-                    name: {
+                    product_name: {
                         validators: {
                             notEmpty: {
                                 message: 'Vui lòng điền mục này'
                             },
                         }
                     },
-                    category: {
+                    product_category: {
                         validators: {
                             notEmpty: {
                                 message: 'Vui lòng chọn danh mục sản phẩm'
                             },
                         }
                     },
-                    brand: {
+                    product_brand: {
                         validators: {
                             notEmpty: {
                                 message: 'Vui lòng chọn thương hiệu sản phẩm'
                             },
                         }
                     },
-                    unit: {
+                    product_unit: {
                         validators: {
                             notEmpty: {
                                 message: 'Vui lòng chọn đơn vị'
@@ -397,28 +397,28 @@
         var validation2 = FormValidation.formValidation(
             form2, {
                 fields: {
-                    name: {
+                    product_name: {
                         validators: {
                             notEmpty: {
                                 message: 'Vui lòng điền mục này'
                             },
                         }
                     },
-                    category: {
+                    product_category: {
                         validators: {
                             notEmpty: {
                                 message: 'Vui lòng chọn danh mục sản phẩm'
                             },
                         }
                     },
-                    brand: {
+                    product_brand: {
                         validators: {
                             notEmpty: {
                                 message: 'Vui lòng chọn thương hiệu sản phẩm'
                             },
                         }
                     },
-                    unit: {
+                    product_unit: {
                         validators: {
                             notEmpty: {
                                 message: 'Vui lòng chọn đơn vị'
@@ -434,16 +434,16 @@
         );
         $('#create_product').click(function(e) {
             e.preventDefault();
-            var product_image = $('#product_image').get(0).files[0];
-            var product_name = $('#product_name').val();
+            var image = $('#product_image').get(0).files[0];
+            var name = $('#product_name').val();
             var category_id = $('#category_id').val();
             var brand_id = $('#brand_id').val();
             var unit_id = $('#unit_id').val();
             var form_data = new FormData();
             validation.validate().then(function(status) {
                 if (status == 'Valid') {
-                    form_data.append("product_image", product_image);
-                    form_data.append("product_name", product_name);
+                    form_data.append("image", image);
+                    form_data.append("name", name);
                     form_data.append("category_id", category_id);
                     form_data.append("brand_id", brand_id);
                     form_data.append("unit_id", unit_id);
@@ -507,9 +507,9 @@
                 },
             })
                 .then(function (response) {
-                    $('.view_image').css("background-image", "url(uploads/product/" +response.data.product_image + ")");
-                    $('#edit_product_id').val(response.data.product_id);
-                    $('#edit_product_name').val(response.data.product_name);
+                    $('.view_image').css("background-image", "url(uploads/product/" +response.data.image + ")");
+                    $('#edit_product_id').val(response.data.id);
+                    $('#edit_product_name').val(response.data.name);
                     $('#edit_category_id').val(response.data.category_id);
                     $('#edit_brand_id').val(response.data.brand_id);
                     $('#edit_unit_id').val(response.data.unit_id);
@@ -519,16 +519,16 @@
         $('#update_product').click(function(e) {
             e.preventDefault();
             var id = $('#edit_product_id').val();
-            var product_image = $('#edit_product_image').get(0).files[0];
-            var product_name = $('#edit_product_name').val();
+            var image = $('#edit_product_image').get(0).files[0];
+            var name = $('#edit_product_name').val();
             var category_id = $('#edit_category_id').val();
             var brand_id = $('#edit_brand_id').val();
             var unit_id = $('#edit_unit_id').val();
             var form_data = new FormData();
             validation2.validate().then(function(status) {
                 if (status == 'Valid') {
-                    form_data.append("product_image", product_image);
-                    form_data.append("product_name", product_name);
+                    form_data.append("image", image);
+                    form_data.append("name", name);
                     form_data.append("category_id", category_id);
                     form_data.append("brand_id", brand_id);
                     form_data.append("unit_id", unit_id);
@@ -641,16 +641,16 @@
             })
                 .then(function (response) {
                     $('#edit_importdetail_id').val(response.data.id);
-                    $('.view_image').css("background-image", "url(uploads/import/" +response.data.detail_image + ")");
+                    $('.view_image').css("background-image", "url(uploads/import/" +response.data.image + ")");
                     $('#edit_product_id').val(response.data.product_id);
                     $('#edit_importdetail_import_id').val(response.data.import_id);
-                    $('#edit_importdetail_import_price').val(response.data.detail_import_price);
-                    $('#edit_importdetail_sell_price').val(response.data.detail_sell_price);
-                    $('#edit_importdetail_date_start').val(response.data.detail_date_start);
-                    $('#edit_importdetail_date_end').val(response.data.detail_date_end);
-                    $('#edit_importdetail_quantity').val(response.data.detail_quantity);
-                    $('#edit_importdetail_drive').val(response.data.detail_drive);
-                    $('#edit_importdetail_vat').val(response.data.detail_vat);
+                    $('#edit_importdetail_import_price').val(response.data.import_price);
+                    $('#edit_importdetail_sell_price').val(response.data.sell_price);
+                    $('#edit_importdetail_date_start').val(response.data.date_start);
+                    $('#edit_importdetail_date_end').val(response.data.date_end);
+                    $('#edit_importdetail_quantity').val(response.data.quantity);
+                    $('#edit_importdetail_drive').val(response.data.drive);
+                    $('#edit_importdetail_vat').val(response.data.vat);
                     validation4.validate();
                 })
                 .catch(function (error) {
@@ -662,27 +662,27 @@
             var id = $('#edit_importdetail_id').val();
             var import_id = $('#edit_importdetail_import_id').val();
             var product_id = $('#edit_product_id').val();
-            var detail_image = $('#edit_importdetail_image').get(0).files[0];
-            var detail_import_price = $('#edit_importdetail_import_price').val();
-            var detail_sell_price = $('#edit_importdetail_sell_price').val();
-            var detail_date_start = $('#edit_importdetail_date_start').val();
-            var detail_date_end = $('#edit_importdetail_date_end').val();
-            var detail_quantity = $('#edit_importdetail_quantity').val();
-            var detail_drive = $('#edit_importdetail_drive').val();
-            var detail_vat = $('#edit_importdetail_vat').val();
+            var image = $('#edit_importdetail_image').get(0).files[0];
+            var import_price = $('#edit_importdetail_import_price').val();
+            var sell_price = $('#edit_importdetail_sell_price').val();
+            var date_start = $('#edit_importdetail_date_start').val();
+            var date_end = $('#edit_importdetail_date_end').val();
+            var quantity = $('#edit_importdetail_quantity').val();
+            var drive = $('#edit_importdetail_drive').val();
+            var vat = $('#edit_importdetail_vat').val();
             validation4.validate().then(function(status) {
                 if (status == 'Valid') {
                     var form_data = new FormData();
                     form_data.append("import_id", import_id);
                     form_data.append("product_id", product_id);
-                    form_data.append("detail_image", detail_image);
-                    form_data.append("detail_import_price", detail_import_price);
-                    form_data.append("detail_sell_price", detail_sell_price);
-                    form_data.append("detail_date_start", detail_date_start);
-                    form_data.append("detail_date_end", detail_date_end);
-                    form_data.append("detail_quantity", detail_quantity);
-                    form_data.append("detail_drive", detail_drive);
-                    form_data.append("detail_vat", detail_vat);
+                    form_data.append("image", image);
+                    form_data.append("import_price", import_price);
+                    form_data.append("sell_price", sell_price);
+                    form_data.append("date_start", date_start);
+                    form_data.append("date_end", date_end);
+                    form_data.append("quantity", quantity);
+                    form_data.append("drive", drive);
+                    form_data.append("vat", vat);
                     axios({
                         url: 'update-importdetail/'+id,
                         method: 'POST',
@@ -753,28 +753,28 @@
                                 'X-CSRF-TOKEN': $('meta[name = "csrf-token" ]').attr('content')
                             },
                         })
-                            .then(function (response) {
-                                if (response.data == 1) {
-                                    Swal.fire({
-                                        icon: "success",
-                                        title: "Thành công",
-                                        text: "Xoá sản phẩm thành công!",
-                                        showConfirmButton: false,
-                                        timer: 1500
-                                    });
-                                    i = 0;
-                                    table.ajax.reload();
-                                    load_productdetail(product_id)
-                                } else if (response.data == 0) {
-                                    Swal.fire({
-                                        icon: "error",
-                                        title: "Thất bại",
-                                        text: "Đang có đơn hàng dùng sản phẩm này!",
-                                        showConfirmButton: false,
-                                        timer: 1500
-                                    });
-                                }
-                            });
+                        .then(function (response) {
+                            if (response.data == 1) {
+                                Swal.fire({
+                                    icon: "success",
+                                    title: "Thành công",
+                                    text: "Xoá sản phẩm thành công!",
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                });
+                                i = 0;
+                                table.ajax.reload();
+                                load_productdetail(product_id)
+                            } else if (response.data == 0) {
+                                Swal.fire({
+                                    icon: "error",
+                                    title: "Thất bại",
+                                    text: "Đang có đơn hàng dùng sản phẩm này!",
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                });
+                            }
+                        });
                     }
                 });
         });

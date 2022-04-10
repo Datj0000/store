@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 
 class CustomerController extends Controller
 {
-    public function index(): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\Foundation\Application
+    public function index()
     {
         if (Auth::check()) {
             return view('user.customer.customer');
@@ -16,27 +16,27 @@ class CustomerController extends Controller
         return view('auth.login');
     }
 
-    public function fetchdata():\Illuminate\Http\JsonResponse
+    public function fetchdata()
     {
         if (Auth::check()) {
             $data = Customer::query()->get();
             return response()->json([
-                "data" => $data,
+                "data" => $data->toArray(),
             ]);
         }
     }
 
-    public function create(Request $request):int
+    public function create(Request $request)
     {
         if (Auth::check()) {
-            $check = Customer::query()->where('customer_name', '=', $request->customer_name)->where('customer_phone','=', $request->customer_phone)->first();
+            $check = Customer::query()->where('name','=',$request->input('name'))->where('phone','=',$request->input('phone'))->first();
             if (!$check){
-                $customer = new Customer();
-                $customer->customer_name = $request->customer_name;
-                $customer->customer_phone = $request->customer_phone;
-                $customer->customer_address = $request->customer_address;
-                $customer->customer_role = $request->customer_role;
-                $customer->save();
+                Customer::query()->create([
+                    'name' => $request->input('name'),
+                    'phone' => $request->input('phone'),
+                    'address' => $request->input('address'),
+                    'role' => $request->input('role'),
+                ]);
                 return 0;
             } else{
                 return 1;
@@ -44,25 +44,27 @@ class CustomerController extends Controller
         }
     }
 
-    public function edit(int $id):\Illuminate\Http\JsonResponse
+    public function edit(int $id)
     {
         if (Auth::check()) {
-            $data = Customer::query()->whereId($id)->first();
-            return response()->json($data);
+            $query = Customer::query()->where('id','=',$id)->first();
+            if($query){
+                return response()->json($query->toArray());
+            }
         }
     }
 
-    public function update(Request $request, int $id)
+    public function update(Request $request,int $id)
     {
         if (Auth::check()) {
-            $check = Customer::query()->where('customer_name', '=', $request->customer_name)->where('customer_phone', '=', $request->customer_phone)->where('id', '!=', $id)->first();
+            $check = Customer::query()->where('name','=',$request->input('name'))->where('phone','=',$request->input('phone'))->where('id','!=',$id)->first();
             if (!$check) {
-                $customer = Customer::query()->whereId($id)->first();
-                $customer->customer_name = $request->customer_name;
-                $customer->customer_phone = $request->customer_phone;
-                $customer->customer_address = $request->customer_address;
-                $customer->customer_role = $request->customer_role;
-                $customer->save();
+                Customer::query()->where('id','=',$id)->update([
+                    'name' => $request->input('name'),
+                    'phone' => $request->input('phone'),
+                    'address' => $request->input('address'),
+                    'role' => $request->input('role'),
+                ]);
                 return 0;
             } else {
                 return 1;
@@ -72,23 +74,29 @@ class CustomerController extends Controller
     public function destroy(int $id)
     {
         if (Auth::check()) {
-            Customer::query()->whereId($id)->delete();
+            $check = Order::query()->where('customer_id','=',$id)->first();
+            if($check){
+                return 0;
+            } else{
+                $query = Customer::query()->where('id','=',$id)->first();
+                if($query){
+                    $query->delete();
+                    return 1;
+                }
+            }
         }
     }
     public function autocomplete(Request $request)
     {
         if (Auth::check()) {
-            $data = $request->all();
-            $customer = Customer::query()->where('customer_name', 'LIKE', '%' . $data['query'] . '%')
-            ->orwhere('customer_phone', 'LIKE', '%' . $data['query'] . '%')->get();
-
-                $output = '
-                <ul class="dropdown-menu2">';
-                $output .= '<li class="li_add_customer">Thêm khách hàng mới</li>';
+            $customer = Customer::query()->where('name','LIKE','%' .  $request->input('value') . '%')
+            ->orwhere('phone','LIKE','%' . $request->input('value') . '%')->get();
+                $output = '<ul class="dropdown-menu2">';
+                            '<li class="li_add_customer">Thêm khách hàng mới</li>';
                 if ($customer->count() > 0) {
                     foreach ($customer as $key => $val) {
                         $output .= '
-                            <li class="li_search_customer" data-id="'.$val->id.'">' . $val->customer_name . ' - ' . $val->customer_phone . '</li>
+                            <li class="li_search_customer" data-id="'.$val->id.'">' . $val->name . ' - ' . $val->phone . '</li>
                        ';
                     }
                 }

@@ -11,6 +11,6 @@ class Order extends Model
     protected $table = 'orders';
     protected $primaryKey = 'id';
     protected $fillable = [
-        'customer_id','order_methodpay','order_fee_ship'
+        'customer_id','method_pay','order_fee_ship'
     ];
 }

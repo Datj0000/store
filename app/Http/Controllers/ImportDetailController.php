@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Import;
 use App\Models\ImportDetail;
+use App\Models\OrderDetail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
@@ -15,11 +16,11 @@ class ImportDetailController extends Controller
     public function fetchdata(int $id)
     {
         if (Auth::check()) {
-            $detail = ImportDetail::query()->select('products.product_name', 'importdetails.*')
-                ->join('products', 'products.id', '=', 'importdetails.product_id')
-                ->where('import_id', $id)->get();
+            $detail = ImportDetail::query()->select('products.name as product_name','importdetails.*')
+                ->join('products','products.id','=','importdetails.product_id')
+                ->where('import_id','=',$id)->get();
             $output = '
-            <input type="hidden" id="importdetail_id" value="'.$id.'"/>
+            <input type="hidden" id="importid" value="'.$id.'"/>
             <div class="card-body">
             <table class="table table-separate table-head-custom table-checkable display nowrap" cellspacing="0" width="100%" id="responsive">
                     <thead>
@@ -39,22 +40,22 @@ class ImportDetailController extends Controller
                     </thead>
                     <tbody>
             ';
-            $detail_count = $detail->count();
-            if ($detail_count > 0) {
+            $count = $detail->count();
+            if ($count > 0) {
                 $i = 0;
                 $total = 0;
                 foreach ($detail as $key => $item) {
                     $i++;
-                    $subtotal = $item->detail_import_price * $item->detail_quantity;
+                    $subtotal = $item->import_price * $item->quantity;
                     $total += $subtotal;
                     $output .= '
                         <tr>
                             <td scope="row">' . $i . '</td>';
-                            if($item->detail_image){
+                            if($item->image){
                                 $output .='
                                 <td>
                                     <div class="import__shape">
-                                        <img class="import__img" src="'.url('uploads/import/'.$item->detail_image.'').'">
+                                        <img class="import__img" src="'.url('uploads/import/'.$item->image.'').'">
                                     </div>
                                 </td>';
                             }else {
@@ -67,20 +68,20 @@ class ImportDetailController extends Controller
                             }
                             $output .='
                             <td>'.$item->product_name.'</td>
-                            <td>'.number_format($item->detail_import_price, 0, ',', '.').'đ'.'</td>
-                            <td>'.number_format($item->detail_sell_price, 0, ',', '.').'đ'.'</td>
-                            <td>'.$item->detail_quantity.'</td>';
-                            if($item->detail_vat){
-                                $output .='<td>'.$item->detail_vat.'</td>';
+                            <td>'.number_format($item->import_price,0,',','.').'đ'.'</td>
+                            <td>'.number_format($item->sell_price,0,',','.').'đ'.'</td>
+                            <td>'.$item->quantity.'</td>';
+                            if($item->vat){
+                                $output .='<td>'.$item->vat.'</td>';
                             }else {
                                 $output .='<td>Không có</td>';
                             }
                             $output .='
-                            <td>'.$item->detail_date_start.'</td>
-                            <td>'.$item->detail_date_end.'</td>
-                            <td>'.number_format($subtotal, 0, ',', '.').'đ'.'</td>
+                            <td>'.$item->date_start.'</td>
+                            <td>'.$item->date_end.'</td>
+                            <td>'.number_format($subtotal,0,',','.').'đ'.'</td>
                             <td>
-                                <a href='.$item->detail_drive.' target="_blank" class="btn btn-sm btn-clean btn-icon" title="Link hình ảnh/video">
+                                <a href='.$item->drive.' target="_blank" class="btn btn-sm btn-clean btn-icon" title="Link hình ảnh/video">
                                     <i class="lab la-google-drive"></i>
                                 </a>
                                 <span data-id='.$item->id.' class="edit_importdetail btn btn-sm btn-clean btn-icon" title="Sửa">
@@ -93,7 +94,7 @@ class ImportDetailController extends Controller
                         </tr>
                     ';
                 }
-                $import = Import::query()->whereId($id)->first();
+                $import = Import::query()->where('id','=',$id)->first();
                 $output .= '
                         </tbody>
                     </table>
@@ -102,19 +103,19 @@ class ImportDetailController extends Controller
                         Tổng:
                         </div>
                         <div style="width: 90%">
-                            ' . number_format($total, 0, ',', '.') . 'đ' . '
+                            ' . number_format($total,0,',','.') . 'đ' . '
                         </div>
                         <div style="width: 10%">
                         Phí ship:
                         </div>
                         <div style="width: 90%">
-                            ' . number_format($import->import_fee_ship, 0, ',', '.') . 'đ' . '
+                            ' . number_format($import->import_fee_ship,0,',','.') . 'đ' . '
                         </div>
                         <div style="width: 10%">
                         Thành tiền:
                         </div>
                         <div style="width: 90%">
-                            ' . number_format($total + $import->import_fee_ship, 0, ',', '.') . 'đ' . '
+                            ' . number_format($total + $import->import_fee_ship,0,',','.') . 'đ' . '
                         </div>
                     </div>
                 </div>';
@@ -125,39 +126,37 @@ class ImportDetailController extends Controller
         }
     }
 
-    public function create(Request $request, int $id)
+    public function create(Request $request,int $id)
     {
         if (Auth::check()) {
-            $check = ImportDetail::query()->where('product_id','=', $request->product_id)->where('import_id','=', $id)->first();
+            $check = ImportDetail::query()->where('product_id','=',$request->input('product_id'))->where('import_id','=',$id)->first();
             if (!$check){
                 do {
                     $product_code = rand(106890122,1000000000);
-                    $check2 = ImportDetail::query()->where('product_code','=', $product_code)->first();
-                    $generator = new BarcodeGeneratorHTML();
-                    $barcodes = $generator->getBarcode($product_code, $generator::TYPE_STANDARD_2_5, 2, 60);
-                }
-                while ($check2);
-                $detail = new ImportDetail();
-                $detail->import_id = $id;
-                $detail->product_id = $request->product_id;
-                $detail->detail_import_price = $request->detail_import_price;
-                $detail->detail_sell_price = $request->detail_sell_price;
-                $detail->detail_date_start = Carbon::parse($request->detail_date_start)->format('Y-m-d');
-                $detail->detail_date_end = Carbon::parse($request->detail_date_end)->format('Y-m-d');
-                $detail->detail_quantity = $request->detail_quantity;
-                $detail->detail_drive = $request->detail_drive;
-                $detail->detail_vat = $request->detail_vat;
-                $detail->product_code = $product_code;
-                $detail->barcodes = $barcodes;
-                $get_image = $request->file('detail_image');
+                    $check_code = ImportDetail::query()->where('product_code','=',$product_code)->first();
+                } while ($check_code);
+                $detail = ImportDetail::query()->create([
+                    'import_id' => $id,
+                    'product_id' => $request->input('product_id'),
+                    'product_code' => $product_code,
+                    'import_price' => $request->input('import_price'),
+                    'sell_price' => $request->input('sell_price'),
+                    'quantity' => $request->input('quantity'),
+                    'drive' => $request->input('drive'),
+                    'vat' => $request->input('vat'),
+                    'date_start' => Carbon::parse($request->input('date_start'))->format('Y-m-d'),
+                    'date_end' => Carbon::parse($request->input('date_end'))->format('Y-m-d'),
+                ]);
+                $get_image = $request->file('image');
                 if ($get_image) {
                     $get_name_image = $get_image->getClientOriginalName();
-                    $name_image = current(explode('.', $get_name_image));
-                    $new_image =  $name_image . rand(0, 99) . '.' . $get_image->getClientOriginalExtension();
-                    $get_image->move('uploads/import', $new_image);
-                    $detail->detail_image = $new_image;
+                    $name_image = current(explode('.',$get_name_image));
+                    $new_image =  $name_image . rand(0,99) . '.' . $get_image->getClientOriginalExtension();
+                    $get_image->move('uploads/import',$new_image);
+                    $detail->update([
+                        'image' => $new_image,
+                    ]);
                 }
-                $detail->save();
                 return 1;
             } else{
                 return 0;
@@ -165,43 +164,50 @@ class ImportDetailController extends Controller
         }
     }
 
-    public function edit(int $id):\Illuminate\Http\JsonResponse
+    public function edit(int $id)
     {
         if (Auth::check()) {
-            $data = ImportDetail::query()->whereId($id)->first();
-            return response()->json($data);
+            $query = ImportDetail::query()
+            ->select('products.brand_id', 'products.category_id','importdetails.*')
+            ->join('products','products.id','=','importdetails.product_id')
+            ->where('importdetails.id','=',$id)->first();
+            if($query){
+                return response()->json($query->toArray());
+            }
         }
     }
 
     public function update(Request $request,int $id)
     {
         if (Auth::check()) {
-            $check = ImportDetail::query()->where('product_id','=', $request->product_id)->where('import_id','!=', $request->import_id)->first();
+            $check = ImportDetail::query()->where('product_id','=',$request->input('product_id'))->where('import_id','!=',$request->input('import_id'))->first();
             if (!$check){
-                $detail = ImportDetail::query()->whereId($id)->first();
-                $detail->product_id = $request->product_id;
-                $detail->detail_import_price = $request->detail_import_price;
-                $detail->detail_sell_price = $request->detail_sell_price;
-                $detail->detail_date_start = Carbon::parse($request->detail_date_start)->format('Y-m-d');
-                $detail->detail_date_end = Carbon::parse($request->detail_date_end)->format('Y-m-d');
-                $detail->detail_quantity = $request->detail_quantity;
-                $detail->detail_drive = $request->detail_drive;
-                $detail->detail_vat = $request->detail_vat;
-                $get_image = $request->file('detail_image');
+                $detail = ImportDetail::query()->where('id','=',$id)->update([
+                    'product_id' => $request->input('product_id'),
+                    'import_price' => $request->input('import_price'),
+                    'sell_price' => $request->input('sell_price'),
+                    'quantity' => $request->input('quantity'),
+                    'drive' => $request->input('drive'),
+                    'vat' => $request->input('vat'),
+                    'date_start' => Carbon::parse($request->input('date_start'))->format('Y-m-d'),
+                    'date_end' => Carbon::parse($request->input('date_end'))->format('Y-m-d'),
+                ]);
+                $get_image = $request->file('image');
                 if ($get_image) {
-                    if ($detail->detail_image) {
-                        $destinationPath = 'uploads/import/' . $detail->detail_image;
+                    if ($detail->image) {
+                        $destinationPath = 'uploads/import/' . $detail->image;
                         if (file_exists($destinationPath)) {
                             unlink($destinationPath);
                         }
                     }
                     $get_name_image = $get_image->getClientOriginalName();
-                    $name_image = current(explode('.', $get_name_image));
-                    $new_image =  $name_image . rand(0, 99) . '.' . $get_image->getClientOriginalExtension();
-                    $get_image->move('uploads/import', $new_image);
-                    $detail->detail_image = $new_image;
+                    $name_image = current(explode('.',$get_name_image));
+                    $new_image =  $name_image . rand(0,99) . '.' . $get_image->getClientOriginalExtension();
+                    $get_image->move('uploads/import',$new_image);
+                    $detail->update([
+                        'image' => $new_image,
+                    ]);
                 }
-                $detail->save();
                 return 1;
             } else{
                 return 0;
@@ -212,15 +218,16 @@ class ImportDetailController extends Controller
     public function destroy(int $id)
     {
         if (Auth::check()) {
-            ImportDetail::query()->whereId($id)->delete();
-            return 1;
-        }
-    }
-    public function barcode(int $id)
-    {
-        if (Auth::check()) {
-            ImportDetail::query()->whereId($id)->delete();
-            return 1;
+            $query = ImportDetail::query()->where('id','=',$id)->first();
+            if($query){
+                $check = OrderDetail::query()->where('product_code','=',$query->product_code)->first();
+                if($check){
+                    return 0;
+                } else{
+                    $query->delete();
+                    return 1;
+                }
+            }
         }
     }
 }

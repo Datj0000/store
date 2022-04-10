@@ -11,6 +11,6 @@ class Import extends Model
     protected $table = 'imports';
     protected $primaryKey = 'id';
     protected $fillable = [
-        'supplier_id', 'import_feeship'
+        'code', 'supplier_id', 'fee_ship'
     ];
 }
