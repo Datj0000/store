@@ -71,11 +71,11 @@
             padding-right: 4px;
         }
         img{
-            width: 60%;
-            opacity: .4;
+            width: 15%;
+            /*opacity: .2;*/
             position: fixed;
-            top: 20%;
-            left: 20%;
+            top: -1%;
+            left: -1%;
         }
     </style>
 </head>
@@ -147,7 +147,7 @@
             <td align='center'>{{$item->quantity}} {{$item->unit_name}}</td>
             <td align='center'>{{$diff}} tháng</td>
             <td align='right'>{{number_format($item->sell_price, 0, ',', '.')}}đ</td>
-            <td align='right'>{{number_format($subtotal, 0, ',', '.')}}đ</td>0
+            <td align='right'>{{number_format($subtotal, 0, ',', '.')}}đ</td>
         <tr>
     @endforeach
     <tr>
@@ -175,9 +175,9 @@
         </tr>
     @endif
     @if($order->fee_ship)
-        @php
+        <?php
             $intomoney += $order->fee_ship
-        @endphp
+        ?>
         <tr>
             <td colspan="6" class="tong">Phí ship</td>
             <td class="cotSo" align='right'>{{number_format($order->fee_ship, 0, ',', '.')}}đ</td>
@@ -188,10 +188,14 @@
         <td class="cotSo" align='right'>{{number_format($intomoney, 0, ',', '.')}}đ</td>
     </tr>
 </table>
-<div class="footer-left"> Uông Bí, ngày {{ date('d') }} tháng {{ date('m') }} năm {{ date('Y') }}<br/>
-    Người mua </div>
-<div class="footer-right"> Uông Bí, ngày {{ date('d') }} tháng {{ date('m') }} năm {{ date('Y') }}<br/>
-    Người lập phiếu </div>
+<div class="footer-left">
+    Người mua <br>
+    <span style="font-style:italic; font-size:13px">(Ký và ghi rõ họ tên)</span>
+</div>
+<div class="footer-right">
+    Người lập phiếu <br>
+    <span style="font-style:italic; font-size:12px">(Ký và ghi rõ họ tên)</span>
+</div>
 </div>
 </body>
 </html>

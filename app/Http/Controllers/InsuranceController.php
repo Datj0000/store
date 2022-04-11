@@ -101,17 +101,19 @@ class InsuranceController extends Controller
                     $query->delete();
                 }
                 foreach (Session::get('edit_insurance') as $key => $cart) {
-                    InsuranceDetail::query()->create([
-                        'insurance_id' => $insurance->id,
-                        'product_code' => $cart['product_code'],
-                        'quantity' => $cart['product_quantity'],
-                    ]);
+                    $query = InsuranceDetail::query()->where('product_code','=',$cart['product_code'])->first();
                     if($request->input('method') == 1){
                         $detail = ImportDetail::query()->where('product_code','=',$cart['product_code'])->first();
                         $detail->update([
                             'quantity' => $detail->quantity - $cart['product_quantity'],
                         ]);
                     }
+                    $query->delete();
+                    InsuranceDetail::query()->create([
+                        'insurance_id' => $insurance->id,
+                        'product_code' => $cart['product_code'],
+                        'quantity' => $cart['product_quantity'],
+                    ]);
                 }
 //                Session::forget('edit_insurance');
             }
