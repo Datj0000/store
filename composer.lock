@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "63338f2bc8175563c5238e73b596ca52",
+    "content-hash": "c69f71590c2197623531abeaa9ff0018",
     "packages": [
         {
             "name": "barryvdh/laravel-dompdf",
@@ -8110,8 +8110,9 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": "^8.1"
+        "php": "^8.1",
+        "ext-gd": "*"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.1.0"
+    "plugin-api-version": "2.2.0"
 }

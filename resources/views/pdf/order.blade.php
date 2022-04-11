@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -69,11 +70,18 @@
             font-weight:bold;
             padding-right: 4px;
         }
+        img{
+            width: 60%;
+            opacity: .4;
+            position: fixed;
+            top: 20%;
+            left: 20%;
+        }
     </style>
 </head>
 <body>
 <div>
-    <img src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path('asset/media/logos/logo.png'))) }}">
+    <img src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path('asset/media/logos/logo2.png'))) }}">
     <center>
         <h3>CÔNG TY CỔ PHẦN GIẢI PHÁP SỐ FUNNY DEV</h3>
         Số 2, Trần Nhân Tông, Phường Thanh Sơn, Uông Bí, Quảng Ninh<br>
@@ -165,8 +173,6 @@
             <td colspan="6" class="tong">Giảm giá</td>
             <td class="cotSo" align='right'>{{number_format($total_coupon, 0, ',', '.')}}đ</td>
         </tr>
-    @else
-        $intomoney = $total;
     @endif
     @if($order->fee_ship)
         @php

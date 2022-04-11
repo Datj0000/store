@@ -426,10 +426,6 @@ class OrderController extends Controller
     public function print(int $id)
     {
         if (Auth::check()) {
-            $path = base_path('favicon.ico');
-            $type = pathinfo($path, PATHINFO_EXTENSION);
-            $data = file_get_contents($path);
-            $pic = 'data:image/'.$type.';base64' . base64_decode($data);
             $order = Order::query()->where('id','=',$id)->first();
             $customer = Customer::query()->where('id','=',$order->customer_id)->first();
             $detail = OrderDetail::query()->select('brands.name as brand_name','products.name as product_name','importdetails.*','orderdetails.*')
@@ -442,7 +438,6 @@ class OrderController extends Controller
                 'order' => $order,
                 'customer' => $customer,
                 'details' => $detail,
-                'pic' => $pic,
             ]);
             return $pdf->stream();
         }
