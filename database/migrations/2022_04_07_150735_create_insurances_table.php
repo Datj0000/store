@@ -16,9 +16,9 @@ return new class extends Migration
         Schema::create('insurances', function (Blueprint $table) {
             $table->id();
             $table->integer('method');
-            $table->bigInteger('product_code');
             $table->integer('status')->default(0);
-            $table->double('fee')->default(0);
+            $table->double('fee');
+            $table->text('note')->nullable();
             $table->timestamps();
         });
     }

@@ -5,7 +5,7 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Hoá đơn nhập hàng</title>
+    <title>Phiếu nhập kho hàng</title>
     <style>
         body{
             font-family: DejaVu Sans;
@@ -13,15 +13,6 @@
         }
         @page {
             size: A4;
-        }
-        .logo {
-            background-color:#FFFFFF;
-            text-align:left;
-            float:left;
-        }
-        .company {
-            float:right;
-            font-size:16px;
         }
         .footer-left {
             text-align:center;
@@ -54,12 +45,12 @@
             border:thin solid #d3d3d3;
         }
         .TableData TH {
-            background: rgba(0,0,255,0.1);
             text-align: center;
             font-weight: bold;
             color: #000;
             border: solid 1px #ccc;
             height: 24px;
+            padding: 7px 0;
         }
         .TableData TR {
             height: 24px;
@@ -82,18 +73,27 @@
 </head>
 <body>
     <div>
-{{--        <div class="logo"><img src="https://ibb.co/58vZcCm" /></div>--}}
-        <div class="company">C.Ty CP Giải pháp số FunnyDev</div>
+        <center>
+        <h3>CÔNG TY CỔ PHẦN GIẢI PHÁP SỐ FUNNY DEV</h3>
+        Số 2, Trần Nhân Tông, Phường Thanh Sơn, Uông Bí, Quảng Ninh<br>
+        Website: www.maytinhuongbi24h.vn - MST: 5702056524 - Hotline: 1900.633.918
+        </center>
+        <p style="float: right; font-size:13px">Ngày {{date('d',strtotime($import['created_at']))}} tháng {{date('m',strtotime($import['created_at']))}} năm {{date('Y',strtotime($import['created_at']))}}</p>
+        <br>
+        <br>
+        <h3>
+            <center>PHIẾU NHẬP KHO HÀNG<br>
+    {{--            <span style="font-weight:bold; font-style:italic; color:#000000; font-size:13px">(Kiêm chứng nhận bảo hành theo chính sách công ty)</span>--}}
+                <span style="font-size:13px">Số: {{$import['code']}}</span><br>
+                <span> -------oOo-------</span>
+            </center>
+        </h3>
+        <h4>Thông tin nhà cung cấp</h4>
+            Tên nhà cung cấp: {{$supplier->name}}<br>
+            Điện thoại: {{$supplier->phone}}<br>
+            Email: {{$supplier->email}}<br>
+            Địa chỉ: {{$supplier->address}}<br>
     </div>
-    <br>
-    <br>
-    <h3><center>HÓA ĐƠN NHẬP HÀNG</center></h3>
-    <h4><center>-------oOo-------</center></h4>
-    <h4>Thông tin nhà cung cấp</h4>
-        Tên nhà cung cấp: {{$supplier->supplier_name}}<br>
-        Email: {{$supplier->supplier_email}}<br>
-        Điện thoại: {{$supplier->supplier_phone}}<br>
-        Địa chỉ: {{$supplier->supplier_address}}<br>
     <h4>Đơn hàng</h4>
     <table class="TableData">
         <thead>
@@ -112,14 +112,14 @@
         @endphp
         @foreach($details as $item)
             @php
-                $subtotal = $item->detail_import_price * $item->detail_quantity;
+                $subtotal = $item->import_price * $item->quantity;
                 $total += $subtotal;
             @endphp
             <tr>
-                <td>{{$i++}}</td>
-                <td>{{$item->product_name}}</td>
-                <td align='center'>{{$item->detail_quantity}}</td>
-                <td align='right'>{{number_format($item->detail_import_price, 0, ',', '.')}}đ</td>
+                <td align='center'>{{$i++}}</td>
+                <td>{{$item->brand_name }} {{ $item->product_name}}</td>
+                <td align='center'>{{$item->quantity}}</td>
+                <td align='right'>{{number_format($item->import_price, 0, ',', '.')}}đ</td>
                 <td align='right'>{{number_format($subtotal, 0, ',', '.')}}đ</td>
             <tr>
         @endforeach
@@ -127,11 +127,19 @@
                 <td colspan="4" class="tong">Tổng cộng</td>
                 <td class="cotSo" align='right'>{{number_format($total, 0, ',', '.')}}đ</td>
             </tr>
+            <tr>
+                <td colspan="4" class="tong">Phí ship</td>
+                <td class="cotSo" align='right'>{{number_format($import->fee_ship, 0, ',', '.')}}đ</td>
+            </tr>
+            <tr>
+                <td colspan="4" class="tong">Thành tiền</td>
+                <td class="cotSo" align='right'>{{number_format($total + $import->fee_ship, 0, ',', '.')}}đ</td>
+            </tr>
         </table>
-        <div class="footer-left"> Uông Bí, ngày ... tháng ... năm {{ date('Y') }}<br/>
+        <div class="footer-left"> Uông Bí, ngày {{ date('d') }} tháng {{ date('m') }} năm {{ date('Y') }}<br/>
             Nhà cung cấp </div>
-        <div class="footer-right"> Uông Bí, ngày ... tháng ... năm {{ date('Y') }}<br/>
-            Nhân viên </div>
+        <div class="footer-right"> Uông Bí, ngày {{ date('d') }} tháng {{ date('m') }} năm {{ date('Y') }}<br/>
+            Người lập phiếu </div>
     </div>
 </body>
 </html>

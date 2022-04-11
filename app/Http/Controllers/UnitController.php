@@ -22,7 +22,7 @@ class UnitController extends Controller
         if (Auth::check()) {
             $query = Unit::all();
             return response()->json([
-                "data" => $query,
+                "data" => $query->toArray(),
             ]);
         }
     }
@@ -48,7 +48,7 @@ class UnitController extends Controller
         if (Auth::check()) {
             $query = Unit::query()->where('id','=',$id)->first();
             if($query){
-                return response()->json($query);
+                return response()->json($query->toArray());
             }
         }
     }

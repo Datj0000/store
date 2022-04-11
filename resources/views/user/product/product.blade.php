@@ -32,7 +32,7 @@
                                 fill="#000000" opacity="0.3" />
                         </g>
                     </svg>
-                </span>Thêm mới</span>
+                </span>Thêm sản phẩm</span>
         </div>
     </div>
     {{-- Add --}}

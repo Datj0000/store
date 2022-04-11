@@ -18,6 +18,9 @@ class OrderController extends Controller
     public function index()
     {
         if (Auth::check()) {
+//            if(Session::get('cart')){
+//                Session::forget('cart');
+//            }
             $customer = Customer::query()->get();
             return view('user.order.order')
                 ->with('customer',$customer);
@@ -72,7 +75,7 @@ class OrderController extends Controller
             }
             if (Session::get('cart')) {
                 foreach (Session::get('cart') as $key => $cart) {
-                    $orderdetail = OrderDetail::query()->create([
+                    OrderDetail::query()->create([
                         'order_id' => $order->id,
                         'product_code' => $cart['product_code'],
                         'quantity' => $cart['product_quantity'],
@@ -125,7 +128,7 @@ class OrderController extends Controller
             if (Session::get('edit_coupon')){
                 foreach (Session::get('edit_coupon') as $key => $cou) {
                     if($order->coupon != $cou['code']){
-                        $coupon = Coupon::query()->where('code','=',$order->coupon)->first();
+                        $coupon = Coupon::query()->where ('code','=',$order->coupon)->first();
                         if($coupon){
                             $coupon->update(['time' => $coupon->time + 1,]);
                         }
@@ -139,24 +142,21 @@ class OrderController extends Controller
                 Session::forget('edit_coupon');
             }
             if (Session::get('edit_cart')) {
-                $query = OrderDetail::query()->where('order_id','=',$id)->get();
-                if($query){
-                    foreach($query as $item){
-                        OrderDetail::query()->where('order_id','=',$item->order_id)->delete();
-                    }
-                }
+//                $query = OrderDetail::query()->where('order_id','=',$id)->delete();
                 foreach (Session::get('edit_cart') as $key => $cart) {
-                    $orderdetail = OrderDetail::query()->create([
+                    $query = OrderDetail::query()->where('product_code','=',$cart['product_code'])->first();
+                    $importdetail = ImportDetail::query()->where('product_code','=',$cart['product_code'])->first();
+                    if($importdetail){
+                        $importdetail->update([
+                            'soldout' => $importdetail->soldout + $cart['product_quantity'] - $query->quantity,
+                        ]);
+                    }
+                    $query->delete();
+                    OrderDetail::query()->create([
                         'order_id' => $id,
                         'product_code' => $cart['product_code'],
                         'quantity' => $cart['product_quantity'],
                     ]);
-                    $importdetail = ImportDetail::query()->where('product_code','=',$cart['product_code'])->first();
-                    if($importdetail){
-                        $importdetail->update([
-                            'soldout' => $importdetail->soldout + $cart['product_quantity'],
-                        ]);
-                    }
                 }
                 Session::forget('edit_cart');
             }
@@ -270,7 +270,7 @@ class OrderController extends Controller
 
     public function load_cart(Request $request)
     {
-        // Session::forget('cart');
+//        Session::forget('cart');
         if (Auth::check()) {
             if (Session::get($request->input('cart'))) {
                 $output = '
@@ -288,7 +288,6 @@ class OrderController extends Controller
                 </thead>';
                 $i = 1;
                 $total = 0;
-                $total_coupon = 0;
                 $iprice = 0;
                 $count = 0;
                 foreach (Session::get($request->input('cart')) as $key => $cart) {
@@ -358,25 +357,23 @@ class OrderController extends Controller
                     foreach (Session::get($request->input('coupon')) as $key => $cou) {
                         if ($cou['condition'] == 0) {
                             $total_coupon = ($total * $cou['number']) / 100;
-                            $output .= '
-                            <div style="width: 10%">Giảm giá:</div>
-                            <div style="width: 90%">
-                                ' . $cou['number'] . '% (' . number_format($total_coupon,0,',','.') . ' đ)' . '
-                            </div>';
                         } else {
                             $total_coupon = $cou['number'];
-                            $output .= '
+                        }
+                        if ($iprice + $total_fee > $total - $total_coupon) {
+                            $total_coupon = $iprice + $total_fee;
+                            $intomoney = $iprice + $total_fee;
+                        } else {
+                            $intomoney = $total - $total_coupon;
+                        }
+                        $output .= '
                             <div style="width: 10%">Giảm giá:</div>
                             <div style="width: 90%">
                                 ' . number_format($total_coupon,0,',','.') . 'đ' . '
                             </div>';
-                        }
                     }
-                }
-                if ($iprice + $total_fee > $total - $total_coupon) {
-                    $intomoney = $iprice + $total_fee;
-                } else {
-                    $intomoney = $total - $total_coupon;
+                } else{
+                    $intomoney = $total;
                 }
                 if (Session::get($request->input('fee'))) {
                     $fee_ship = Session::get($request->input('fee'));
@@ -423,6 +420,46 @@ class OrderController extends Controller
                     );
                 }
                 Session::put('edit_cart',$cart);
+            }
+        }
+    }
+    public function print(int $id)
+    {
+        if (Auth::check()) {
+            $path = base_path('favicon.ico');
+            $type = pathinfo($path, PATHINFO_EXTENSION);
+            $data = file_get_contents($path);
+            $pic = 'data:image/'.$type.';base64' . base64_decode($data);
+            $order = Order::query()->where('id','=',$id)->first();
+            $customer = Customer::query()->where('id','=',$order->customer_id)->first();
+            $detail = OrderDetail::query()->select('brands.name as brand_name','products.name as product_name','importdetails.*','orderdetails.*')
+                ->join('importdetails','importdetails.product_code','=','orderdetails.product_code')
+                ->join('products','products.id','=','importdetails.product_id')
+                ->join('brands','brands.id','=','products.brand_id')
+                ->where('orderdetails.order_id','=',$id)
+                ->get();
+            $pdf = \PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('pdf.order',[
+                'order' => $order,
+                'customer' => $customer,
+                'details' => $detail,
+                'pic' => $pic,
+            ]);
+            return $pdf->stream();
+        }
+    }
+    public function autocomplete(Request $request)
+    {
+        if (Auth::check()) {
+            $query = Order::query()->where('code','LIKE','%' .  $request->input('value') . '%')->get();
+            if ($query->count() > 0) {
+                $output = '<ul class="dropdown-menu2">';
+                foreach ($query as $key => $val) {
+                    $output .= '
+                                <li class="li_search_order" data-id="'.$val->id.'">' . $val->code . '</li>
+                           ';
+                }
+                $output .= '</ul>';
+                return $output;
             }
         }
     }

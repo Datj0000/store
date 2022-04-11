@@ -1,38 +1,119 @@
 @extends('index')
 @section('content')
-<style>
-    .dropdown-menu2 {
-        width: 100%;
-        padding: .5rem 0;
-        margin: .125rem 0 0;
-        font-size: 1rem;
-        color: #212529;
-        text-align: left;
-        list-style: none;
-        background-color: #fff;
-        background-clip: padding-box;
-        border: 1px solid rgba(0,0,0,.15);
-        border-radius: .25rem;
-        padding-left: 20px;
-        cursor: pointer;
-    }
-    .dropdown-menu2 li{
-        color: #333;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-    .dropdown-menu2 li:active,
-    .dropdown-menu2 li:hover {
-        color: #717fe0;
-    }
-    .show{
-        display: block;
-    }
-    .hide{
-        display: none;
-    }
-</style>
+    <style>
+        .dropdown-menu2 {
+            width: 100%;
+            padding: .5rem 0;
+            margin: .125rem 0 0;
+            font-size: 1rem;
+            color: #212529;
+            text-align: left;
+            list-style: none;
+            background-color: #fff;
+            background-clip: padding-box;
+            border: 1px solid rgba(0,0,0,.15);
+            border-radius: .25rem;
+            padding-left: 20px;
+            cursor: pointer;
+        }
+        .dropdown-menu2 li,
+        .dropdown-menu2 a{
+            color: #333;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .dropdown-menu2 li:active,
+        .dropdown-menu2 li:hover,
+        .dropdown-menu2 a:active,
+        .dropdown-menu2 a:hover{
+            color: #717fe0;
+        }
+        .show{
+            display: block;
+        }
+        .hide{
+            display: none;
+        }
+        .cart__shape {
+            width: 5rem;
+            height: 5rem;
+            border: 1px solid #fff4de;
+        }
+
+        .cart__img {
+            width: 100%;
+            height: 100%
+        }
+
+        .wrap-num-product {
+            width: 140px;
+            height: 45px;
+            border: 1px solid #e6e6e6;
+            border-radius: 3px;
+            overflow: hidden;
+            float: left;
+        }
+
+        .btn-num-product-up,
+        .btn-num-product-down {
+            width: 45px;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .num-product {
+            width: calc(100% - 90px);
+            height: 100%;
+            border-left: 1px solid #e6e6e6;
+            border-right: 1px solid #e6e6e6;
+            background-color: #f7f7f7;
+        }
+
+        input.num-product {
+            -moz-appearance: textfield;
+            appearance: none;
+            -webkit-appearance: none;
+            outline: none;
+            border: none;
+        }
+
+        input.num-product::-webkit-outer-spin-button,
+        input.num-product::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+            outline: none;
+            border: none;
+        }
+        .hov-btn3:hover {
+            border-color: #717fe0;
+            background-color: #717fe0;
+            color: #fff;
+        }
+
+        .hov-btn3:hover i {
+            color: #fff;
+        }
+
+        .flex-w,.flex-c-m {
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: -moz-box;
+            display: -ms-flexbox;
+            display: flex;
+            justify-content: center;
+            -ms-align-items: center;
+            align-items: center;
+        }
+        .txt-center {text-align: center;}
+        .flex-w {
+            -webkit-flex-wrap: wrap;
+            -moz-flex-wrap: wrap;
+            -ms-flex-wrap: wrap;
+            -o-flex-wrap: wrap;
+            flex-wrap: wrap;
+        }
+    </style>
 <div class="card card-custom">
     <div class="card-header flex-wrap py-5">
         <div class="card-title">
@@ -78,35 +159,33 @@
                                     <option value="1">Tự bảo hành</option>
                                 </select>
                             </div>
-                            <div class="form-group supplier hide">
-                                <label>Nhà cung cấp:</label>
-                                <select id="supplier_id" name="supplier" class="form-control">
-                                    @if($supplier->count() > 0)
-                                        <option value disabled selected hidden>Chọn nhà cung cấp</option>
-                                        @foreach ($supplier as $key => $item)
-                                            <option value="{{ $item->id }}">{{ $item->supplier_name }}</option>
-                                        @endforeach
-                                    @else
-                                        <option value="">Chưa có nhà cung cấp</option>
-                                    @endif
-                                </select>
+                            <div class="form-group import hide">
+                                <label>Nhập hàng:</label>
+                                <input type="hidden" name="import" id="import_id">
+                                <input autocomplete="off" type="text" class="form-control form-control-solid" id="import_name" placeholder="Tìm kiếm theo mã nhập hàng" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==255) return false;"/>
+                                <div id="search_import"></div>
                             </div>
                             <div class="form-group order hide">
                                 <label>Đơn hàng:</label>
                                 <input type="hidden" name="order" id="order_id">
-                                <input type="text" class="form-control form-control-solid" id="order_name" placeholder="Tìm kiếm theo mã đơn hàng" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==20) return false;"/>
+                                <input autocomplete="off" type="text" class="form-control form-control-solid" id="order_name" placeholder="Tìm kiếm theo mã đơn hàng" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==255) return false;"/>
                                 <div id="search_order"></div>
-                            </div>
-                            <div class="form-group product hide">
-                                <label>Sản phẩm:</label>
-                                <input type="hidden" name="product" id="product_id">
-                                <input type="text" class="form-control form-control-solid" id="product_name" placeholder="Tìm kiếm theo mã sản phẩm hoặc tên sản phẩm" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==20) return false;"/>
-                                <div id="search_product"></div>
                             </div>
                             <div class="form-group fee hide">
                                 <label>Phí bảo hành:</label>
                                 <input type="number" name="fee" class="form-control form-control-solid" id="insurance_fee" placeholder="Phí bảo hành" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==20) return false;"/>
                             </div>
+                            <div class="form-group fee hide">
+                                <label>Ghi chú:</label>
+                                <input type="text" name="note" class="form-control form-control-solid" id="insurance_note" placeholder="Ghi chú" />
+                            </div>
+                            <div class="form-group product hide">
+                                <label>Sản phẩm:</label>
+                                <input type="hidden" name="product" id="product_id">
+                                <input autocomplete="off" type="text" class="form-control form-control-solid" id="product_name" placeholder="Tìm kiếm theo mã sản phẩm hoặc tên sản phẩm" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==255) return false;"/>
+                                <div id="search_product"></div>
+                            </div>
+                            <div id="load_insurance"></div>
                         </div>
                         <div class="card-footer">
                             <button id="create_insurance" type="button" class="btn btn-primary mr-2">Thêm mới</button>
@@ -156,7 +235,9 @@
             <thead>
             <tr>
                 <th>STT</th>
-                <th>đơn vị</th>
+                <th>Mã bảo hành</th>
+                <th>Loại</th>
+                <th>Trạng thái</th>
                 <th>Ghi chú</th>
                 <th>Chức năng</th>
             </tr>
@@ -165,17 +246,132 @@
     </div>
 </div>
 <script type="Text/javascript">
+    load_insurance('insurance');
+    function load_btn(insurance){
+        $('.btn-num-product-down').click(function() {
+            var session_id = $(this).data('session_id');
+            var numProduct = Number($(this).next().val());
+            if (numProduct > 1) $(this).next().val(numProduct - 1);
+            if (numProduct > 1) {
+                var product_quantity = numProduct - 1;
+            } else {
+                var product_quantity = 1;
+            }
+            update_insurance(insurance,session_id, product_quantity);
+        });
+        $('.btn-num-product-up').click(function() {
+            var session_id = $(this).data('session_id');
+            var numProduct = Number($(this).prev().val());
+            $(this).prev().val(numProduct + 1);
+            var max_product_quantity = $('.product_quantity_' + session_id).val();
+            var product_quantity = numProduct + 1;
+            if (product_quantity > max_product_quantity) {
+                update_insurance(insurance,session_id, max_product_quantity);
+                Swal.fire({
+                    icon: "warning",
+                    title: "Cảnh báo",
+                    text: "Chỉ có thể thêm " + max_product_quantity + " sản phẩm!",
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            } else {
+                update_insurance(insurance,session_id, product_quantity);
+            }
+        });
+    }
+    function add_insurance(type, code){
+        axios.post('add-insur',{
+            type: type,
+            code: code
+        })
+        .then(function(response) {
+            if(response.data == 1){
+                if(type == 'insurance'){
+                    load_insurance('insurance');
+                } else {
+                    load_insurance('edit_insurance');
+                }
+            }else if(response.data == 0) {
+                swal.fire({
+                    icon: "error",
+                    title: "Thất bại",
+                    text: "Sản phẩm đã được thêm rồi!",
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            }
+        });
+    }
+    function load_insurance(insurance){
+        axios.post('load-insur',{
+            insurance: insurance,
+        })
+        .then(function(response) {
+            if(insurance == 'insurance'){
+                $("#load_insurance").html(response.data);
+                $('#table_insurance').DataTable({
+                    "ordering": false,
+                    "responsive": true,
+                    "searching": false,
+                    "bPaginate": false,
+                    "bLengthChange": false,
+                    "bFilter": true,
+                    "bInfo": false,
+                    "bAutoWidth": false
+                });
+                load_btn('insurance');
+            } else {
+                $("#load_edit_insurance").html(response.data);
+                $('#table_edit_insurance').DataTable({
+                    "ordering": false,
+                    "responsive": true,
+                    "searching": false,
+                    "bPaginate": false,
+                    "bLengthChange": false,
+                    "bFilter": true,
+                    "bInfo": false,
+                    "bAutoWidth": false
+                });
+                load_btn('edit_insurance');
+            }
+
+        });
+    }
+    function edit_insurance(id){
+        axios.get('edit-insurance/'+id)
+    }
+    function update_insurance(type, session_id, product_quantity) {
+        axios({
+            url: 'update-insur',
+            method: "POST",
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name = "csrf-token" ]').attr('content')
+            },
+            data: {
+                type: type,
+                session_id: session_id,
+                product_quantity: product_quantity
+            },
+        })
+        .then(function (response) {
+            if(type == 'insurance'){
+                load_insurance('insurance');
+            } else {
+                load_insurance('edit_insurance');
+            }
+        });
+    }
     $(document).ready(function() {
         $('#insurance_method').change(function() {
             var query = $(this).val();
             if (query == 1) {
-                $('.supplier').removeClass('hide');
-                $('.supplier').addClass('show');
+                $('.import').removeClass('hide');
+                $('.import').addClass('show');
                 $('.order').removeClass('show');
                 $('.order').addClass('hide');
             } else if(query == 0) {
-                $('.supplier').removeClass('show');
-                $('.supplier').addClass('hide');
+                $('.import').removeClass('show');
+                $('.import').addClass('hide');
                 $('.order').removeClass('hide');
                 $('.order').addClass('show');
             }
@@ -183,6 +379,88 @@
             $('.product').addClass('show');
             $('.fee').removeClass('hide');
             $('.fee').addClass('show');
+        });
+        $('#import_name').keyup(function() {
+            var value = $(this).val();
+            if (value != '') {
+                axios({
+                    url: "autocomplete-import",
+                    method: "POST",
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name = "csrf-token" ]').attr('content')
+                    },
+                    data: {
+                        value: value
+                    },
+                })
+                .then(function (response) {
+                    $('#search_import').fadeIn();
+                    $('#search_import').html(response.data);
+                    $('.li_search_import').click(function() {
+                        $('#import_id').val($(this).data('id'));
+                        $('#import_name').val($(this).text());
+                        $('#search_import').fadeOut();
+                    });
+                });
+            } else {
+                $('#search_import').fadeOut();
+            }
+        });
+        $('#order_name').keyup(function() {
+            var value = $(this).val();
+            if (value != '') {
+                axios({
+                    url: "autocomplete-order",
+                    method: "POST",
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name = "csrf-token" ]').attr('content')
+                    },
+                    data: {
+                        value: value
+                    },
+                })
+                    .then(function (response) {
+                        $('#search_order').fadeIn();
+                        $('#search_order').html(response.data);
+                        $('.li_search_order').click(function() {
+                            $('#order_id').val($(this).data('id'));
+                            $('#order_name').val($(this).text());
+                            $('#search_order').fadeOut();
+                        });
+                    });
+            } else {
+                $('#search_order').fadeOut();
+            }
+        });
+        $('#product_name').keyup(function() {
+            var value = $(this).val();
+            var order_id = $('#order_id').val();
+            var import_id = $('#import_id').val();
+            if ((value != '') && (order_id != '' || import_id != '')) {
+                axios({
+                    url: "autocomplete-product",
+                    method: "POST",
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name = "csrf-token" ]').attr('content')
+                    },
+                    data: {
+                        order_id: order_id,
+                        import_id: import_id,
+                        value: value
+                    },
+                })
+                .then(function (response) {
+                    $('#search_product').fadeIn();
+                    $('#search_product').html(response.data);
+                    $('.li_search_product').click(function() {
+                        $('#product_name').val('');
+                        $('#search_product').fadeOut();
+                        add_insurance('insurance',$(this).data('code'));
+                    });
+                });
+            } else {
+                $('#search_product').fadeOut();
+            }
         });
         var i = 0;
         var table = $('#kt_datatable').DataTable({
@@ -195,17 +473,37 @@
                     }
                 },
                 {
-                    'data': 'insurance_name'
+                    'data': 'code'
                 },
                 {
-                    'data': 'insurance_desc'
+                    'data': null,
+                    sortable: false,
+                    render: function(data, type, row) {
+                        if(row.method == 0){
+                            return `Khách bảo hành`;
+                        } else {
+                            return `Tự bảo hành`;
+                        }
+                    }
+                },
+                {
+                    'data': null,
+                    sortable: false,
+                    render: function(data, type, row) {
+                        if(row.status == 0){
+                            return `<span data-status="1" class="insurance_status label label-lg label-light-warning label-inline cursor-pointer">Đang xử lý</span>`;
+                        } else if(row.status == 1){
+                            return `<span data-status="0" class="insurance_status label label-lg label-light-success label-inline cursor-pointer">Thành công</span>`;
+                        }
+                    }
+                },
+                {
+                    'data': 'note'
                 },
                 {
                     'data': null,
                     sortable: false,
                     width: '75px',
-                    overflow: 'visible',
-                    autoHide: false,
                     render: function(data, type, row) {
                         return `\
                             <span data-toggle="modal" data-target="#exampleModalPopovers2" data-id='${row.id}' class="edit_insurance btn btn-sm btn-clean btn-icon" title="Sửa">\
@@ -268,8 +566,9 @@
         );
         $('#create_insurance').click(function(e) {
             e.preventDefault();
-            var insurance_name = $('#insurance_name').val();
-            var insurance_desc = $('#insurance_desc').val();
+            var method = $('#insurance_method').val();
+            var fee = $('#insurance_fee').val();
+            var note = $('#insurance_note').val();
             validation.validate().then(function(status) {
                 if (status == 'Valid') {
                     axios({
@@ -279,25 +578,22 @@
                             'X-CSRF-TOKEN': $('meta[name = "csrf-token" ]').attr('content')
                         },
                         data: {
-                            insurance_name: insurance_name,
-                            insurance_desc: insurance_desc,
+                            method: method,
+                            fee: fee,
+                            note: note,
                         },
                     })
-                        .then(function (response) {
-                            if (response.data == 1) {
-                                Swal.fire({
-                                    icon: "success",
-                                    title: "Thành công",
-                                    text: "Tạo đơn bảo hành thành công thành công!",
-                                    showConfirmButton: false,
-                                    timer: 1500
-                                });
-                                i = 0;
-                                table.ajax.reload();
-                            } else if (response.data == 0) {
-                                Swal.fire("Thất bại", "Sản phẩm này đã bảo hành rồi!", "error");
-                            }
+                    .then(function (response) {
+                        Swal.fire({
+                            icon: "success",
+                            title: "Thành công",
+                            text: "Tạo đơn bảo hành thành công thành công!",
+                            showConfirmButton: false,
+                            timer: 1500
                         });
+                        i = 0;
+                        table.ajax.reload();
+                    });
                 } else {
                     swal.fire({
                         text: "Xin lỗi, có vẻ như đã phát hiện thấy một số lỗi, vui lòng thử lại .",
@@ -421,6 +717,49 @@
                     });
                 }
             });
+        });
+        $(document).on('change', '.cart_qty', function(e) {
+            var type = $(this).data('type');
+            var session_id = $(this).data('session_id');
+            var max_product_quantity = $('.product_quantity_' + session_id).val();
+            var product_quantity = $(this).val();
+            if (product_quantity < 1) {
+                product_quantity = 1;
+            }
+            if (product_quantity > max_product_quantity) {
+                product_quantity = max_product_quantity;
+                Swal.fire({
+                    icon: "warning",
+                    title: "Cảnh báo",
+                    text: "Sản phẩm chỉ còn " + max_product_quantity + " sản phẩm!",
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            }
+            update_cart(type,session_id, product_quantity);
+        });
+        $(document).on('click', '.destroy_insur', function(e) {
+            e.preventDefault();
+            var session_id = $(this).data('session_id');
+            var type = $(this).data('type');
+            axios({
+                url: 'destroy-cart',
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name = "csrf-token" ]').attr('content')
+                },
+                data: {
+                    type: type,
+                    session_id: session_id
+                }
+            })
+                .then(function () {
+                    if(type == 'cart'){
+                        load_cart('insurance');
+                    } else {
+                        load_cart('edit_insurance');
+                    }
+                });
         });
     })
 </script>

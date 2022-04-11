@@ -127,6 +127,12 @@ Route::group(['middleware' => 'mod'], function(){
     Route::get('/edit-insurance/{id}',[InsuranceController::class, 'edit']);
     Route::post('/update-insurance/{id}',[InsuranceController::class,'update']);
     Route::get('/destroy-insurance/{id}',[InsuranceController::class,'destroy']);
+
+    Route::post('/add-insur',[InsuranceController::class,'add_insurance']);
+    Route::post('/load-insur',[InsuranceController::class,'load_insurance']);
+    Route::get('/edit-insur/{id}',[InsuranceController::class,'edit_insurance']);
+    Route::post('/update-insur',[InsuranceController::class,'update_insurance']);
+    Route::post('/destroy-insur',[InsuranceController::class,'destroy_insurance']);
 });
 //Product
 Route::get('/product',[ProductController::class,'index']);
@@ -151,6 +157,8 @@ Route::post('/create-order',[OrderController::class,'create']);
 Route::get('/edit-order/{id}',[OrderController::class, 'edit']);
 Route::post('/update-order/{id}',[OrderController::class,'update']);
 Route::get('/destroy-order/{id}',[OrderController::class,'destroy']);
+Route::get('/print-order/{id}',[OrderController::class,'print']);
+Route::post('/autocomplete-import',[ImportController::class,'autocomplete']);
 
 Route::post('/add-cart',[OrderController::class,'add_cart']);
 Route::post('/load-cart',[OrderController::class,'load_cart']);
@@ -166,3 +174,4 @@ Route::post('/create-orderdetail/{id}',[OrderDetailController::class,'create']);
 Route::get('/edit-orderdetail/{id}',[OrderDetailController::class, 'edit']);
 Route::post('/update-orderdetail/{id}',[OrderDetailController::class,'update']);
 Route::get('/destroy-orderdetail/{id}',[OrderDetailController::class,'destroy']);
+

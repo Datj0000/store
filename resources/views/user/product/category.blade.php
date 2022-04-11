@@ -217,7 +217,13 @@
                             i = 0;
                             table.ajax.reload();
                         } else if (response.data == 0) {
-                            Swal.fire("Thất bại", "Danh mục đã nhập rồi!", "error");
+                            Swal.fire({
+                                icon: "warning",
+                                title: "Thất bại",
+                                text: "Danh mục này đã nhập rồi!",
+                                showConfirmButton: false,
+                                timer: 1500
+                            });
                         }
                     });
                 } else {

@@ -552,27 +552,27 @@
                                 'X-CSRF-TOKEN': $('meta[name = "csrf-token" ]').attr('content')
                             },
                         })
-                            .then(function (response) {
-                                if (response.data == 1) {
-                                    Swal.fire({
-                                        icon: "success",
-                                        title: "Thành công",
-                                        text: "Xoá nhà cung cấp thành công!",
-                                        showConfirmButton: false,
-                                        timer: 1500
-                                    });
-                                    i = 0;
-                                    table.ajax.reload();
-                                } else if (response.data == 0) {
-                                    Swal.fire({
-                                        icon: "error",
-                                        title: "Thất bại",
-                                        text: "Đang có sản phẩm thuộc nhà cung cấp này!",
-                                        showConfirmButton: false,
-                                        timer: 1500
-                                    });
-                                }
-                            });
+                        .then(function (response) {
+                            if (response.data == 1) {
+                                Swal.fire({
+                                    icon: "success",
+                                    title: "Thành công",
+                                    text: "Xoá nhà cung cấp thành công!",
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                });
+                                i = 0;
+                                table.ajax.reload();
+                            } else if (response.data == 0) {
+                                Swal.fire({
+                                    icon: "error",
+                                    title: "Thất bại",
+                                    text: "Đang có sản phẩm thuộc nhà cung cấp này!",
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                });
+                            }
+                        });
                     }
                 });
         });

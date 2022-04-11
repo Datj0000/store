@@ -152,12 +152,26 @@ class ProductController extends Controller
     public function autocomplete(Request $request)
     {
         if (Auth::check()) {
-            $product = Product::query()->select('importdetails.*','brands.name as brand_name','products.*')
-                ->join('brands','brands.id','=','products.brand_id')
-                ->join('importdetails','importdetails.product_id','=','products.id')
-                ->where('products.name','LIKE','%' .  $request->input('value') . '%')
-                ->orwhere('importdetails.product_code','LIKE','%' .  $request->input('value') . '%')
-                ->get();
+            if($request->input('order_id') != '' ||  $request->input('import_id')){
+                $product = Product::query()->select('importdetails.*','brands.name as brand_name','products.*')
+                    ->join('brands','brands.id','=','products.brand_id')
+                    ->join('importdetails','importdetails.product_id','=','products.id')
+                    ->join('orderdetails','orderdetails.product_code','=','importdetails.product_code')
+                    ->where('importdetails.import_id','=',$request->input('import_id'))
+                    ->orwhere('orderdetails.order_id','=',$request->input('order_id'))
+                    ->where('products.name','LIKE','%' .  $request->input('value') . '%')
+                    ->orwhere('brands.name','LIKE','%' .  $request->input('value') . '%')
+                    ->orwhere('importdetails.product_code','LIKE','%' .  $request->input('value') . '%')
+                    ->get();
+            } else{
+                $product = Product::query()->select('importdetails.*','brands.name as brand_name','products.*')
+                    ->join('brands','brands.id','=','products.brand_id')
+                    ->join('importdetails','importdetails.product_id','=','products.id')
+                    ->where('products.name','LIKE','%' .  $request->input('value') . '%')
+                    ->orwhere('brands.name','LIKE','%' .  $request->input('value') . '%')
+                    ->orwhere('importdetails.product_code','LIKE','%' .  $request->input('value') . '%')
+                    ->get();
+            }
             if ($product->count() > 0) {
                 $output = '<ul class="dropdown-menu2">';
                 foreach ($product as $key => $val){

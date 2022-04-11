@@ -8,6 +8,7 @@ use App\Models\Import;
 use App\Models\ImportDetail;
 use App\Models\Product;
 use App\Models\Supplier;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -36,7 +37,7 @@ class ImportController extends Controller
     public function fetchdata()
     {
         if (Auth::check()) {
-            $data = Import::query()->select('suppliers.name as supplier_name',DB::raw('SUM(importdetails.import_price) As total'),'imports.*')
+            $data = Import::query()->select('suppliers.name as supplier_name',DB::raw('SUM(importdetails.import_price) As total'),DB::raw('SUM(importdetails.quantity) As quantity'),'imports.*')
                 ->leftJoin('importdetails','importdetails.id','=','imports.id')
                 ->join('suppliers','suppliers.id','=','imports.supplier_id')
                 ->groupBy('suppliers.name','imports.code','imports.id','imports.fee_ship','imports.supplier_id','imports.created_at','imports.updated_at')
@@ -104,15 +105,32 @@ class ImportController extends Controller
         if (Auth::check()) {
             $import = Import::query()->where('id','=',$id)->first();
             $supplier = Supplier::query()->where('id','=',$import->supplier_id)->first();
-            $detail = ImportDetail::query()->select('products.product_name','importdetails.*')
+            $detail = ImportDetail::query()->select('brands.name as brand_name', 'products.name as product_name','importdetails.*')
                 ->join('products','products.id','=','importdetails.product_id')
-                ->where('id','=',$id)->get();
-            $pdf = \PDF::loadView('pdf.import',[
+                ->join('brands','brands.id','=','products.brand_id')
+                ->where('importdetails.id','=',$id)->get();
+            $pdf = PDF::loadView('pdf.import',[
                 'import' => $import,
                 'supplier' => $supplier,
                 'details' => $detail
             ]);
             return $pdf->stream();
+        }
+    }
+    public function autocomplete(Request $request)
+    {
+        if (Auth::check()) {
+            $query = Import::query()->where('code','LIKE','%' .  $request->input('value') . '%')->get();
+            if ($query->count() > 0) {
+                $output = '<ul class="dropdown-menu2">';
+                    foreach ($query as $key => $val) {
+                        $output .= '
+                                <li class="li_search_import" data-id="'.$val->id.'">' . $val->code . '</li>
+                           ';
+                    }
+                $output .= '</ul>';
+                return $output;
+            }
         }
     }
 }

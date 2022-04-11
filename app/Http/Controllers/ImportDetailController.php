@@ -22,7 +22,7 @@ class ImportDetailController extends Controller
             $output = '
             <input type="hidden" id="importid" value="'.$id.'"/>
             <div class="card-body">
-            <table class="table table-separate table-head-custom table-checkable display nowrap" cellspacing="0" width="100%" id="responsive">
+            <table class="table table-separate table-head-custom table-checkable display nowrap" cellspacing="0" width="100%" id="table_import_'.$id.'">
                     <thead>
                         <tr>
                             <th scope="col">STT</th>
@@ -109,13 +109,13 @@ class ImportDetailController extends Controller
                         Phí ship:
                         </div>
                         <div style="width: 90%">
-                            ' . number_format($import->import_fee_ship,0,',','.') . 'đ' . '
+                            ' . number_format($import->fee_ship,0,',','.') . 'đ' . '
                         </div>
                         <div style="width: 10%">
                         Thành tiền:
                         </div>
                         <div style="width: 90%">
-                            ' . number_format($total + $import->import_fee_ship,0,',','.') . 'đ' . '
+                            ' . number_format($total + $import->fee_ship,0,',','.') . 'đ' . '
                         </div>
                     </div>
                 </div>';

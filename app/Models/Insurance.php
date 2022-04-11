@@ -10,4 +10,11 @@ class Insurance extends Model
     use HasFactory;
     protected $table = 'insurances';
     protected $primaryKey = 'id';
+    protected $fillable = [
+        'code',
+        'method',
+        'status',
+        'fee',
+        'note'
+    ];
 }

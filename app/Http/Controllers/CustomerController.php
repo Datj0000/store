@@ -92,8 +92,8 @@ class CustomerController extends Controller
         if (Auth::check()) {
             $customer = Customer::query()->where('name','LIKE','%' .  $request->input('value') . '%')
             ->orwhere('phone','LIKE','%' . $request->input('value') . '%')->get();
-                $output = '<ul class="dropdown-menu2">';
-                            '<li class="li_add_customer">Thêm khách hàng mới</li>';
+                $output = '<ul class="dropdown-menu2">
+                            <li><a href="'.url('/customer').'">Thêm khách hàng mới</a></li>';
                 if ($customer->count() > 0) {
                     foreach ($customer as $key => $val) {
                         $output .= '

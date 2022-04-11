@@ -282,7 +282,13 @@
                             i = 0;
                             table.ajax.reload();
                         } else if (response.data == 0) {
-                            Swal.fire("Thất bại", "Thương hiệu đã trùng tên!", "error");
+                            Swal.fire({
+                                icon: "warning",
+                                title: "Thất bại",
+                                text: "Thương hiệu này đã nhập rồi!",
+                                showConfirmButton: false,
+                                timer: 1500
+                            });
                         }
                     });
                 } else {

@@ -49,7 +49,7 @@
                             </div>
                             <div class="form-group">
                                 <label>Số lượng:</label>
-                                <input name="coupon_time" type="number" class="form-control form-control-solid" id="coupon_time " min="0"
+                                <input name="coupon_time" type="number" class="form-control form-control-solid" id="coupon_time" min="0"
                                        placeholder="Số lượng" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==20) return false;"/>
                             </div>
                             <div class="form-group">
@@ -433,6 +433,7 @@
                         },
                     })
                     .then(function (response) {
+                        console.log(response.data)
                         if (response.data == 1) {
                             Swal.fire({
                                 icon: "success",

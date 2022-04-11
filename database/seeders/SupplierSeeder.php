@@ -16,9 +16,9 @@ class SupplierSeeder extends Seeder
     {
         Supplier::query()->create(
             [
-                'supplier_name' => 'Cái',
-                'supplier_phone' => 'Bộ',
-                'supplier_email' => 'Mét',
+                'supplier_name' => 'HQ',
+                'supplier_phone' => '0391895552',
+                'supplier_email' => 'dn16092000@gmail.com',
                 'supplier_mst' => '5700133674',
                 'supplier_address' => 'Hạ Long',
                 'supplier_information' => 'MB bank 999999993599',

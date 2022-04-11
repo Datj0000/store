@@ -32,7 +32,7 @@
                                 fill="#000000" opacity="0.3" />
                         </g>
                     </svg>
-                </span>Thêm mới</span>
+                </span>Nhập hàng</span>
         </div>
     </div>
     {{-- Add --}}
@@ -399,7 +399,7 @@
         axios.get('fetchdata-importdetail/' + id)
             .then(function(response) {
                 $("#load_importdetail").html(response.data);
-                $('#responsive').DataTable({
+                $('#table_import_'+ id).DataTable({
                     "ordering": false,
                     "responsive": true,
                     "searching": false,
@@ -484,7 +484,7 @@
                 {
                     'data': null,
                     render: function(data, type, row) {
-                        return formatter.format(row.total);
+                        return formatter.format(row.total * row.quantity);
                     }
                 },
                 {
@@ -496,7 +496,7 @@
                 {
                     'data': null,
                     render: function(data, type, row) {
-                        return formatter.format(row.total + row.fee_ship);
+                        return formatter.format(row.total * row.quantity + row.fee_ship);
                     }
                 },
                 {

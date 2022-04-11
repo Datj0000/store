@@ -16,14 +16,17 @@
         padding-left: 20px;
         cursor: pointer;
     }
-    .dropdown-menu2 li{
+    .dropdown-menu2 li,
+    .dropdown-menu2 a{
         color: #333;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
     }
     .dropdown-menu2 li:active,
-    .dropdown-menu2 li:hover {
+    .dropdown-menu2 li:hover,
+    .dropdown-menu2 a:active,
+    .dropdown-menu2 a:hover{
         color: #717fe0;
     }
     .show{
@@ -494,15 +497,6 @@
                 .then(function (response) {
                     $('#search_customer').fadeIn();
                     $('#search_customer').html(response.data);
-                    $('.li_add_customer').click(function() {
-                        $('#view_order').removeClass("menu-item-active");
-                        $('#view_customer').addClass("menu-item-active");
-                        $('#exampleModalPopovers2').modal('hide');
-                        axios.get("view-customer")
-                            .then(function(response) {
-                                $("#container").html(response.data);
-                            });
-                    });
                     $('.li_search_customer').click(function() {
                         $('#customer_id').val($(this).data('id'));
                         $('#customer_name').val($(this).text());
@@ -598,15 +592,6 @@
                     .then(function (response) {
                         $('#edit_search_customer').fadeIn();
                         $('#edit_search_customer').html(response.data);
-                        $('.li_add_customer').click(function() {
-                            $('#view_order').removeClass("menu-item-active");
-                            $('#view_customer').addClass("menu-item-active");
-                            $('#exampleModalPopovers').modal('hide');
-                            axios.get("view-customer")
-                                .then(function(response) {
-                                    $("#container").html(response.data);
-                                });
-                        });
                         $('.li_search_customer').click(function() {
                             $('#edit_customer_id').val($(this).data('id'));
                             $('#edit_customer_name').val($(this).text());
@@ -669,10 +654,10 @@
                     'data': null,
                     render: function(data, type, row) {
                         if(row.method_pay == 0){
-                            return `<span class="label label-lg label-light label-inline">Tiền mặt</span>`;
+                            return `Tiền mặt`;
                         }
                         else {
-                            return `<span class="label label-lg label-light label-inline">Chuyển khoản</span>`;
+                            return `Chuyển khoản`;
                         }
                     }
                 },
@@ -684,6 +669,9 @@
                     autoHide: false,
                     render: function(data, type, row) {
                         return `\
+                            <span class="btn btn-sm btn-clean btn-icon" title="In hoá đơn">\
+        						<a class="nav-link" target="_blank" href="print-order/${row.id}"><i class="nav-icon la la-print"></i></a>\
+        					</span>\
                             <span data-toggle="modal" data-target="#exampleModalPopovers" data-id='${row.id}' class="edit_order btn btn-sm btn-clean btn-icon" title="Sửa">\
         						<i class="la la-edit"></i>\
         					</span>\
