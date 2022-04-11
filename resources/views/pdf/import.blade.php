@@ -69,10 +69,18 @@
             font-weight:bold;
             padding-right: 4px;
         }
+        img{
+            width: 15%;
+            /*opacity: .2;*/
+            position: fixed;
+            top: -1%;
+            left: -1%;
+        }
     </style>
 </head>
 <body>
     <div>
+        <img src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path('asset/media/logos/logo2.png'))) }}">
         <center>
         <h3>CÔNG TY CỔ PHẦN GIẢI PHÁP SỐ FUNNY DEV</h3>
         Số 2, Trần Nhân Tông, Phường Thanh Sơn, Uông Bí, Quảng Ninh<br>

@@ -91,8 +91,7 @@
     <br>
     <br>
     <h3>
-        <center>PHIẾU XUẤT KHO HÀNG<br>
-            <span style="font-weight:bold; font-style:italic; color:#000000; font-size:13px">(Kiêm chứng nhận bảo hành theo chính sách công ty)</span><br>
+        <center>PHIẾU XUẤT KHO KIÊM BẢO HÀNH<br>
             <span style="font-size:13px">Số: {{$order['code']}}</span><br>
             <span> -------oOo-------</span>
         </center>
@@ -100,6 +99,7 @@
     <h4>Khách hàng</h4>
         Họ và tên: {{$customer->name}}<br>
         Điện thoại: {{$customer->phone}}<br>
+        Email: {{$customer->email}}<br>
         Địa chỉ: {{$customer->address}}<br>
     <h4>Đơn hàng</h4>
 </div>
